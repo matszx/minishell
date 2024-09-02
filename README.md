@@ -2,8 +2,8 @@
 ## Checklist
 
 **General:**
-- [ ] Display a prompt when waiting for a new command.
-- [ ] Have a working history.
+- [X] Display a prompt when waiting for a new command.
+- [X] Have a working history.
 - [ ] Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
 - [ ] Not use more than one global variable. Think about it. You will have to explain its purpose.
 - [ ] Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
@@ -22,9 +22,9 @@
 - [ ] Handle $? which should expand to the exit status of the most recently executed foreground pipeline.
 
 **Signals:**
-- [ ] ctrl-C displays a new prompt on a new line.
-- [ ] ctrl-D exits the shell.
-- [ ] ctrl-\ does nothing.
+- [X] ctrl-C displays a new prompt on a new line.
+- [X] ctrl-D exits the shell.
+- [X] ctrl-\ does nothing.
 
 **Builtins:**
 - [ ] echo with option -n .
@@ -33,4 +33,4 @@
 - [ ] export with no options
 - [ ] unset with no options
 - [ ] env with no options or arguments
-- [ ] exit with no options
+- [X] exit with no options
