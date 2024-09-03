@@ -13,11 +13,12 @@
 NAME 		=	minishell
 
 CC 			=	clang
-CFLAGS 		=	-Wall -Wextra -Werror -fsanitize=address -g -I ~/.brew/opt/readline/include
-READLINE	=	-lreadline -L ~/.brew/opt/readline/lib
+CFLAGS 		=	-Wall -Wextra -Werror -fsanitize=address -g \
+				-I./libft/inc -I~/.brew/opt/readline/include
+INC			=	-L./libft -lft \
+				-L~/.brew/opt/readline/lib -lreadline
 
 LIB_DIR 	=	libft/
-LIB 		=	$(LIB_DIR)libft.a
 
 SRC_DIR		= 	src/
 SRC_FILES 	=	main.c \
@@ -39,7 +40,7 @@ $(OBJ_DIR):
 $(NAME): $(OBJ)
 	@make -sC $(LIB_DIR)
 	# compiling $(NAME)
-	@$(CC) $(CFLAGS) $(LIB) $(READLINE) $(OBJ) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(INC) -o $(NAME)
 	# ready
 
 clean :
