@@ -27,10 +27,9 @@ static void	sigint_handler(int sig)
 	rl_redisplay();
 }
 
-void init_signals(void)
+void	init_signals(void)
 {
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
-
 }

@@ -37,18 +37,18 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(NAME): $(OBJ)
-	@make -C $(LIB_DIR)
-	# compiling minishell
+	@make -sC $(LIB_DIR)
+	# compiling $(NAME)
 	@$(CC) $(CFLAGS) $(LIB) $(READLINE) $(OBJ) -o $(NAME)
-	# minishell ready
+	# ready
 
 clean :
 	# cleaning up
 	@rm -rf $(OBJ_DIR)
-	@make fclean -C $(LIB_DIR)
+	@make fclean -sC $(LIB_DIR)
 
 fclean : clean
-	# deleting $(NAME)
+	# $(NAME) deleted
 	@rm -f $(NAME)
 
 re : fclean all
