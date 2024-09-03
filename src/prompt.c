@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/02 15:39:50 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/09/03 14:51:23 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*prompt(void)
 			eof_handler();
 		if (!ft_strncmp(user_input, "exit", 5))
 		{
-			write(1, "exit\n", 5);
+			printf("exit\n");
 			exit(EXIT_SUCCESS);
 		}
 		add_history(user_input);

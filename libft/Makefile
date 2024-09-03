@@ -6,7 +6,7 @@
 #    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 17:14:51 by mcygan            #+#    #+#              #
-#    Updated: 2024/09/02 14:52:56 by mcygan           ###   ########.fr        #
+#    Updated: 2024/09/03 14:54:20 by mcygan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,6 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(OBJ_DIR) $(NAME)
-	@echo "# libft ready"
 
 $(OBJ_DIR):
 	@echo "# compiling libft"
