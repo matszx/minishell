@@ -6,13 +6,13 @@
 #    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/09/02 15:37:22 by mcygan           ###   ########.fr        #
+#    Updated: 2024/09/12 22:21:29 by mcygan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 		=	minishell
 
-CC 			=	clang
+CC 			=	cc
 CFLAGS 		=	-Wall -Wextra -Werror -fsanitize=address -g \
 				-I./libft/inc -I~/.brew/opt/readline/include
 INC			=	-L./libft -lft \

@@ -6,13 +6,13 @@
 #    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 17:14:51 by mcygan            #+#    #+#              #
-#    Updated: 2024/09/03 14:54:20 by mcygan           ###   ########.fr        #
+#    Updated: 2024/09/12 22:21:41 by mcygan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 		=	libft.a
 
-CC 			=	clang
+CC 			=	cc
 CFLAGS		=	-Wall -Wextra -Werror -fsanitize=address
 
 SRC_DIR		=	src/
