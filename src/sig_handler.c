@@ -6,17 +6,11 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:34:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/03 14:55:42 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/09/24 12:42:22 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-void	eof_handler(void)
-{
-	printf("exit\n");
-	exit(0);
-}
 
 static void	sigint_handler(int sig)
 {
