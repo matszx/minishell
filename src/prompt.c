@@ -6,13 +6,14 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/24 12:47:42 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/09/30 15:22:22 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static char	*prompt_msg(int	exit_status)
+// Returns the appropriate prompt line
+static char	*prompt_msg(int exit_status)
 {
 	if (!exit_status)
 		return (PT "minishell" AG " > " RESET);
@@ -20,6 +21,7 @@ static char	*prompt_msg(int	exit_status)
 		return (PT "minishell" VM " > " RESET);
 }
 
+// Displays a prompt
 void	prompt(t_shell *shell)
 {
 	while (1)
@@ -31,6 +33,14 @@ void	prompt(t_shell *shell)
 			printf("exit\n");
 			return ;
 		}
+		else if (!ft_strncmp(shell->buf, "env", 4))
+			shell->exit_status = put_env(shell->env);
+		else if (!ft_strncmp(shell->buf, "unset", 5))
+			shell->exit_status = del_env(shell->env, shell->buf + 6);
+		else if (!ft_strncmp(shell->buf, "export", 6))
+			shell->exit_status = add_env(shell->env, shell->buf + 7);
+		else
+			shell->exit_status = 1;
 		add_history(shell->buf);
 		free(shell->buf);
 	}

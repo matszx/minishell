@@ -6,7 +6,7 @@
 #    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/09/12 22:21:29 by mcygan           ###   ########.fr        #
+#    Updated: 2024/09/30 16:09:20 by mcygan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ LIB_DIR 	=	libft/
 SRC_DIR		= 	src/
 SRC_FILES 	=	main.c \
         		prompt.c \
+				env.c \
 				sig_handler.c
 SRC			=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

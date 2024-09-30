@@ -6,14 +6,14 @@
 #    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 17:14:51 by mcygan            #+#    #+#              #
-#    Updated: 2024/09/16 14:42:13 by mcygan           ###   ########.fr        #
+#    Updated: 2024/09/30 15:45:49 by mcygan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 		=	libft.a
 
 CC 			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror -fsanitize=address -g
 
 SRC_DIR		=	src/
 SRC_FILES 	= 	ft_isalpha.c \
@@ -34,6 +34,7 @@ SRC_FILES 	= 	ft_isalpha.c \
 				ft_strchr.c \
 				ft_strrchr.c \
 				ft_strnstr.c \
+				ft_strcmp.c \
 				ft_strncmp.c \
 				ft_atoi.c \
 				ft_itoa.c \

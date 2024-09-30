@@ -6,21 +6,50 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/24 12:45:00 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/09/30 17:19:33 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	main(void)
+static void	free_shell(t_shell *shell)
+{
+	t_env	*prev;
+
+	while (shell->env)
+	{
+		prev = shell->env;
+		shell->env = shell->env->next;
+		free(prev->var);
+		free(prev->value);
+		free(prev);
+	}
+	free(shell);
+}
+
+static t_shell	*init_shell(char **envp)
 {
 	t_shell	*shell;
 
-	shell = malloc(sizeof(t_shell));
+	shell = malloc(sizeof(*shell));
 	if (!shell)
-		return (EXIT_FAILURE);
+		return (NULL);
+	shell->env = copy_env(envp);
 	shell->exit_status = 0;
 	init_signals();
+	return (shell);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	*shell;
+
+	(void)argv;
+	if (argc > 1)
+		return (printf("error: does not accept arguments\n"), EXIT_FAILURE);
+	shell = init_shell(envp);
+	if (!shell)
+		return (printf("error: could not allocate memory\n"), EXIT_FAILURE);
 	prompt(shell);
-	return (free(shell), EXIT_SUCCESS);
+	return (free_shell(shell), EXIT_SUCCESS);
 }
