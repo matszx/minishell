@@ -47,6 +47,7 @@ int	del_env(t_env *env, char *str)
 	{
 		prev->next = env->next;
 		free(env->var);
+		free(env->value);
 		free(env);
 	}
 	return (0);
