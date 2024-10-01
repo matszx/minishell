@@ -13,53 +13,12 @@
 #include "../inc/minishell.h"
 
 /*
-Prints the environment
-*/
-int	put_env(t_env *env)
-{
-	env = env->next;
-	while (env)
-	{
-		printf("%s=%s\n", env->var, env->value);
-		env = env->next;
-	}
-	return (0);
-}
-
-/*
-Deletes an environment variable
-
-env: environment pointer
-str: variable name
-*/
-int	del_env(t_env *env, char *str)
-{
-	t_env	*prev;
-
-	prev = env;
-	env = env->next;
-	while (env && ft_strcmp(env->var, str))
-	{
-		prev = env;
-		env = env->next;
-	}
-	if (env)
-	{
-		prev->next = env->next;
-		free(env->var);
-		free(env->value);
-		free(env);
-	}
-	return (0);
-}
-
-/*
 Sets a new environment variable or replaces an existing one
 
 env: environment pointer
 str: string formatted as "variable=value"
 */
-int	add_env(t_env *env, char *str)
+int	ft_export(t_env *env, char *str)
 {
 	t_env	*new;
 	size_t	idx;
@@ -89,6 +48,47 @@ int	add_env(t_env *env, char *str)
 }
 
 /*
+Deletes an environment variable
+
+env: environment pointer
+str: variable name
+*/
+int	ft_unset(t_env *env, char *str)
+{
+	t_env	*prev;
+
+	prev = env;
+	env = env->next;
+	while (env && ft_strcmp(env->var, str))
+	{
+		prev = env;
+		env = env->next;
+	}
+	if (env)
+	{
+		prev->next = env->next;
+		free(env->var);
+		free(env->value);
+		free(env);
+	}
+	return (0);
+}
+
+/*
+Prints the environment
+*/
+int	ft_env(t_env *env)
+{
+	env = env->next;
+	while (env)
+	{
+		printf("%s=%s\n", env->var, env->value);
+		env = env->next;
+	}
+	return (0);
+}
+
+/*
 Copies envp into a list of t_env
 */
 t_env	*copy_env(char **envp)
@@ -102,6 +102,6 @@ t_env	*copy_env(char **envp)
 	env->value = ft_substr("___INIT___", 0, 10);
 	env->next = NULL;
 	while (*envp)
-		add_env(env, *(envp++));
+		ft_export(env, *(envp++));
 	return (env);
 }

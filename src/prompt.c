@@ -34,11 +34,11 @@ void	prompt(t_shell *shell)
 			return ;
 		}
 		else if (!ft_strncmp(shell->buf, "env", 4))
-			shell->exit_status = put_env(shell->env);
+			shell->exit_status = ft_env(shell->env);
 		else if (!ft_strncmp(shell->buf, "unset", 5))
-			shell->exit_status = del_env(shell->env, shell->buf + 6);
+			shell->exit_status = ft_unset(shell->env, shell->buf + 6);
 		else if (!ft_strncmp(shell->buf, "export", 6))
-			shell->exit_status = add_env(shell->env, shell->buf + 7);
+			shell->exit_status = ft_export(shell->env, shell->buf + 7);
 		else
 			shell->exit_status = 1;
 		add_history(shell->buf);

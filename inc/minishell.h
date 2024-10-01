@@ -64,9 +64,9 @@ typedef struct s_shell
 void		prompt(t_shell *shell);
 
 // env.c
-int			put_env(t_env *env);
-int			del_env(t_env *env, char *str);
-int			add_env(t_env *env, char *str);
+int			ft_env(t_env *env);
+int			ft_unset(t_env *env, char *str);
+int			ft_export(t_env *env, char *str);
 t_env		*copy_env(char **envp);
 
 // sig_handler.c
