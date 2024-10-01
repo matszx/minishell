@@ -23,18 +23,18 @@ int	ft_export(t_env *env, char *str)
 	t_env	*new;
 	size_t	idx;
 
-	if (!str || *str == '=')
-		return (1);
+	if (!str || *str == '=' || !ft_strchr(str, '='))
+		return (printf("error: invalid format\n"), 1);
 	new = malloc(sizeof(*new));
 	if (!new)
-		return (1);
+		return (printf("error: malloc fail for %s\n", str), 1);
 	idx = 0;
 	while (str[idx] && str[idx] != '=')
 		idx++;
 	while (env && env->next && ft_strncmp(env->var, str, idx))
 		env = env->next;
 	new->next = NULL;
-	if (!env->next)
+	if (!env->next && ft_strncmp(env->var, str, idx))
 		env->next = new;
 	else
 	{
