@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/02 13:55:33 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:43:56 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static char	*prompt_msg(int exit_status)
 void	prompt(t_shell *shell)
 {
 	char	*tmp;
-	
+
 	while (1)
 	{
 		shell->buf = readline(prompt_msg(shell->exit_status));
