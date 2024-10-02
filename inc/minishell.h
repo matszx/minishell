@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/30 16:10:00 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:42:51 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,23 @@
 # define VM		"\x1b[1;38;5;203m"	// vermillion
 # define RESET	"\x1b[0m"			// reset
 
+typedef struct s_token
+{
+	char			*str;
+	int				type;
+	struct s_token	*prev;
+	struct s_token	*next;
+}	t_token;
+
+typedef struct s_cmd
+{
+	char			*str;
+	t_token			*token_array;
+	int				flags;
+	struct s_cmd	*prev;
+	struct s_cmd	*next;
+}	t_cmd;
+
 typedef struct s_env
 {
 	char			*var;
@@ -35,41 +52,28 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_token
-{
-	int				type;
-	char			*str;
-	char			*backup;
-	struct s_token	*prev;
-	struct s_token	*next;
-}	t_token;
-
-typedef struct s_cmd
-{
-	t_token			*token_array;
-	int				flags;
-	struct s_cmd	*prev;
-	struct s_cmd	*next;
-}	t_cmd;
-
 typedef struct s_shell
 {
 	char	*buf;
-	t_env	*env;
+	char	*cmd_line;
 	t_cmd	*cmd_array;
+	t_env	*env;
 	int		exit_status;
 }	t_shell;
 
 // prompt.c
 void		prompt(t_shell *shell);
 
+// lexer.c
+char		*space_line(char *s);
+
 // env.c
 int			ft_env(t_env *env);
-int			ft_unset(t_env *env, char *str);
 int			ft_export(t_env *env, char *str);
+int			ft_unset(t_env *env, char *str);
 t_env		*copy_env(char **envp);
 
-// sig_handler.c
+// signals.c
 void		init_signals(void);
 
 #endif
