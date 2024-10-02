@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/30 16:07:31 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:23:36 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ Copies envp into a list of t_env
 t_env	*copy_env(char **envp)
 {
 	t_env	*env;
+	t_env	*tmp;
+	char	*shlvl;
 
 	env = malloc(sizeof(*env));
 	if (!env)
@@ -103,5 +105,17 @@ t_env	*copy_env(char **envp)
 	env->next = NULL;
 	while (*envp)
 		ft_export(env, *(envp++));
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->var, "SHLVL"))
+		{
+			shlvl = ft_itoa(ft_atoi(tmp->value) + 1);
+			free(tmp->value);
+			tmp->value = shlvl;
+			break ;
+		}
+		tmp = tmp->next;
+	}
 	return (env);
 }
