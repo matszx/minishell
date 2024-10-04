@@ -1,0 +1,26 @@
+Parsing
+
+cmd token cmd
+
+1.	Replace all whitespaces and tabs for '\x1F' (A special character who is not used) except for the text enclosed by " " or ' '
+1.1	if there are unclosed quotes, it is considered as an error
+2.	separate the whole string with ft_split, passing '\x1F' as the character for split
+2.1 if there is one or more ; or \ it is considered as an error. optionally, display amessage who announce that minishell cannot interpret the character
+2.1 if malloc fails, error
+3.	separete the string into tokens. each token has to be indicated if is a command, and argument or and operator
+4.	interpret the text enclosed by " "
+5.	execute
+
+for execute
+
+1.	verifies that all tokens are valid (this is, after every token there must be a logical token wh follows it, 
+	ex: a command must be followed either by an argument or an operator, but an operator cannot be followed by another operator)
+1.1	if this is not rue, print a message about the syntax error and returns
+2. 	perform redirections
+2.1	if there is an error (ex, file that must be open does not exist) priint essage and return
+3. 	init a while
+4.	verifies if it is a builtin. If it is, then it performs it
+4.1 if not, he passes all to execve
+5.	repeat from 2 until all the lines are executed
+6.	wait for the process to end
+7. return the exit state of the last command

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/04 14:59:43 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/04 16:13:07 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,17 @@
 # define SQUOTE	39
 # define DQUOTE	34
 
+typedef enum e_type
+{
+	COMMAND,
+	ARGUMENT,
+	OPERATOR,
+}	t_type;
+
 typedef struct s_token
 {
 	char			*str;
-	int				type;
-	struct s_token	*prev;
+	t_type			type;
 	struct s_token	*next;
 }	t_token;
 
