@@ -3,58 +3,67 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
+#    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/04 15:55:46 by mcygan           ###   ########.fr        #
+#    Updated: 2024/10/04 20:00:56 by dzapata          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME 		=	minishell
+#Variables =====================================================================
 
-CC 			=	cc
-CFLAGS 		=	-Wall -Wextra -Werror -fsanitize=address -g \
-				-I./libft/inc -I~/.brew/opt/readline/include
-INC			=	-L./libft -lft \
-				-L~/.brew/opt/readline/lib -lreadline
+NAME 			=	minishell
 
-LIB_DIR 	=	libft/
+CC 				=	cc
 
-SRC_DIR		= 	src/
-SRC_FILES 	=	main.c \
-        		prompt.c \
-				expander.c \
-				parser.c \
-				env.c \
-				signals.c
-SRC			=	$(addprefix $(SRC_DIR), $(SRC_FILES))
+CFLAGS 			=	-Wall -Wextra -fsanitize=address -g \
+					-I./libft/inc -I~/.brew/opt/readline/include
+					
+INC				=	-L./libft -lft \
+					-L~/.brew/opt/readline/lib -lreadline \
 
-OBJ_DIR		=	obj/
-OBJ			=	$(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
+LIB_DIR 		=	libft/
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+SRC_DIR			=	src/
 
-all: $(OBJ_DIR) $(NAME)
+SRC_FILES 		=	main.c \
+					prompt.c \
+					expander.c \
+					parser.c \
+					env.c \
+					signals.c
+					
+SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+OBJ_DIR			=	obj/
 
-$(NAME): $(OBJ)
-	@make -sC $(LIB_DIR)
-	# compiling $(NAME)
-	@$(CC) $(CFLAGS) $(OBJ) $(INC) -o $(NAME)
-	# ready
+OBJ				=	$(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
 
-clean :
-	# cleaning up
-	@rm -rf $(OBJ_DIR)
-	@make fclean -sC $(LIB_DIR)
+#Functions =======================================================================
 
-fclean : clean
-	# $(NAME) deleted
-	@rm -f $(NAME)
+$(OBJ_DIR)%.o	:	$(SRC_DIR)%.c
+					@$(CC) $(CFLAGS) -c $< -o $@
 
-re : fclean all
+all				:	$(OBJ_DIR) $(NAME)
 
-.PHONY : all clean flcean re
+$(OBJ_DIR)		:
+					@mkdir -p $(OBJ_DIR)
+
+$(NAME)			:	$(OBJ)
+					@make -sC $(LIB_DIR)
+					# compiling $(NAME)
+					@$(CC) $(CFLAGS) $(OBJ) $(INC) -o $(NAME)
+					# ready
+
+clean			:
+					# cleaning up
+					@rm -rf $(OBJ_DIR)
+					@make fclean -sC $(LIB_DIR)
+
+fclean			:	clean
+					# $(NAME) deleted
+					@rm -f $(NAME)
+
+re				:	fclean all
+
+.PHONY			:	all clean flcean re

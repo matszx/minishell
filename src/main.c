@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/30 17:19:33 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/04 19:49:49 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static void	free_shell(t_shell *shell)
+void	free_shell(t_shell *shell)
 {
 	t_env	*prev;
 
@@ -20,6 +20,7 @@ static void	free_shell(t_shell *shell)
 	{
 		prev = shell->env;
 		shell->env = shell->env->next;
+		destroy_list(&shell->tokens);
 		free(prev->var);
 		free(prev->value);
 		free(prev);

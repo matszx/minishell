@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/04 15:59:00 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/04 19:46:02 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,141 @@ static int	quotes_closed(char *s)
 	return (!status);
 }
 
-char	*parse(t_env *env, char *s)
+void	replace_spaces(char *str)
 {
-	char	*line;
-	char	status;
 	int		i;
-	int		j;
-	char	*value;
+	char	c;
 
-	if (!quotes_closed(s))
-		return (printf("minishell error:\texpected quote"), NULL);
-	line = malloc(sizeof(char) * 2000);
-	if (!line)
-		return (printf("minishell error:\tmalloc fail in parse()"), NULL);
-	status = 0;
-	i = 0;
-	while (*s)
+	i = -1;
+	while (str[++i])
 	{
-		if ((*s == SQUOTE || *s == DQUOTE) && !status)
+		if (str[i] == ' ' || str[i] == '\t')
+			str[i] = '\x1F';
+		if (str[i] == DQUOTE || str[i] == SQUOTE)
+		{
+			c = str[i++];
+			while (str[i] && str[i] != c)
+				i++;
+			if (!str[i])
+				break ;
+		}
+	}
+}
+
+void	classify(t_token *head)
+{
+	t_token	*temp;
+	int		command;
+
+	temp = head;
+	command = 1;
+	while (temp)
+	{
+		if (!ft_strncmp(temp->str, "|", 2) || !ft_strncmp(temp->str, "<", 2)
+			|| !ft_strncmp(temp->str, ">", 2) || !ft_strncmp(temp->str, "<<", 3)
+			|| !ft_strncmp(temp->str, ">>", 3))
+			temp->type = OPERATOR;
+		else if (command)
+		{
+			temp->type = COMMAND;
+			command = 0;
+		}
+		else
+			temp->type = ARGUMENT;
+		temp = temp->next;
+	}
+}
+
+t_token	*new_node(char *s, t_token *prev)
+{
+	t_token	*node;
+
+	node = malloc(sizeof(t_token));
+	if (!node)
+		return (NULL);
+	node->str = s;
+	node->prev = prev;
+	node->next = NULL;
+	return (node);
+}
+
+void	destroy_list(t_token **head)
+{
+	t_token	*temp;
+	t_token	*next;
+
+	if (!head || !(*head))
+		return ;
+	temp = (*head);
+	while (temp)
+	{
+		free(temp->str);
+		next = temp->next;
+		free(temp);
+		temp = next;
+	}
+	*head = NULL;
+}
+
+void	remove_dummy(t_token **token)
+{
+	t_token	*temp;
+
+	if ((*token))
+	{
+		temp = *token;
+		*token = (*token)->next;
+		free(temp);
+		temp = NULL;
+	}
+}
+
+t_token	*get_arguments(char **splitted)
+{
+	t_token	*head;
+	t_token *temp;
+	t_token	*prev;
+	int		i;
+	
+	head = new_node(NULL, NULL);
+	if (!head)
+		return (NULL);
+	temp = head;
+	prev = NULL;
+	i = -1;
+	while (splitted[++i])
+	{
+		temp->next = new_node(splitted[i], prev);
+		if (!temp->next)
+			return (destroy_list(&head), NULL);
+		prev = temp->next;
+		temp = temp->next;
+	}
+	remove_dummy(&head);
+	classify(head);
+	return (head);
+}
+
+int	parse(char	*buf, t_token **head)
+{
+	char	**splitted;
+
+	*head = NULL;
+	if (!quotes_closed(buf))
+		return (QUOTES_ERR);
+	replace_spaces(buf);
+	splitted = ft_split(buf, '\x1F');
+	if (!splitted)
+		return (SPLIT_ERR);
+	*head = get_arguments(splitted);
+	free(splitted);
+	if (!(*head))
+		return (LIST_ERR);
+	return (0);
+}
+
+/*
+	if ((*s == SQUOTE || *s == DQUOTE) && !status)
 		{
 			status = *(s++);
 			continue ;
@@ -68,7 +185,4 @@ char	*parse(t_env *env, char *s)
 		}
 		else
 			line[i++] = *(s++);
-	}
-	line[i] = '\0';
-	return (line);
-}
+*/

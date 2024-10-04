@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"sstream": "c",
+		"iterator": "c",
+		"signal.h": "c",
+		"history.h": "c",
+		"errno.h": "c"
+	}
+}

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/04 16:13:07 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/04 19:45:52 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,11 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/inc/libft.h"
-
-# define PT		"\x1b[1;38;5;195m"	// pale turquoise
-# define AG		"\x1b[1;38;5;191m"	// apple green
-# define VM		"\x1b[1;38;5;203m"	// vermillion
-# define RESET	"\x1b[0m"			// reset
-
-# define SQUOTE	39
-# define DQUOTE	34
+# include "constants.h"
 
 typedef enum e_type
 {
@@ -42,6 +36,7 @@ typedef struct s_token
 {
 	char			*str;
 	t_type			type;
+	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
 
@@ -70,13 +65,19 @@ char		*expander(t_env *env, char *s);
 char		*space_line(char *s);
 
 // parser.c
-char		*parse(t_env *env, char *s);
+int			parse(char *buf, t_token **head);
+void		destroy_list(t_token **head);
 
 // env.c
 int			ft_env(t_env *env);
 int			ft_export(t_env *env, char *str);
 int			ft_unset(t_env *env, char *str);
+int			ft_exit(t_shell *shell);
+int			ft_pwd();
+int			ft_echo(t_token *token);
+
 t_env		*copy_env(char **envp);
+void		free_shell(t_shell *shell);
 
 // signals.c
 void		init_signals(void);

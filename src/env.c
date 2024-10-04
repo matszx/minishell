@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/02 16:23:36 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/04 19:55:17 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,4 +118,25 @@ t_env	*copy_env(char **envp)
 		tmp = tmp->next;
 	}
 	return (env);
+}
+
+/*
+Exits from the prompt, ending the program
+*/
+int	ft_exit(t_shell *shell)
+{
+	printf("exit\n");
+	free_shell(shell);
+	exit (EXIT_SUCCESS);
+	return (0);
+}
+
+int	ft_pwd()
+{
+	return (0);
+}
+
+int	ft_echo(t_token *token)
+{
+	return (0);
 }
