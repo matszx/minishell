@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/02 13:42:51 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/04 14:59:43 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 # define VM		"\x1b[1;38;5;203m"	// vermillion
 # define RESET	"\x1b[0m"			// reset
 
+# define SQUOTE	39
+# define DQUOTE	34
+
 typedef struct s_token
 {
 	char			*str;
@@ -35,15 +38,6 @@ typedef struct s_token
 	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
-
-typedef struct s_cmd
-{
-	char			*str;
-	t_token			*token_array;
-	int				flags;
-	struct s_cmd	*prev;
-	struct s_cmd	*next;
-}	t_cmd;
 
 typedef struct s_env
 {
@@ -55,8 +49,7 @@ typedef struct s_env
 typedef struct s_shell
 {
 	char	*buf;
-	char	*cmd_line;
-	t_cmd	*cmd_array;
+	t_token	*tokens;
 	t_env	*env;
 	int		exit_status;
 }	t_shell;
@@ -64,8 +57,14 @@ typedef struct s_shell
 // prompt.c
 void		prompt(t_shell *shell);
 
+// expander.c
+char		*expander(t_env *env, char *s);
+
 // lexer.c
 char		*space_line(char *s);
+
+// parser.c
+char		*parse(t_env *env, char *s);
 
 // env.c
 int			ft_env(t_env *env);

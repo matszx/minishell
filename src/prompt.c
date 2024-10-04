@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/02 16:43:56 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/04 15:22:17 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	prompt(t_shell *shell)
 			shell->exit_status = ft_export(shell->env, shell->buf + 7);
 		else
 			shell->exit_status = 1;
-		tmp = space_line(shell->buf);
+		tmp = parse(shell->env, shell->buf);
 		printf("%s\n", tmp);
 		free(tmp);
 		add_history(shell->buf);
