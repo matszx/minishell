@@ -18,7 +18,7 @@
 
 **Env:**
 - [ ] Implement pipes (| character). The output of each command in the pipeline is connected to the input of the next command via a pipe.
-- [ ] Handle environment variables ($ followed by a sequence of characters) which should expand to their values.
+- [X] Handle environment variables ($ followed by a sequence of characters) which should expand to their values.
 - [ ] Handle $? which should expand to the exit status of the most recently executed foreground pipeline.
 
 **Signals:**
