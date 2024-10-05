@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/04 19:46:02 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/05 19:32:50 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,8 @@ int	parse(char	*buf, t_token **head)
 	splitted = ft_split(buf, '\x1F');
 	if (!splitted)
 		return (SPLIT_ERR);
+	else if (splitted && !(splitted[0]))
+		return (free(splitted), EMPTY_INPUT);
 	*head = get_arguments(splitted);
 	free(splitted);
 	if (!(*head))

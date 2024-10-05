@@ -4,6 +4,9 @@
 		"iterator": "c",
 		"signal.h": "c",
 		"history.h": "c",
-		"errno.h": "c"
+		"errno.h": "c",
+		"minishell.h": "c",
+		"type_traits": "c",
+		"utility": "c"
 	}
 }

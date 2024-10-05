@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/04 19:45:52 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/05 23:34:55 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,18 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_env_node
+{
+	char				*var;
+	char				*value;
+	struct s_env_node	*next;
+}	t_env_node;
+
+
 typedef struct s_env
 {
-	char			*var;
-	char			*value;
-	struct s_env	*next;
+	int			amount;
+	t_env_node	*head;
 }	t_env;
 
 typedef struct s_shell
@@ -69,8 +76,9 @@ int			parse(char *buf, t_token **head);
 void		destroy_list(t_token **head);
 
 // env.c
+void		destroy_env(t_env **env);
 int			ft_env(t_env *env);
-int			ft_export(t_env *env, char *str);
+int			ft_export(t_env_node *env, char *str);
 int			ft_unset(t_env *env, char *str);
 int			ft_exit(t_shell *shell);
 int			ft_pwd();

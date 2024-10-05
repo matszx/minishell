@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                      :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/02 15:34:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/09/24 12:42:22 by mcygan           ###   ########.fr       */
+/*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
+/*   Updated: 2024/10/05 23:41:22 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static void	sigint_handler(int sig)
+int	ft_exit(t_shell *shell)
 {
-	(void)sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	printf("exit\n");
+	free_shell(shell);
+	exit (EXIT_SUCCESS);
+	return (0);
 }
 
-void	init_signals(void)
+int	ft_pwd()
 {
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
+	return (0);
+}
+
+int	ft_echo(t_token *token)
+{
+	return (0);
 }

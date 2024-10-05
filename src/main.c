@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/04 19:49:49 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/05 23:39:22 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,10 @@
 
 void	free_shell(t_shell *shell)
 {
-	t_env	*prev;
-
 	while (shell->env)
 	{
-		prev = shell->env;
-		shell->env = shell->env->next;
 		destroy_list(&shell->tokens);
-		free(prev->var);
-		free(prev->value);
-		free(prev);
+		destroy_env(&shell->env);
 	}
 	free(shell);
 }

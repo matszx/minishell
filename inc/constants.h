@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/04 19:43:21 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/05 22:51:14 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@
 
 # define SQUOTE	39
 # define DQUOTE	34
+# define LVL_LIMIT 1000
 
-# define ERRNO_ERR 1
-# define QUOTES_ERR 2
-# define SPLIT_ERR 3
-# define LIST_ERR 4
+# define EMPTY_INPUT 1
+# define ERRNO_ERR 2
+# define QUOTES_ERR 3
+# define SPLIT_ERR 4
+# define LIST_ERR 5
 
 #endif
