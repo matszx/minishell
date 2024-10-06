@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/05 23:34:55 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/06 21:44:15 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_shell
 	char	*buf;
 	t_token	*tokens;
 	t_env	*env;
+	char	**env_var;
 	int		exit_status;
 }	t_shell;
 
@@ -86,6 +87,7 @@ int			ft_echo(t_token *token);
 
 t_env		*copy_env(char **envp);
 void		free_shell(t_shell *shell);
+void		free_table(void **table);
 
 // signals.c
 void		init_signals(void);

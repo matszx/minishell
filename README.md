@@ -7,7 +7,7 @@
 - [ ] Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
 - [ ] Not use more than one global variable. Think about it. You will have to explain its purpose.
 - [X] Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
-- [ ] Handle ’ (single quote) which should prevent the shell from interpreting the meta- characters in the quoted sequence.
+- [X] Handle ’ (single quote) which should prevent the shell from interpreting the meta- characters in the quoted sequence.
 - [ ] Handle " (double quote) which should prevent the shell from interpreting the meta- characters in the quoted sequence except for $ (dollar sign).
 
 **Streams:**
