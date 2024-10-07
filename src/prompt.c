@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/07 00:57:43 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/07 14:33:51 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	argument_manager(t_shell *shell, t_token *head)
 		return (ft_export(shell->env->head, head->next->str));
 	else if (!ft_strncmp(head->str, "pwd", 4))
 		return (ft_pwd());
+	else if (!ft_strncmp(head->str, "cd", 3))
+		return (ft_cd(head->next));
 	else if (!ft_strncmp(head->str, "echo", 5))
 		return (ft_echo(head->next));
 	else
