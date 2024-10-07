@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/05 19:32:50 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/07 15:08:25 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ void	classify(t_token *head)
 		if (!ft_strncmp(temp->str, "|", 2) || !ft_strncmp(temp->str, "<", 2)
 			|| !ft_strncmp(temp->str, ">", 2) || !ft_strncmp(temp->str, "<<", 3)
 			|| !ft_strncmp(temp->str, ">>", 3))
+		{
 			temp->type = OPERATOR;
+			command = 1;
+		}
 		else if (command)
 		{
 			temp->type = COMMAND;
@@ -120,10 +123,10 @@ void	remove_dummy(t_token **token)
 t_token	*get_arguments(char **splitted)
 {
 	t_token	*head;
-	t_token *temp;
+	t_token	*temp;
 	t_token	*prev;
 	int		i;
-	
+
 	head = new_node(NULL, NULL);
 	if (!head)
 		return (NULL);

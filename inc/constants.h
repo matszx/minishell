@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/05 22:51:14 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/07 13:50:36 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@
 # define QUOTES_ERR 3
 # define SPLIT_ERR 4
 # define LIST_ERR 5
+# define PARENTHESIS_ERR 6
+# define FORMAT_ERR 7
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/05 23:54:03 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/07 14:04:02 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,11 +153,9 @@ t_env	*copy_env(char **envp)
 	env->head = malloc(sizeof(t_env_node));
 	if (!env->head)
 		return (free(env), NULL);
-	env->head->var = ft_substr("___INIT___", 0, 10);
-	env->head->value = ft_substr("___INIT___", 0, 10);
+	env->head->var = NULL;
+	env->head->value = NULL;
 	env->head->next = NULL;
-	if (!env->head->var || !env->head->value)
-		return (destroy_env(&env), NULL);
 	env->amount = 0;
 	while (*envp)
 	{
