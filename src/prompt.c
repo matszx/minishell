@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/07 16:41:59 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:35:59 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ char	*get_var(t_env_node *node)
 
 	len_var = ft_strlen(node->var);
 	len_val = ft_strlen(node->value);
-	str = malloc(sizeof(char) * (len_var + len_val + 2));
+	str = malloc(sizeof(char) * (len_var + len_val + 3));
 	if (!str)
 		return (NULL);
-	ft_strlcpy(str, node->var, len_var);
+	ft_strlcpy(str, node->var, len_var + 1);
 	str[len_var] = '=';
-	ft_strlcpy(&str[len_var + 1], node->value, len_val);
-	str[len_var + len_val + 1] = '\0';
+	ft_strlcpy(&str[len_var + 1], node->value, len_val + 1);
+	str[len_var + len_val + 2] = '\0';
 	return (str);
 }
 
@@ -96,7 +96,7 @@ char	**get_env(t_env *env)
 	if (!env_var)
 		return (NULL);
 	i = -1;
-	temp = env->head;
+	temp = env->head->next;
 	while (temp)
 	{
 		env_var[++i] = get_var(temp);
@@ -114,7 +114,6 @@ char	**get_env(t_env *env)
 
 char	*find_env(char **env, char *var)
 {
-	char	*value;
 	int		i;
 	int		len;
 
@@ -122,66 +121,85 @@ char	*find_env(char **env, char *var)
 	len = ft_strlen(var);
 	while (env[++i])
 	{
-		if (!ft_strncmp(var, env[i], len) && env[i][len + 1] == '=')
-			return (&env[i][len + 2]);
+		if (!ft_strncmp(var, env[i], len) && env[i][len] == '=')
+			return (&env[i][len + 1]);
 	}
 	return ("");
 }
 
-int	expand(char *src, char *dst, char **env, int status)
+int	valid_name(char c)
 {
-	int		i;
+	return (c && (c == '_'|| ft_isalnum(c)));
+}
+
+int	valid_expand(char c, char quotes, char next)
+{
+	return (c == '$' && quotes != SQUOTE && next != '\0' && next != ' '
+		&& next != '$' && next != DQUOTE);
+}
+
+int	expand(t_expand *e, char *src, char *dst, int status)
+{
 	char	*temp;
 	char	*var;
+	int		start;
 
-	i = 0;
-	if (src[i + 1] == '?')
+	start = ++e->i;
+	if (src[e->i] == '?')
 	{
 		temp = ft_itoa(status);
 		if (!temp)
 			return (-1);
-		return (ft_strlcpy(dst, temp, ft_strlen(temp)), free(temp), 0);
+		ft_strlcpy(&dst[e->j], temp, ft_strlen(temp) + 1);
+		return (e->j += ft_strlen(temp), free(temp), 0);
 	}
-	while (src[++i] != ' ' || src[i] != '\"')
-		;
-	temp = ft_substr(src, 1, i);
+	while (valid_name(src[e->i]))
+		e->i++;
+	temp = ft_substr(src, start, e->i - start);
+	e->i--;
 	if (!temp)
 		return (-1);
-	var = find_env(env, temp);
+	var = find_env(e->env, temp);
 	free(temp);
-	return (ft_strlcpy(dst, var, ft_strlen(var)), 0);
+	start = ft_strlen(var);
+	ft_strlcpy(&dst[e->j], var, start + 1);
+	e->j += start;
+	return (0);
+}
+
+void	init_expand(t_expand *expand, char **env)
+{
+	expand->i = -1;
+	expand->j = 0;
+	expand->quotes = '\0';
+	expand->env = env;
 }
 
 int	get_expanded(char *src, char *dst, char **env, int status)
 {
-	int		i;
-	int		j;
-	char	quotes;
+	t_expand	e;
 
-	i = -1;
-	j = -1;
-	quotes = '\0';
-	while (src[++i])
+	init_expand(&e, env);
+	while (src[++e.i])
 	{
-		if (src[i] == SQUOTE || src[i] == DQUOTE)
-			quotes = src[i++];
-		if (src[i] == quotes && quotes != '\0')
+		if (src[e.i] && valid_expand(src[e.i], e.quotes, src[e.i + 1]))
 		{
-			quotes = '\0';
-			i++;	
-		}
-		if (src[i] == '$' && quotes != SQUOTE
-			&& src[i + 1] != ' ' || src[i + 1] != '\"')
-			if (expand(&src[i], &dst[++j], env, status) == -1)
+			if (expand(&e, src, dst, status) == -1)
 				return (ERRNO_ERR);
-		if (src[i] == '\\' && quotes == '\0')
-			i++;
-		if (!src[i])
-			dst[++j] = src[i];
-		else
+			continue ;
+		}
+		if ((src[e.i] == SQUOTE || src[e.i] == DQUOTE) && e.quotes == '\0')
+			e.quotes = src[e.i];
+		else if (src[e.i] == e.quotes && e.quotes != '\0')
+			e.quotes = '\0';
+		else if (src[e.i] == '\\' && src[e.i + 1] && e.quotes == '\0')
+			e.i++;
+		else if (!src[e.i])
 			break ;
+		else
+			dst[e.j++] = src[e.i];
 	}
-	dst[++j] = '\0';
+	dst[e.j] = '\0';
 	return (0);
 }
 
@@ -196,20 +214,18 @@ void	parsing(t_format *f, char *str, int status)
 	else if (str[i] == '?')
 	{
 		if (status > 100)
-			f->len_val += 2;
-		else if (status > 10)
 			f->len_val++;
 	}
 	else
 	{
-		while (str[i] != ' ' || str[i] != '\"')
+		while (valid_name(str[i]))
 			i++;
-		sbstr = ft_substr(str, 1, i);
-		f->len_var += i;
+		sbstr = ft_substr(str, 1, --i);
+		f->len_var += i + 1;
 		if (!sbstr)
 			f->err = ERRNO_ERR;
 		else
-			f->len_val += ft_strlen(find_env(f->env, sbstr));
+			f->len_val += ft_strlen(find_env(f->env, sbstr));	
 		free(sbstr);
 	}
 }
@@ -228,29 +244,31 @@ void	init_format(t_format *f, char **env)
 
 int	calculate_len(char *str, char **env, int *len, int status)
 {
-	int			err;
 	t_format	f;
 
 	init_format(&f, env);
 	while (str[++f.i])
 	{
-		if (str[f.i] == SQUOTE || str[f.i] == DQUOTE)
+		if ((str[f.i] == SQUOTE || str[f.i] == DQUOTE) && str[f.i + 1] && f.quotes == '\0')
 		{
 			f.quotes = str[f.i++];
 			f.rem_quotes++;
 		}
 		if (str[f.i] == f.quotes && f.quotes != '\0')
 			f.quotes = '\0';
-		else if (str[f.i] == '$' && f.quotes != SQUOTE
-			&& str[f.i + 1] != ' ' || str[f.i + 1] != '\"')
+		else if (valid_expand(str[f.i], f.quotes, str[f.i + 1]))
 		{
 			parsing(&f, &str[f.i], status);
 			if (f.err)
-				return (err);
+				return (f.err);
 		}
-		else if (str[f.i] == '\\' && f.quotes == '\0')
+		else if (str[f.i] == '\\' && str[f.i + 1] && f.quotes == '\0')
+		{
 			f.rem_slash++;
+			f.i++;	
+		}
 	}
+	printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\n", f.rem_quotes, f.rem_slash, f.len_var, f.len_val);
 	(*len) = f.i - (f.rem_quotes * 2) - f.rem_slash - f.len_var + (f.len_val);
 	return (0);
 }
@@ -269,6 +287,7 @@ int	handle_expansions(t_token *cmd_head, char **env, int status)
 		len = ft_strlen(temp->str);
 		if (calculate_len(temp->str, env, &new_len, status))
 			return (FORMAT_ERR);
+		printf("Len : %i\nnew len: %i\n", len, new_len);
 		if (len != new_len)
 		{
 			new_str = malloc(sizeof(char) * (new_len + 1));
@@ -282,6 +301,16 @@ int	handle_expansions(t_token *cmd_head, char **env, int status)
 	return (0);
 }
 
+void	print_env(char **env)
+{
+	int	i;
+
+	i = -1;
+	while (env[++i])
+		printf("%s\n", env[i]);
+	printf("\n");
+}
+
 void	execute(t_shell *shell)
 {
 	t_token	*temp;
@@ -293,13 +322,13 @@ void	execute(t_shell *shell)
 		return ;
 	while (temp)
 	{
-		print_tokens(temp);
 		err = handle_expansions(temp, shell->env_var, shell->exit_status);
 		if (err)
 		{
 			print_err(err);
 			break ;
 		}
+		print_tokens(temp);
 		shell->exit_status = argument_manager(shell, temp);
 		while (temp && temp->type != OPERATOR)
 			temp = temp->next;
