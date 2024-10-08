@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/08 17:03:40 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/08 17:10:42 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ void	print_err(int err)
 		write(STDERR_FILENO, "Error splitting command line\n", 30);
 	else if (err == LIST_ERR)
 		write(STDERR_FILENO, "Error initializing list\n", 25);
-	else if (err == FORMAT_ERR)
-		write(STDERR_FILENO, "Error in format\n", 31);
 	else
 		perror(NULL);
 }
