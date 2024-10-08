@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/08 16:35:59 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:50:19 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,14 +288,11 @@ int	handle_expansions(t_token *cmd_head, char **env, int status)
 		if (calculate_len(temp->str, env, &new_len, status))
 			return (FORMAT_ERR);
 		printf("Len : %i\nnew len: %i\n", len, new_len);
-		if (len != new_len)
-		{
-			new_str = malloc(sizeof(char) * (new_len + 1));
-			if (!new_str || get_expanded(temp->str, new_str, env, status))
-				return (free(new_str), ERRNO_ERR);
-			free(temp->str);
-			temp->str = new_str;
-		}
+		new_str = malloc(sizeof(char) * (new_len + 1));
+		if (!new_str || get_expanded(temp->str, new_str, env, status))
+			return (free(new_str), ERRNO_ERR);
+		free(temp->str);
+		temp->str = new_str;
 		temp = temp->next;
 	}
 	return (0);
