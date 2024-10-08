@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/06 21:44:15 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/08 12:53:43 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,31 @@ typedef struct s_env_node
 	struct s_env_node	*next;
 }	t_env_node;
 
-
 typedef struct s_env
 {
 	int			amount;
 	t_env_node	*head;
 }	t_env;
+
+typedef struct s_format
+{
+	int		rem_quotes;
+	int		rem_slash;
+	int		len_var;
+	int		len_val;
+	int		i;
+	int		err;
+	char	quotes;
+	char	**env;
+}	t_format;
+
+typedef struct s_expand
+{
+	int		i;
+	int		j;
+	char	quotes;
+	char	**env;
+}	t_expand;
 
 typedef struct s_shell
 {
