@@ -31,14 +31,3 @@ Redirections
 << DEL	Reads the given input until it finds a DEL, then, the writen conrent before DEl is taken as input for the current command
 > FILE	The output from the current command is redirected to FILE, overwriting the content of FILE. If FILE does not exist, the system creates it
 >> FILE	The output from the current command is redirected to FILE, appending it to the existing content of FILE. If FILE does not exist, the system creates it
-
-Daniel:
-
-
-
-Mat:
-- DONE (+/-) gérer export de plusieurs variables
-- DONE echo -nnnnnnnnn
-- DONE cd message d'erreur
-- exit arg
-- env no arg check
