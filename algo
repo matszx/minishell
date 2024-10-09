@@ -24,3 +24,15 @@ for execute
 5.	repeat from 2 until all the lines are executed
 6.	wait for the process to end
 7. return the exit state of the last command
+
+
+Daniel:
+
+
+
+Mat:
+- DONE (+/-) gérer export de plusieurs variables
+- DONE echo -nnnnnnnnn
+- DONE cd message d'erreur
+- exit arg
+- env no arg check

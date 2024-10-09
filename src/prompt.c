@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 12:23:30 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 16:33:18 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,20 @@ void	print_err(int err)
 
 int	argument_manager(t_shell *shell, t_token *head)
 {
-	if (!ft_strncmp(head->str, "exit", 5))
-		return (ft_exit(shell));
-	else if (!ft_strncmp(head->str, "env", 4))
-		return (ft_env(shell->env));
-	else if (!ft_strncmp(head->str, "unset", 5))
-		return (ft_unset(shell->env, head->next->str));
-	else if (!ft_strncmp(head->str, "export", 6))
-		return (ft_export(shell->env->head, head->next->str));
-	else if (!ft_strncmp(head->str, "pwd", 4))
-		return (ft_pwd());
+	if (!ft_strncmp(head->str, "echo", 5))
+		return (ft_echo(head->next));
 	else if (!ft_strncmp(head->str, "cd", 3))
 		return (ft_cd(shell->env_var, head->next));
-	else if (!ft_strncmp(head->str, "echo", 5))
-		return (ft_echo(head->next));
+	else if (!ft_strncmp(head->str, "pwd", 4))
+		return (ft_pwd());
+	else if (!ft_strncmp(head->str, "export", 6))
+		return (ft_export(shell->env->head, head->next));
+	else if (!ft_strncmp(head->str, "unset", 5))
+		return (ft_unset(shell->env, head->next));
+	else if (!ft_strncmp(head->str, "env", 4))
+		return (ft_env(shell->env));
+	else if (!ft_strncmp(head->str, "exit", 5))
+		return (ft_exit(shell));
 	else
 		return (1);
 }

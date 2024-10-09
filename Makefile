@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
+#    By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/05 23:40:57 by dzapata          ###   ########.fr        #
+#    Updated: 2024/10/09 16:44:18 by mcygan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,9 +30,10 @@ SRC_FILES 		=	main.c \
 					prompt.c \
 					expander.c \
 					parser.c \
+					builtins.c \
 					env.c \
-					signals.c \
-					builtins.c
+					env_utils.c \
+					signals.c
 					
 SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

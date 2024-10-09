@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/09 12:12:17 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 14:34:26 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define SQUOTE		39
 # define DQUOTE		34
 # define LVL_LIMIT 	1000
-# define PATH_MAX	1024
+# define PATH_MAX 	1024
 
 # define EMPTY_INPUT 		1
 # define ERRNO_ERR 			2
