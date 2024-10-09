@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/09 12:09:49 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 12:45:18 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,33 @@ int	ft_exit(t_shell *shell)
 
 int	ft_pwd(void)
 {
-	char	*cwd;
+	char	cwd[PATH_MAX];
 
-	cwd = NULL;
-	getcwd(cwd, PATH_MAX);
-	if (!cwd)
+	if (!getcwd(cwd, PATH_MAX))
 		return (1);
 	printf("%s\n", cwd);
 	return (0);
 }
 
-int	ft_cd(t_env *env, t_token *token)
+int	ft_cd(char **env, t_token *token)
 {
-	if (!token || token->type != ARGUMENT)
-		return (chdir(ft_getenv(env->head, "$HOME")) != 0);
-	if (token && token->type == ARGUMENT)
-		return (chdir(token->str) != 0);
+	char	*tmp;
+	int		res;
+
+	if (token && token->next && token->next->type == ARGUMENT)
+		return (1);
+	else if (!token || token->type != ARGUMENT)
+		return (chdir(find_env(env, "HOME")) != 0);
+	else if (token && token->type == ARGUMENT)
+	{
+		if (*(token->str) == '~')
+			tmp = ft_strjoin(find_env(env, "HOME"), token->str + 1);
+		else
+			tmp = ft_strjoin("", token->str);
+		res = (chdir(tmp) != 0);
+		free(tmp);
+		return (res);
+	}
 	return (1);
 }
 

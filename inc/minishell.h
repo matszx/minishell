@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/08 12:53:43 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:22:41 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_shell
 }	t_shell;
 
 // prompt.c
+char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);
 
 // expander.c
@@ -102,6 +103,7 @@ int			ft_export(t_env_node *env, char *str);
 int			ft_unset(t_env *env, char *str);
 int			ft_exit(t_shell *shell);
 int			ft_pwd();
+int			ft_cd(char **env, t_token *token);
 int			ft_echo(t_token *token);
 
 t_env		*copy_env(char **envp);

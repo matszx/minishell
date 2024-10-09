@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 12:05:54 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:23:30 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	argument_manager(t_shell *shell, t_token *head)
 	else if (!ft_strncmp(head->str, "pwd", 4))
 		return (ft_pwd());
 	else if (!ft_strncmp(head->str, "cd", 3))
-		return (ft_cd(head->next));
+		return (ft_cd(shell->env_var, head->next));
 	else if (!ft_strncmp(head->str, "echo", 5))
 		return (ft_echo(head->next));
 	else
@@ -276,7 +276,6 @@ int	calculate_len(char *str, char **env, int *len, int status)
 int	handle_expansions(t_token *cmd_head, char **env, int status)
 {
 	t_token	*temp;
-	int		len;
 	int		new_len;
 	char	*new_str;
 
@@ -284,7 +283,6 @@ int	handle_expansions(t_token *cmd_head, char **env, int status)
 	new_len = 0;
 	while (temp && temp->type != OPERATOR)
 	{
-		len = ft_strlen(temp->str);
 		if (calculate_len(temp->str, env, &new_len, status))
 			return (FORMAT_ERR);
 		new_str = malloc(sizeof(char) * (new_len + 1));
