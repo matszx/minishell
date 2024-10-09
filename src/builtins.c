@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/07 14:33:44 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 12:09:49 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,28 @@ int	ft_pwd(void)
 	char	*cwd;
 
 	cwd = NULL;
-	getcwd(cwd, 256);
+	getcwd(cwd, PATH_MAX);
 	if (!cwd)
 		return (1);
 	printf("%s\n", cwd);
 	return (0);
 }
 
-int	ft_cd(t_token *token)
+int	ft_cd(t_env *env, t_token *token)
 {
-	if (!token || token->type != ARGUMENT|| chdir(token->str))
-		return (1);
-	return (0);
+	if (!token || token->type != ARGUMENT)
+		return (chdir(ft_getenv(env->head, "$HOME")) != 0);
+	if (token && token->type == ARGUMENT)
+		return (chdir(token->str) != 0);
+	return (1);
 }
 
 int	ft_echo(t_token *token)
 {
 	int	newline;
 
+	if (!token || token->type != ARGUMENT)
+		return (printf("\n"), 0);
 	newline = 1;
 	if (token && !ft_strcmp(token->str, "-n"))
 	{
@@ -60,4 +64,4 @@ int	ft_echo(t_token *token)
 	if (newline)
 		printf("\n");
 	return (0);
-} 
+}
