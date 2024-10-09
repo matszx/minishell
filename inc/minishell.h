@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 16:52:06 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 17:05:13 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int			parse(char *buf, t_token **head);
 void		destroy_list(t_token **head);
 
 // env.c
-int			addenv(t_env_node *env, char *str);
+int			addenv(t_env *stack, t_env_node *env, char *str);
 t_env		*copy_env(char **envp);
 void		destroy_env(t_env **env);
 void		free_table(void **table);
@@ -114,7 +114,7 @@ int			ft_exit(t_shell *shell);
 
 // env_utils.c
 
-int			ft_export(t_env_node *env, t_token *token);
+int			ft_export(t_env *stack, t_env_node *env, t_token *token);
 int			ft_unset(t_env *env, t_token *token);
 int			ft_env(t_env *env);
 

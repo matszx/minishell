@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 16:43:34 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 17:04:33 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 // Loops addenv for every argument given
-int	ft_export(t_env_node *env, t_token *token)
+int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 {
 	int		ret;
 
 	ret = 0;
 	while (token && token->type == ARGUMENT)
 	{
-		if (addenv(env, token->str))
+		if (addenv(stack, env, token->str))
 		{
 			printf(
 				"minishell: export: '%s': Not a valid identifier\n",

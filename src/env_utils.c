@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:42:13 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 16:43:20 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 17:03:36 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	is_valid_identifier(char *s)
 }
 
 // Sets a new environment variable or replaces an existing one
-int	addenv(t_env_node *env, char *str)
+int	addenv(t_env *stack, t_env_node *env, char *str)
 {
 	t_env_node	*new;
 	size_t		idx;
@@ -53,6 +53,7 @@ int	addenv(t_env_node *env, char *str)
 		free(new->value);
 	}
 	new->value = ft_substr(str, idx + (str[idx] == '='), ft_strlen(str) - idx);
+	stack->amount++;
 	return (new->var = ft_substr(str, 0, idx), 0);
 }
 
@@ -120,7 +121,7 @@ t_env	*copy_env(char **envp)
 	env->head->next = NULL;
 	env->amount = 0;
 	while (*envp)
-		env->amount += !addenv(env->head, *(envp++));
+		addenv(env, env->head, *(envp++));
 	if (set_level(env->head))
 		destroy_env(&env);
 	return (env);

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 16:50:52 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 17:04:56 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	argument_manager(t_shell *shell, t_token *head)
 	else if (!ft_strncmp(head->str, "pwd", 4))
 		return (ft_pwd());
 	else if (!ft_strncmp(head->str, "export", 6))
-		return (ft_export(shell->env->head, head->next));
+		return (ft_export(shell->env, shell->env->head, head->next));
 	else if (!ft_strncmp(head->str, "unset", 5))
 		return (ft_unset(shell->env, head->next));
 	else if (!ft_strncmp(head->str, "env", 4))
