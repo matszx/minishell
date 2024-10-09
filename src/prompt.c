@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 12:23:30 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 13:46:44 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,7 @@ int	calculate_len(char *str, char **env, int *len, int status)
 			f.i++;	
 		}
 	}
-	printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\n", f.rem_quotes, f.rem_slash, f.len_var, f.len_val);
+	//printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\n", f.rem_quotes, f.rem_slash, f.len_var, f.len_val);
 	(*len) = f.i - (f.rem_quotes * 2) - f.rem_slash - f.len_var + (f.len_val);
 	return (0);
 }
@@ -323,7 +323,7 @@ void	execute(t_shell *shell)
 			free_shell(shell);
 			exit(1);
 		}
-		print_tokens(temp);
+		//print_tokens(temp);
 		shell->exit_status = argument_manager(shell, temp);
 		while (temp && temp->type != OPERATOR)
 			temp = temp->next;

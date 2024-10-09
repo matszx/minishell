@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/07 15:08:25 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 15:32:51 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,14 @@ void	classify(t_token *head)
 	command = 1;
 	while (temp)
 	{
-		if (!ft_strncmp(temp->str, "|", 2) || !ft_strncmp(temp->str, "<", 2)
-			|| !ft_strncmp(temp->str, ">", 2) || !ft_strncmp(temp->str, "<<", 3)
-			|| !ft_strncmp(temp->str, ">>", 3))
+		if (!ft_strncmp(temp->str, "|", 2))
 		{
 			temp->type = OPERATOR;
 			command = 1;
 		}
+		else if (!ft_strncmp(temp->str, "<", 2)	|| !ft_strncmp(temp->str, ">", 2)
+			|| !ft_strncmp(temp->str, "<<", 3) || !ft_strncmp(temp->str, ">>", 3))
+			temp->type = REDIRECT;
 		else if (command)
 		{
 			temp->type = COMMAND;
@@ -165,29 +166,3 @@ int	parse(char	*buf, t_token **head)
 		return (LIST_ERR);
 	return (0);
 }
-
-/*
-	if ((*s == SQUOTE || *s == DQUOTE) && !status)
-		{
-			status = *(s++);
-			continue ;
-		}
-		if (*s == status)
-		{
-			status = !status;
-			s++;
-			continue ;
-		}
-		if (status != SQUOTE && *s == '$')
-		{
-			s++;
-			value = expander(env, s);
-			j = 0;
-			while (value[j])
-				line[i++] = value[j++];
-			while (ft_isalnum(*s) || *s == '_')
-				s++;
-		}
-		else
-			line[i++] = *(s++);
-*/

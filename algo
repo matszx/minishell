@@ -13,14 +13,21 @@ cmd token cmd
 
 for execute
 
-1.	verifies that all tokens are valid (this is, after every token there must be a logical token wh follows it, 
+1.	verifies that all tokens are valid (this is, after every token there must be a logical token who follows it, 
 	ex: a command must be followed either by an argument or an operator, but an operator cannot be followed by another operator)
-1.1	if this is not rue, print a message about the syntax error and returns
+1.1	if this is not true, print a message about the syntax error and returns
 2. 	perform redirections
-2.1	if there is an error (ex, file that must be open does not exist) priint essage and return
+2.1	if there is an error (ex, file that must be open does not exist) print message and return
 3. 	init a while
 4.	verifies if it is a builtin. If it is, then it performs it
 4.1 if not, he passes all to execve
 5.	repeat from 2 until all the lines are executed
 6.	wait for the process to end
 7. return the exit state of the last command
+
+Redirections
+
+< FILE	Takes the content of FILE as input for the current command. if it does not exist
+<< DEL	Reads the given input until it finds a DEL, then, the writen conrent before DEl is taken as input for the current command
+> FILE	The output from the current command is redirected to FILE, overwriting the content of FILE. If FILE does not exist, the system creates it
+>> FILE	The output from the current command is redirected to FILE, appending it to the existing content of FILE. If FILE does not exist, the system creates it

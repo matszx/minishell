@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 12:22:41 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 15:31:50 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef enum e_type
 	COMMAND,
 	ARGUMENT,
 	OPERATOR,
+	REDIRECT,
 }	t_type;
 
 typedef struct s_token
@@ -80,6 +81,8 @@ typedef struct s_shell
 	t_env	*env;
 	char	**env_var;
 	int		exit_status;
+	int		fd_in;
+	int		fd_out;
 }	t_shell;
 
 // prompt.c
