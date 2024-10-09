@@ -6,50 +6,25 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/09 12:45:18 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 15:50:12 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ft_exit(t_shell *shell)
+static int	is_flag(char *s)
 {
-	printf("exit\n");
-	free_shell(shell);
-	exit (EXIT_SUCCESS);
-	return (0);
-}
-
-int	ft_pwd(void)
-{
-	char	cwd[PATH_MAX];
-
-	if (!getcwd(cwd, PATH_MAX))
-		return (1);
-	printf("%s\n", cwd);
-	return (0);
-}
-
-int	ft_cd(char **env, t_token *token)
-{
-	char	*tmp;
-	int		res;
-
-	if (token && token->next && token->next->type == ARGUMENT)
-		return (1);
-	else if (!token || token->type != ARGUMENT)
-		return (chdir(find_env(env, "HOME")) != 0);
-	else if (token && token->type == ARGUMENT)
+	if (s && *s == '-' && *(++s))
 	{
-		if (*(token->str) == '~')
-			tmp = ft_strjoin(find_env(env, "HOME"), token->str + 1);
-		else
-			tmp = ft_strjoin("", token->str);
-		res = (chdir(tmp) != 0);
-		free(tmp);
-		return (res);
+		while (*s)
+		{
+			if (*s != 'n' && *s != 'e' && *s != 'E')
+				return (0);
+			s++;
+		}
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	ft_echo(t_token *token)
@@ -59,7 +34,7 @@ int	ft_echo(t_token *token)
 	if (!token || token->type != ARGUMENT)
 		return (printf("\n"), 0);
 	newline = 1;
-	if (token && !ft_strcmp(token->str, "-n"))
+	if (token && is_flag(token->str))
 	{
 		newline = 0;
 		token = token->next;
@@ -74,5 +49,46 @@ int	ft_echo(t_token *token)
 	}
 	if (newline)
 		printf("\n");
+	return (0);
+}
+
+int	ft_cd(char **env, t_token *token)
+{
+	char	*tmp;
+	int		ret;
+
+	if (token && token->next && token->next->type == ARGUMENT)
+		return (printf("minishell: cd: Too many arguments\n"), 1);
+	ret = 1;
+	if (!token || token->type != ARGUMENT)
+		ret = (chdir(find_env(env, "HOME")) != 0);
+	else if (token && token->type == ARGUMENT)
+	{
+		if (*(token->str) == '~')
+			tmp = ft_strjoin(find_env(env, "HOME"), token->str + 1);
+		else
+			tmp = ft_strjoin("", token->str);
+		ret = (chdir(tmp) != 0);
+		free(tmp);
+	}
+	if (ret)
+		printf("minishell: cd: %s: No such file or directory\n", token->str);
+	return (ret);
+}
+
+int	ft_pwd(void)
+{
+	char	cwd[PATH_MAX];
+
+	if (!getcwd(cwd, PATH_MAX))
+		return (1);
+	return (printf("%s\n", cwd), 0);
+}
+
+int	ft_exit(t_shell *shell)
+{
+	printf("exit\n");
+	free_shell(shell);
+	exit(EXIT_SUCCESS);
 	return (0);
 }

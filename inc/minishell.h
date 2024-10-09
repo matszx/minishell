@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 15:31:50 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 16:52:06 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,23 @@ int			parse(char *buf, t_token **head);
 void		destroy_list(t_token **head);
 
 // env.c
-void		destroy_env(t_env **env);
-int			ft_env(t_env *env);
-int			ft_export(t_env_node *env, char *str);
-int			ft_unset(t_env *env, char *str);
-int			ft_exit(t_shell *shell);
-int			ft_pwd();
-int			ft_cd(char **env, t_token *token);
-int			ft_echo(t_token *token);
-
+int			addenv(t_env_node *env, char *str);
 t_env		*copy_env(char **envp);
-void		free_shell(t_shell *shell);
+void		destroy_env(t_env **env);
 void		free_table(void **table);
+void		free_shell(t_shell *shell);
+
+// builtins1.c
+int			ft_echo(t_token *token);
+int			ft_cd(char **env, t_token *token);
+int			ft_pwd();
+int			ft_exit(t_shell *shell);
+
+// env_utils.c
+
+int			ft_export(t_env_node *env, t_token *token);
+int			ft_unset(t_env *env, t_token *token);
+int			ft_env(t_env *env);
 
 // signals.c
 void		init_signals(void);

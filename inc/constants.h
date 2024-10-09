@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/09 13:27:52 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 16:51:29 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define SQUOTE		39
 # define DQUOTE		34
 # define LVL_LIMIT 	1000
-# define PATH_MAX	1024
+# define PATH_MAX 	1024
 
 # define EMPTY_INPUT 		1
 # define ERRNO_ERR 			2
