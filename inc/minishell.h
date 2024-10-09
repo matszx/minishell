@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 17:05:13 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 19:51:24 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,10 @@ typedef struct s_shell
 	int		fd_out;
 }	t_shell;
 
+// main.c
+void		free_table(void **table);
+void		free_shell(t_shell *shell);
+
 // prompt.c
 char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);
@@ -100,23 +104,20 @@ int			parse(char *buf, t_token **head);
 void		destroy_list(t_token **head);
 
 // env.c
-int			addenv(t_env *stack, t_env_node *env, char *str);
-t_env		*copy_env(char **envp);
-void		destroy_env(t_env **env);
-void		free_table(void **table);
-void		free_shell(t_shell *shell);
-
-// builtins1.c
-int			ft_echo(t_token *token);
-int			ft_cd(char **env, t_token *token);
-int			ft_pwd();
-int			ft_exit(t_shell *shell);
-
-// env_utils.c
-
 int			ft_export(t_env *stack, t_env_node *env, t_token *token);
 int			ft_unset(t_env *env, t_token *token);
-int			ft_env(t_env *env);
+int			ft_env(t_env *env, t_token *token);
+
+// env_utils.c
+int			addenv(t_env *stack, t_env_node *env, char *str);
+void		destroy_env(t_env **env);
+t_env		*copy_env(char **envp);
+
+// builtins.c
+int			ft_echo(t_token *token);
+int			ft_cd(char **env, t_token *token);
+int			ft_pwd(void);
+int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 
 // signals.c
 void		init_signals(void);

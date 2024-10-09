@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/09 15:50:12 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/09 19:45:52 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int	ft_echo(t_token *token)
 		token = token->next;
 		if (token)
 			printf(" ");
-		
 	}
 	if (newline)
 		printf("\n");
@@ -85,10 +84,30 @@ int	ft_pwd(void)
 	return (printf("%s\n", cwd), 0);
 }
 
-int	ft_exit(t_shell *shell)
+int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 {
-	printf("exit\n");
-	free_shell(shell);
-	exit(EXIT_SUCCESS);
-	return (0);
+	int				i;
+
+	if (token && token->next)
+		return (printf("exit\nminishell: exit: Too many arguments\n"), \
+			free_shell(shell), exit(1), 0);
+	else if (token && token->type == ARGUMENT)
+	{
+		i = 0;
+		if (*token->str == '-' || *token->str == '+')
+			i++;
+		if (!token->str[i])
+			return (printf(\
+				"exit\nminishell: exit: %s: Numeric argument required\n", \
+				token->str), free_shell(shell), exit(2), 0);
+		while (token->str[i])
+		{
+			if (!ft_isdigit(token->str[i++]))
+				return (printf(\
+					"exit\nminishell: exit: %s: Numeric argument required\n", \
+					token->str), free_shell(shell), exit(2), 0);
+		}
+		ret = (unsigned char)ft_atoi(token->str);
+	}
+	return (printf("exit\n"), free_shell(shell), exit(ret), 0);
 }

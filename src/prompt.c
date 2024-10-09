@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 17:04:56 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 19:51:38 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ int	argument_manager(t_shell *shell, t_token *head)
 	else if (!ft_strncmp(head->str, "unset", 5))
 		return (ft_unset(shell->env, head->next));
 	else if (!ft_strncmp(head->str, "env", 4))
-		return (ft_env(shell->env));
+		return (ft_env(shell->env, head->next));
 	else if (!ft_strncmp(head->str, "exit", 5))
-		return (ft_exit(shell));
+		return (ft_exit((unsigned int)shell->exit_status, shell, head->next));
 	else
 		return (1);
 }
@@ -347,7 +347,7 @@ void	prompt(t_shell *shell)
 		{
 			if (err != errno)
 				return (perror("Minishell: "));
-			ft_exit(shell);
+			ft_exit((unsigned int)shell->exit_status, shell, NULL);
 		}
 		add_history(shell->buf);
 		err = parse(shell->buf, &shell->tokens);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:42:13 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 17:03:36 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 19:47:14 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ int	addenv(t_env *stack, t_env_node *env, char *str)
 		free(new->value);
 	}
 	new->value = ft_substr(str, idx + (str[idx] == '='), ft_strlen(str) - idx);
-	stack->amount++;
-	return (new->var = ft_substr(str, 0, idx), 0);
+	return (stack->amount++, new->var = ft_substr(str, 0, idx), 0);
 }
 
 void	destroy_env(t_env **env)

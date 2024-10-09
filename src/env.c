@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 17:04:33 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/09 19:49:33 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,12 @@ int	ft_unset(t_env *env, t_token *token)
 }
 
 // Prints the environment
-int	ft_env(t_env *env)
+int	ft_env(t_env *env, t_token *token)
 {
 	t_env_node	*temp;
 
+	if (token && token->type == ARGUMENT)
+		return (printf("minishell: env: Too many arguments\n"), 1);
 	temp = env->head->next;
 	while (temp)
 	{
