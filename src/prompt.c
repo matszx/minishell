@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/10 14:43:35 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/10 15:38:46 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,44 @@ void	print_err(int err)
 		write(STDERR_FILENO, "Error splitting command line\n", 30);
 	else if (err == LIST_ERR)
 		write(STDERR_FILENO, "Error initializing list\n", 25);
+	else if (err == SYNTAX_ERR)
+		write(STDERR_FILENO, "Syntax error near unexpected token\n", 36);
 	else
 		perror(NULL);
+}
+
+int	valid_sequence(t_token *head)
+{
+	t_token		*temp;
+	
+	if (head->type == OPERATOR)
+		return (SYNTAX_ERR);
+	temp = head;
+	while (temp)
+	{
+		if (temp->type == REDIRECT && (!temp->next || temp->next != ARGUMENT))
+			return (SYNTAX_ERR);
+		else if (temp->type == OPERATOR
+			&& (!temp->next || temp->next->type == OPERATOR))
+			return (SYNTAX_ERR);
+	}
+	return (0);
+}
+
+void	minishell(t_shell *shell)
+{
+	int	err;
+
+	err = valid_sequence(shell->tokens);
+	if (err)
+	{
+		shell->exit_status = 2;
+		return (print_err(err));
+	}
+	redirect(shell);
+	expand_commands(shell);
+	execute(shell);
+	destroy_list(&shell->tokens);
 }
 
 // Displays a prompt
@@ -72,9 +108,6 @@ void	prompt(t_shell *shell)
 				print_err(err);
 			continue ;
 		}
-		expand_commands(shell);
-		redirect(shell);
-		execute(shell);
-		destroy_list(&shell->tokens);
+		minishell(shell);
 	}
 }

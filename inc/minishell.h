@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/10 14:42:01 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/10 15:59:54 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ typedef struct s_shell
 	t_env	*env;
 	char	**env_var;
 	int		exit_status;
-	int		*fd[2];
+	int		*fd;
 }	t_shell;
 
 // main.c
