@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 19:51:24 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/10 14:42:01 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ typedef struct s_shell
 	t_env	*env;
 	char	**env_var;
 	int		exit_status;
-	int		fd_in;
-	int		fd_out;
+	int		*fd[2];
 }	t_shell;
 
 // main.c
@@ -90,20 +89,22 @@ void		free_table(void **table);
 void		free_shell(t_shell *shell);
 
 // prompt.c
+void		print_err(int err);
 char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);
 
 // expander.c
-char		*expander(t_env *env, char *s);
+void		expand_commands(t_shell *shell);
 
-// lexer.c
-char		*space_line(char *s);
+// redirect.c
+int			redirect(t_shell *shell);
 
 // parser.c
 int			parse(char *buf, t_token **head);
 void		destroy_list(t_token **head);
 
 // env.c
+char		**get_env(t_env *env);
 int			ft_export(t_env *stack, t_env_node *env, t_token *token);
 int			ft_unset(t_env *env, t_token *token);
 int			ft_env(t_env *env, t_token *token);
@@ -121,5 +122,8 @@ int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 
 // signals.c
 void		init_signals(void);
+
+//execute.c
+int			execute(t_shell *shell);
 
 #endif
