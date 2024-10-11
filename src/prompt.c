@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/10 15:38:46 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/11 17:28:09 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,13 @@ int	valid_sequence(t_token *head)
 	temp = head;
 	while (temp)
 	{
-		if (temp->type == REDIRECT && (!temp->next || temp->next != ARGUMENT))
+		if (temp->type == REDIRECT
+			&& (!temp->next || temp->next->type != ARGUMENT))
 			return (SYNTAX_ERR);
 		else if (temp->type == OPERATOR
 			&& (!temp->next || temp->next->type == OPERATOR))
 			return (SYNTAX_ERR);
+		temp = temp->next;
 	}
 	return (0);
 }
@@ -72,13 +74,14 @@ void	minishell(t_shell *shell)
 {
 	int	err;
 
+	print_tokens(shell->tokens);
 	err = valid_sequence(shell->tokens);
 	if (err)
 	{
 		shell->exit_status = 2;
 		return (print_err(err));
 	}
-	redirect(shell);
+	//redirect(shell);
 	expand_commands(shell);
 	execute(shell);
 	destroy_list(&shell->tokens);

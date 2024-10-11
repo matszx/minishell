@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 15:32:51 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/11 17:56:07 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,16 @@ void	replace_spaces(char *str)
 				break ;
 		}
 	}
+}
+
+char *skip_spaces(char *str)
+{
+	char	*str2;
+
+	str2 = str;
+	while (str2 && ft_isspace(*str))
+		str2++;
+	return (str2);
 }
 
 void	classify(t_token *head)
@@ -150,16 +160,19 @@ t_token	*get_arguments(char **splitted)
 int	parse(char	*buf, t_token **head)
 {
 	char	**splitted;
+	char	*jumped;
 
 	*head = NULL;
 	if (!quotes_closed(buf))
 		return (QUOTES_ERR);
-	replace_spaces(buf);
-	splitted = ft_split(buf, '\x1F');
+	jumped = skip_spaces(buf);
+	if (!jumped)
+		return (EMPTY_INPUT);
+	else if(jumped[0] == '|')
+		return (SYNTAX_ERR);
+	splitted = ft_split(jumped, '|');
 	if (!splitted)
 		return (SPLIT_ERR);
-	else if (splitted && !(splitted[0]))
-		return (free(splitted), EMPTY_INPUT);
 	*head = get_arguments(splitted);
 	free(splitted);
 	if (!(*head))

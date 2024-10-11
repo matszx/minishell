@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/10 16:23:34 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/11 17:21:28 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int	redirect(t_shell *shell)
 	if (err)
 		return (err);
 	temp = shell->tokens;
-	while (temp)
+	/*while (temp)
 	{
 		temp = temp->next;
-	}
+	}*/
 }

@@ -31,3 +31,10 @@ Redirections
 << DEL	Reads the given input until it finds a DEL, then, the writen conrent before DEl is taken as input for the current command
 > FILE	The output from the current command is redirected to FILE, overwriting the content of FILE. If FILE does not exist, the system creates it
 >> FILE	The output from the current command is redirected to FILE, appending it to the existing content of FILE. If FILE does not exist, the system creates it
+
+Refactor:
+
+The parser needs to be refactored because:
+	Redirections and pipes must be taken even if there is no space between the operators and the following content
+This affects the current inplementation since all is splitted using spaces, ignoring if there are pipes or redirection amongst the content leading to misclasification
+and splitting all separated tokens seartching for operatiors would be overcomplicated.
