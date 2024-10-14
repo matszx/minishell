@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/11 17:56:07 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/14 00:32:00 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,17 @@ void	replace_spaces(char *str)
 	}
 }
 
-char *skip_spaces(char *str)
+int	skip_spaces(char *str)
 {
-	char	*str2;
+	int	i;
 
-	str2 = str;
-	while (str2 && ft_isspace(*str))
-		str2++;
-	return (str2);
+	i = 0;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	return (i);
 }
 
-void	classify(t_token *head)
+/*void	classify(t_token *head)
 {
 	t_token	*temp;
 	int		command;
@@ -73,9 +73,6 @@ void	classify(t_token *head)
 			temp->type = OPERATOR;
 			command = 1;
 		}
-		else if (!ft_strncmp(temp->str, "<", 2)	|| !ft_strncmp(temp->str, ">", 2)
-			|| !ft_strncmp(temp->str, "<<", 3) || !ft_strncmp(temp->str, ">>", 3))
-			temp->type = REDIRECT;
 		else if (command)
 		{
 			temp->type = COMMAND;
@@ -85,9 +82,9 @@ void	classify(t_token *head)
 			temp->type = ARGUMENT;
 		temp = temp->next;
 	}
-}
+}*/
 
-t_token	*new_node(char *s, t_token *prev)
+t_token	*new_node(char *s)
 {
 	t_token	*node;
 
@@ -95,7 +92,6 @@ t_token	*new_node(char *s, t_token *prev)
 	if (!node)
 		return (NULL);
 	node->str = s;
-	node->prev = prev;
 	node->next = NULL;
 	return (node);
 }
@@ -131,51 +127,92 @@ void	remove_dummy(t_token **token)
 	}
 }
 
-t_token	*get_arguments(char **splitted)
+t_token	*get_arguments(char **splitted, int *n_commands)
 {
 	t_token	*head;
 	t_token	*temp;
-	t_token	*prev;
-	int		i;
 
-	head = new_node(NULL, NULL);
+	head = new_node(NULL);
 	if (!head)
 		return (NULL);
 	temp = head;
-	prev = NULL;
-	i = -1;
-	while (splitted[++i])
+	*n_commands = -1;
+	while (splitted[++(*n_commands)])
 	{
-		temp->next = new_node(splitted[i], prev);
+		temp->next = new_node(splitted[*n_commands]);
 		if (!temp->next)
 			return (destroy_list(&head), NULL);
-		prev = temp->next;
 		temp = temp->next;
 	}
 	remove_dummy(&head);
-	classify(head);
 	return (head);
 }
 
-int	parse(char	*buf, t_token **head)
+int	is_operator(char c)
+{
+	return (c == '|' || c == ';' || c == '&');
+}
+
+int	valid_redirect_input(char *str, int *i, char c)
+{
+	(*i)++;
+	if (str[(*i)] == c)
+		(*i)++;
+	*i += skip_spaces(&str[*i]);
+	return (str[*i] == '<' || str[*i] == '>'
+		|| is_operator(str[*i]) || !str[*i]);
+}
+
+int	verify_redirect(char *str, int *i)
+{
+	if (str[*i] == '<')
+		return (valid_redirect_input(str, i, '<'));
+	else if (str[*i] == '>')
+		return (valid_redirect_input(str, i, '>'));
+	return (0);
+}
+
+int	check_string(char *str)
+{
+	int		i;
+	int		command;
+
+	command = 0;
+	i = -1;
+	while (str[++i])
+	{
+		i += skip_spaces(&str[i]);
+		if (str[i] == '|'&& !command)
+			return (SYNTAX_ERR);
+		else if (str[i] == '|')
+			command = 0;
+		else if (verify_redirect(str, &i))
+			return (SYNTAX_ERR);
+		else if (!str[i])
+			break;
+		else
+			command = 1;
+	}
+	return (0);
+}
+
+int	parse(char	*buf, t_shell *shell)
 {
 	char	**splitted;
-	char	*jumped;
 
-	*head = NULL;
+	shell->tokens = NULL;
+	if (!buf[0] || !buf[skip_spaces(buf)])
+		return (EMPTY_INPUT);
 	if (!quotes_closed(buf))
 		return (QUOTES_ERR);
-	jumped = skip_spaces(buf);
-	if (!jumped)
-		return (EMPTY_INPUT);
-	else if(jumped[0] == '|')
+	else if(check_string(buf))
 		return (SYNTAX_ERR);
-	splitted = ft_split(jumped, '|');
+	splitted = ft_split(buf, '|');
 	if (!splitted)
 		return (SPLIT_ERR);
-	*head = get_arguments(splitted);
+	shell->tokens = get_arguments(splitted, &shell->n_commands);
 	free(splitted);
-	if (!(*head))
+	if (!(shell->tokens))
 		return (LIST_ERR);
 	return (0);
 }

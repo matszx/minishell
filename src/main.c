@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/10 16:01:09 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/14 01:14:07 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,21 @@ void	free_table(void **table)
 	free(table);
 }
 
+void	close_files(int *fd, int n)
+{
+	int	i;
+	int	err;
+
+	err = errno;
+	i = -1;
+	if (!fd)
+		return ;
+	while (++i < n)
+		if (fd[i] != -1 || fd[i] != STDOUT_FILENO)
+			close(fd[i]);
+	errno = err;
+}
+
 void	free_shell(t_shell *shell)
 {
 	while (shell->env)
@@ -34,6 +49,7 @@ void	free_shell(t_shell *shell)
 		destroy_list(&shell->tokens);
 		destroy_env(&shell->env);
 		free_table((void **) shell->env_var);
+		close_files(shell->fd, shell->n_commands);
 		free(shell->fd);
 	}
 	free(shell);
@@ -50,6 +66,7 @@ static t_shell	*init_shell(char **envp)
 	shell->tokens = NULL;
 	shell->env_var = NULL;
 	shell->fd = NULL;
+	shell->n_commands = 0;
 	shell->env = copy_env(envp);
 	if (!shell->env)
 		return (free_shell(shell), NULL);

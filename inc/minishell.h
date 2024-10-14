@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/10 15:59:54 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/14 01:00:52 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ typedef struct s_token
 {
 	char			*str;
 	t_type			type;
-	struct s_token	*prev;
 	struct s_token	*next;
 }	t_token;
 
@@ -82,11 +81,13 @@ typedef struct s_shell
 	char	**env_var;
 	int		exit_status;
 	int		*fd;
+	int		n_commands;
 }	t_shell;
 
 // main.c
 void		free_table(void **table);
 void		free_shell(t_shell *shell);
+void		close_files(int *fd, int n);
 
 // prompt.c
 void		print_err(int err);
@@ -100,7 +101,8 @@ void		expand_commands(t_shell *shell);
 int			redirect(t_shell *shell);
 
 // parser.c
-int			parse(char *buf, t_token **head);
+int			skip_spaces(char *str);
+int			parse(char *buf, t_shell *shell);
 void		destroy_list(t_token **head);
 
 // env.c

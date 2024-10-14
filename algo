@@ -36,5 +36,18 @@ Refactor:
 
 The parser needs to be refactored because:
 	Redirections and pipes must be taken even if there is no space between the operators and the following content
-This affects the current inplementation since all is splitted using spaces, ignoring if there are pipes or redirection amongst the content leading to misclasification
-and splitting all separated tokens seartching for operatiors would be overcomplicated.
+This affects the current inplementation since all is splitted using spaces, ignoring if there are pipes or redirection amongst the content leading to misclasification and splitting all separated tokens searching for operatiors would be overcomplicated.
+
+New Algo:
+
+1. check if the line if correct. A line is correct if after triming the white spaces:
+- There is content before a pipe.
+- There is content after a pipe (if there is no content, bash opens a readline for completing the input)
+- There is content after a redirection
+Any other kind of operator wont be managed
+
+2. If line is correct, split the line using the pipes '|' as character
+
+3. Redirects the input and the outputs, removing the redirect string for the original string
+
+4. Expands

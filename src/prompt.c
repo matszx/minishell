@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/11 17:28:09 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/14 01:23:24 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,13 @@ void	minishell(t_shell *shell)
 	int	err;
 
 	print_tokens(shell->tokens);
-	err = valid_sequence(shell->tokens);
+	/*err = redirect(shell);
 	if (err)
-	{
-		shell->exit_status = 2;
 		return (print_err(err));
-	}
-	//redirect(shell);
-	expand_commands(shell);
-	execute(shell);
-	destroy_list(&shell->tokens);
+	err = expand_commands(shell);
+	if (err)
+		return (print_err(err));
+	execute(shell);*/
 }
 
 // Displays a prompt
@@ -103,7 +100,7 @@ void	prompt(t_shell *shell)
 			ft_exit((unsigned int)shell->exit_status, shell, NULL);
 		}
 		add_history(shell->buf);
-		err = parse(shell->buf, &shell->tokens);
+		err = parse(shell->buf, shell);
 		free(shell->buf);
 		if (err)
 		{
@@ -112,5 +109,7 @@ void	prompt(t_shell *shell)
 			continue ;
 		}
 		minishell(shell);
+		close_files(shell->fd, shell->n_commands);
+		destroy_list(&shell->tokens);
 	}
 }
