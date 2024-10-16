@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/10 14:57:51 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/17 01:26:35 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@
 # define PARENTHESIS_ERR 	6
 # define FORMAT_ERR 		7
 # define SYNTAX_ERR			8
+# define ERRNO_PRINTED		9
 
 #endif

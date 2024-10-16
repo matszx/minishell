@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/16 16:38:18 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/17 01:43:25 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,8 @@ int	heredoc(char *str, int *fd, int cmd)
 	if (pipe(new_fd) == -1)
 		return (ERRNO_ERR);
 	i = 0;
-	while (!str[i])
+	while (str[i])
 		i++;
-	printf("Del: %i\n", i);
 	while (1)
 	{
 		input = readline("> ");
@@ -70,20 +69,24 @@ int	heredoc(char *str, int *fd, int cmd)
 		free(input);
 	}
 	close(new_fd[1]);
-	close(fd[cmd]);
-	fd[cmd] = new_fd[0];
+	close(fd[cmd * 2]);
+	fd[cmd * 2] = new_fd[0];
 	return (free(input), 0);
 }
 
 int	input(char *str, int *fd, int cmd)
 {
 	int	new_fd;
-	int	i;
-
-	i = 0;
-	while (!redirect_delimiter(str[i]))
-		i++;
 	
+	close(fd[cmd * 2]);
+	new_fd = open(str, O_RDONLY);
+	if (new_fd != -1)
+		return (fd[cmd * 2] = new_fd, 0);
+	print_errno(str);
+	new_fd = open("/dev/null", O_RDONLY);
+	fd[cmd * 2] = new_fd;
+	if (new_fd == -1)
+		return (print_errno("/dev/null"), ERRNO_PRINTED);
 }
 
 int	output(char *str, int *fd, int cmd)
@@ -92,7 +95,7 @@ int	output(char *str, int *fd, int cmd)
 	int	i;
 
 	i = 0;
-	while (!redirect_delimiter(str[i]))
+	while (str[i])
 		i++;
 	
 }
@@ -103,7 +106,7 @@ int	append_output(char *str, int *fd, int cmd)
 	int	i;
 
 	i = 0;
-	while (!redirect_delimiter(str[i]))
+	while (str[i])
 		i++;
 	
 }
@@ -117,7 +120,7 @@ int	red_heredoc(t_token *token, int *fd, int cmd)
 	i = -1;
 	err = 0;
 	quotes = '\0';
-	while (token->str[++i])
+	while (++i < token->len)
 	{
 		if ((token->str[i] == SQUOTE || token->str[i] == DQUOTE) && !quotes)
 			quotes = token->str[i];
@@ -130,7 +133,7 @@ int	red_heredoc(t_token *token, int *fd, int cmd)
 		}
 		if (err)
 			return (err);
-		if (!token->str[i])
+		if (i == token->len)
 			break;
 	}
 	return (0);

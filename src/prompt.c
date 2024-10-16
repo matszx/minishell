@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 16:35:51 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/17 01:35:23 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,16 @@ void	print_tokens(t_token *head)
 	}
 }
 
-void	print_err(int err)
+void	print_errno(char *str)
 {
 	write(STDERR_FILENO, "Minishell: ", 10);
+	perror(str);
+}
+
+void	print_err(int err)
+{
+	if (err != ERRNO_PRINTED)
+		write(STDERR_FILENO, "Minishell: ", 10);
 	if (err == QUOTES_ERR)
 		write(STDERR_FILENO, "Unclosed quotes\n", 17);
 	else if (err == SPLIT_ERR)
@@ -46,7 +53,7 @@ void	print_err(int err)
 		write(STDERR_FILENO, "Error initializing list\n", 25);
 	else if (err == SYNTAX_ERR)
 		write(STDERR_FILENO, "Syntax error near unexpected token\n", 36);
-	else
+	else if (err != ERRNO_PRINTED)
 		perror(NULL);
 }
 
@@ -81,6 +88,12 @@ void	minishell(t_shell *shell)
 	/*if (err)
 		return (print_err(err));
 	execute(shell);*/
+	close_files(shell->fd, shell->n_commands);
+	free(shell->fd);
+	shell->fd = NULL;
+	destroy_list(&shell->tokens);
+	free_table((void **) shell->env_var);
+	shell->env_var = NULL;
 }
 
 // Displays a prompt
@@ -108,7 +121,5 @@ void	prompt(t_shell *shell)
 			continue ;
 		}
 		minishell(shell);
-		close_files(shell->fd, shell->n_commands);
-		destroy_list(&shell->tokens);
 	}
 }

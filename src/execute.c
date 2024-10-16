@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/10 14:44:00 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 23:04:04 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,5 @@ int	execute(t_shell *shell)
 		if (temp)
 			temp = temp->next;
 	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 17:07:13 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/17 01:29:14 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void		free_shell(t_shell *shell);
 void		close_files(int *fd, int n);
 
 // prompt.c
+void		print_errno(char *str);
 void		print_err(int err);
 char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);

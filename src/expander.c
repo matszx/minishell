@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 17:07:13 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 23:48:14 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,17 @@ void	init_expand(t_expand *expand, char **env)
 
 void	redirect_expand(t_expand *e, char *src, char *dst)
 {
-	dst[e->j++] = src[e->i++];
+	dst[e->j++] = src[e->i];
 	e->redirect = 2;
-	if (src[e->i] == '<')
+	if (src[e->i + 1] == '<')
+	{
 		e->redirect = 1;
+		dst[e->j++] = src[++e->i];
+	}
+	else if (src[e->i + 1] == '>')
+		dst[e->j++] = src[++e->i];
 	while (ft_isspace(src[e->i + 1]))
 		e->i++;
-	dst[e->j++] = src[e->i];
 }
 
 int	get_expanded(char *src, char *dst, char **env, int status)
@@ -155,14 +159,11 @@ void	redirect_len(t_format *f, char *str)
 {
 	int	skip_red;
 
-	if (str[f->i + 1] == '>')
-	{
+	f->redirect = 2;
+	skip_red = 2;
+	if (str[f->i + 1] == '<')
 		f->redirect = 1;
-		skip_red = 2;	
-	}
-	else if (str[f->i + 1] == '<')
-		skip_red = 2;
-	else
+	else if (str[f->i + 1] != '>')
 		skip_red = 1;
 	f->red_limit++;
 	f->temp = skip_spaces(&str[f->i + skip_red]);
@@ -190,6 +191,7 @@ int	calculate_len(char *str, char **env, int *len, int status)
 			f.redirect = 0;
 		else if (valid_expand(str[f.i], f.quotes, str[f.i + 1]) && f.redirect != 1)
 		{
+			printf("Redirect: %i\n", f.redirect);
 			parsing(&f, &str[f.i], status);
 			if (f.err)
 				return (f.err);
