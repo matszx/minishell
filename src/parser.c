@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/14 00:32:00 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:37:00 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,10 @@ t_token	*new_node(char *s)
 	if (!node)
 		return (NULL);
 	node->str = s;
+	if (!s)
+		node->len = 0;
+	else
+		node->len = ft_strlen(s);
 	node->next = NULL;
 	return (node);
 }

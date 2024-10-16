@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/16 14:26:56 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:38:18 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int	heredoc(char *str, int *fd, int cmd)
 
 	if (pipe(new_fd) == -1)
 		return (ERRNO_ERR);
-	i = skip_spaces(str);
-	while (!redirect_delimiter(str[i]) || (str[i] == ' ' && (str[i + 1] == ' ' || !str[i + 1])))
+	i = 0;
+	while (!str[i])
 		i++;
 	printf("Del: %i\n", i);
 	while (1)
@@ -147,7 +147,7 @@ int	nth_pipe(t_token *token, int *fd, int cmd)
 	quotes = '\0';
 	if (err)
 		return (err);
-	while (token->str[++i])
+	while (++i < token->len)
 	{
 		if ((token->str[i] == SQUOTE || token->str[i] == DQUOTE) && !quotes)
 			quotes = token->str[i];
@@ -167,7 +167,7 @@ int	nth_pipe(t_token *token, int *fd, int cmd)
 		}
 		if (err)
 			return (err);
-		if (!token->str[i])
+		if (i == token->len)
 			break;
 	}
 	return (0);

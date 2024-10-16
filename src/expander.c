@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 13:41:32 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 17:07:13 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,18 @@ void	init_expand(t_expand *expand, char **env)
 	expand->j = 0;
 	expand->quotes = '\0';
 	expand->env = env;
-	expand->heredoc = 0;
+	expand->redirect = 0;
 }
 
 void	redirect_expand(t_expand *e, char *src, char *dst)
 {
 	dst[e->j++] = src[e->i++];
+	e->redirect = 2;
 	if (src[e->i] == '<')
-	{
-		e->heredoc = 1;
-		dst[e->j++] = src[e->i];
-	}
-	else if (src[e->i] == '>')
-		dst[e->j++] = src[e->i];
+		e->redirect = 1;
 	while (ft_isspace(src[e->i + 1]))
 		e->i++;
+	dst[e->j++] = src[e->i];
 }
 
 int	get_expanded(char *src, char *dst, char **env, int status)
@@ -82,7 +79,7 @@ int	get_expanded(char *src, char *dst, char **env, int status)
 	init_expand(&e, env);
 	while (src[++e.i])
 	{
-		if (src[e.i] && valid_expand(src[e.i], e.quotes, src[e.i + 1]) && !e.heredoc)
+		if (src[e.i] && valid_expand(src[e.i], e.quotes, src[e.i + 1]) && e.redirect != 1)
 		{
 			if (expand(&e, src, dst, status) == -1)
 				return (ERRNO_ERR);
@@ -92,15 +89,16 @@ int	get_expanded(char *src, char *dst, char **env, int status)
 			e.quotes = src[e.i];
 		else if (src[e.i] == e.quotes && e.quotes != '\0')
 			e.quotes = '\0';
+		else if (redirect_delimiter(src[e.i]) && !e.quotes && e.redirect)
+		{
+			dst[e.j++] = '\0';
+			dst[e.j++] = src[e.i];
+			e.redirect = 0;
+		}
 		else if (src[e.i] == '\\' && src[e.i + 1] && e.quotes == '\0')
 			e.i++;
 		else if (src[e.i] == '<' || src[e.i] == '>')
 			redirect_expand(&e, src, dst);
-		else if (redirect_delimiter(src[e.i]) && e.heredoc)
-		{
-			e.heredoc = 0;
-			dst[e.j++] = src[e.i];
-		}
 		else if (!src[e.i])
 			break ;
 		else
@@ -147,9 +145,10 @@ void	init_format(t_format *f, char **env)
 	f->i = -1;
 	f->env = env;
 	f->err = 0;
-	f->heredoc = 0;
-	f->spaces_skipted = 0;
+	f->redirect = 0;
+	f->spaces_skipped = 0;
 	f->temp = 0;
+	f->red_limit = 0;
 }
 
 void	redirect_len(t_format *f, char *str)
@@ -158,16 +157,17 @@ void	redirect_len(t_format *f, char *str)
 
 	if (str[f->i + 1] == '>')
 	{
-		f->heredoc = 1;
+		f->redirect = 1;
 		skip_red = 2;	
 	}
 	else if (str[f->i + 1] == '<')
 		skip_red = 2;
 	else
 		skip_red = 1;
+	f->red_limit++;
 	f->temp = skip_spaces(&str[f->i + skip_red]);
-	f->spaces_skipted += f->temp;
-	f->i += f->temp + skip_red;
+	f->spaces_skipped += f->temp;
+	f->i += f->temp + skip_red - 1;
 }
 
 int	calculate_len(char *str, char **env, int *len, int status)
@@ -186,9 +186,9 @@ int	calculate_len(char *str, char **env, int *len, int status)
 			f.quotes = '\0';
 		else if (str[f.i] == '<' || str[f.i] == '>')
 			redirect_len(&f, str);
-		else if (redirect_delimiter(str[f.i]) && f.heredoc)
-			f.heredoc = 0;
-		else if (valid_expand(str[f.i], f.quotes, str[f.i + 1]) && !f.heredoc)
+		else if (redirect_delimiter(str[f.i]) && !f.quotes && f.redirect)
+			f.redirect = 0;
+		else if (valid_expand(str[f.i], f.quotes, str[f.i + 1]) && f.redirect != 1)
 		{
 			parsing(&f, &str[f.i], status);
 			if (f.err)
@@ -200,8 +200,9 @@ int	calculate_len(char *str, char **env, int *len, int status)
 			f.i++;	
 		}
 	}
-	//printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\n", f.rem_quotes, f.rem_slash, f.len_var, f.len_val);
-	(*len) = f.i - (f.rem_quotes * 2) - f.rem_slash - f.len_var - f.spaces_skipted + (f.len_val);
+	printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\nspaces: %i\nlimiter: %i\n",
+		f.rem_quotes, f.rem_slash, f.len_var, f.len_val, f.spaces_skipped, f.red_limit);
+	(*len) = f.i - (f.rem_quotes * 2) - f.rem_slash - f.len_var - f.spaces_skipped + (f.len_val) + f.red_limit;
 	return (0);
 }
 
@@ -221,6 +222,7 @@ int	handle_expansions(t_token *cmd_head, char **env, int status)
 		new_str = malloc(sizeof(char) * (new_len + 1));
 		if (!new_str || get_expanded(temp->str, new_str, env, status))
 			return (free(new_str), ERRNO_ERR);
+		temp->len = new_len;
 		free(temp->str);
 		temp->str = new_str;
 		temp = temp->next;

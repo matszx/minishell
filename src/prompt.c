@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 13:00:27 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 16:35:51 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ void	print_tokens(t_token *head)
 	temp = head;
 	while (temp)
 	{
-		printf("STR: %s\n", temp->str);
-		printf("TYPE: %i\n", temp->type);
-		printf("\n");
+		write(1, "STR: ", 5);
+		write(1, temp->str, temp->len);
+		write(1, "\n", 1);
 		temp = temp->next;
 	}
 }

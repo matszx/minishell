@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 13:41:32 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 17:07:13 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef enum e_type
 typedef struct s_token
 {
 	char			*str;
+	int				len;
 	t_type			type;
 	struct s_token	*next;
 }	t_token;
@@ -61,9 +62,10 @@ typedef struct s_format
 	int		len_val;
 	int		i;
 	int		err;
-	int		heredoc;
-	int		spaces_skipted;
+	int		redirect;
+	int		spaces_skipped;
 	int		temp;
+	int		red_limit;
 	char	quotes;
 	char	**env;
 }	t_format;
@@ -72,7 +74,7 @@ typedef struct s_expand
 {
 	int		i;
 	int		j;
-	int		heredoc;
+	int		redirect;
 	char	quotes;
 	char	**env;
 }	t_expand;
