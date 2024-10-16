@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 13:28:19 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:41:32 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	get_expanded(char *src, char *dst, char **env, int status)
 			e.i++;
 		else if (src[e.i] == '<' || src[e.i] == '>')
 			redirect_expand(&e, src, dst);
-		else if (heredoc_delimiter(src[e.i]) && e.heredoc)
+		else if (redirect_delimiter(src[e.i]) && e.heredoc)
 		{
 			e.heredoc = 0;
 			dst[e.j++] = src[e.i];
@@ -186,7 +186,7 @@ int	calculate_len(char *str, char **env, int *len, int status)
 			f.quotes = '\0';
 		else if (str[f.i] == '<' || str[f.i] == '>')
 			redirect_len(&f, str);
-		else if (heredoc_delimiter(str[f.i]) && f.heredoc)
+		else if (redirect_delimiter(str[f.i]) && f.heredoc)
 			f.heredoc = 0;
 		else if (valid_expand(str[f.i], f.quotes, str[f.i + 1]) && !f.heredoc)
 		{

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 13:16:33 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:41:32 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void		prompt(t_shell *shell);
 void		expand_commands(t_shell *shell);
 
 // redirect.c
-int			heredoc_delimiter(char c);
+int			redirect_delimiter(char c);
 int			redirect(t_shell *shell);
 
 // parser.c

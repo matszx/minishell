@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/16 13:31:23 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:26:56 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	get_pipes(t_shell *shell)
 	return (err);
 }
 
-int	heredoc_delimiter(char c)
+int	redirect_delimiter(char c)
 {
 	return (!c || c == ' ' || c == '|' || c == '<' || c == '>');
 }
@@ -53,9 +53,10 @@ int	heredoc(char *str, int *fd, int cmd)
 
 	if (pipe(new_fd) == -1)
 		return (ERRNO_ERR);
-	i = 0;
-	while (!heredoc_delimiter(str[i]))
+	i = skip_spaces(str);
+	while (!redirect_delimiter(str[i]) || (str[i] == ' ' && (str[i + 1] == ' ' || !str[i + 1])))
 		i++;
+	printf("Del: %i\n", i);
 	while (1)
 	{
 		input = readline("> ");
@@ -79,10 +80,35 @@ int	input(char *str, int *fd, int cmd)
 	int	new_fd;
 	int	i;
 
+	i = 0;
+	while (!redirect_delimiter(str[i]))
+		i++;
 	
 }
 
-int	nth_pipe(t_token *token, int *fd, int cmd)
+int	output(char *str, int *fd, int cmd)
+{
+	int	new_fd;
+	int	i;
+
+	i = 0;
+	while (!redirect_delimiter(str[i]))
+		i++;
+	
+}
+
+int	append_output(char *str, int *fd, int cmd)
+{
+	int	new_fd;
+	int	i;
+
+	i = 0;
+	while (!redirect_delimiter(str[i]))
+		i++;
+	
+}
+
+int	red_heredoc(t_token *token, int *fd, int cmd)
 {
 	int		i;
 	int		err;
@@ -101,18 +127,48 @@ int	nth_pipe(t_token *token, int *fd, int cmd)
 		{
 			if (token->str[++i] == '<')
 				err = heredoc(&token->str[++i], fd, cmd);
-			else
+		}
+		if (err)
+			return (err);
+		if (!token->str[i])
+			break;
+	}
+	return (0);
+}
+
+int	nth_pipe(t_token *token, int *fd, int cmd)
+{
+	int		i;
+	int		err;
+	char	quotes;
+
+	i = -1;
+	err = red_heredoc(token, fd, cmd);
+	quotes = '\0';
+	if (err)
+		return (err);
+	while (token->str[++i])
+	{
+		if ((token->str[i] == SQUOTE || token->str[i] == DQUOTE) && !quotes)
+			quotes = token->str[i];
+		else if (token->str[i] == quotes)
+			quotes = '\0';
+		else if (token->str[i] == '<' && !quotes)
+		{
+			if (token->str[++i] != '<')
 				err = input(&token->str[i], fd, cmd);
 		}
 		else if (token->str[i] == '>' && !quotes)
 		{
-			/*if (token->str[++i] == '>')
+			if (token->str[++i] == '>')
 				err = append_output(&token->str[++i], fd, cmd);
 			else
-				err = output(&token->str[i], fd, cmd);*/
+				err = output(&token->str[i], fd, cmd);
 		}
 		if (err)
 			return (err);
+		if (!token->str[i])
+			break;
 	}
 	return (0);
 }
