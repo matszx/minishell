@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/14 01:23:24 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:00:27 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	print_tokens(t_token *head)
 
 void	print_err(int err)
 {
-	write(STDERR_FILENO, "Minishell: ", 12);
+	write(STDERR_FILENO, "Minishell: ", 10);
 	if (err == QUOTES_ERR)
 		write(STDERR_FILENO, "Unclosed quotes\n", 17);
 	else if (err == SPLIT_ERR)
@@ -75,11 +75,10 @@ void	minishell(t_shell *shell)
 	int	err;
 
 	print_tokens(shell->tokens);
-	/*err = redirect(shell);
-	if (err)
-		return (print_err(err));
-	err = expand_commands(shell);
-	if (err)
+	expand_commands(shell);
+	print_tokens(shell->tokens);
+	err = redirect(shell);
+	/*if (err)
 		return (print_err(err));
 	execute(shell);*/
 }
@@ -96,7 +95,7 @@ void	prompt(t_shell *shell)
 		if (!shell->buf)
 		{
 			if (err != errno)
-				return (perror("Minishell: "));
+				return (perror("Minishell"));
 			ft_exit((unsigned int)shell->exit_status, shell, NULL);
 		}
 		add_history(shell->buf);

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/14 01:00:52 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:16:33 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ typedef struct s_format
 	int		len_val;
 	int		i;
 	int		err;
+	int		heredoc;
+	int		spaces_skipted;
+	int		temp;
 	char	quotes;
 	char	**env;
 }	t_format;
@@ -69,6 +72,7 @@ typedef struct s_expand
 {
 	int		i;
 	int		j;
+	int		heredoc;
 	char	quotes;
 	char	**env;
 }	t_expand;
@@ -98,6 +102,7 @@ void		prompt(t_shell *shell);
 void		expand_commands(t_shell *shell);
 
 // redirect.c
+int			heredoc_delimiter(char c);
 int			redirect(t_shell *shell);
 
 // parser.c

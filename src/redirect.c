@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/14 01:52:04 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:31:23 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ int	get_pipes(t_shell *shell)
 	return (err);
 }
 
+int	heredoc_delimiter(char c)
+{
+	return (!c || c == ' ' || c == '|' || c == '<' || c == '>');
+}
+
 int	heredoc(char *str, int *fd, int cmd)
 {
 	int		i;
@@ -48,35 +53,32 @@ int	heredoc(char *str, int *fd, int cmd)
 
 	if (pipe(new_fd) == -1)
 		return (ERRNO_ERR);
-	i = skip_spaces(str);
-	while (str[i] && str[i] != ' ' && str[i] != '|')
+	i = 0;
+	while (!heredoc_delimiter(str[i]))
 		i++;
 	while (1)
 	{
-		input = readline(">");
+		input = readline("> ");
 		if (!input)
 			return (close_files(new_fd, 2), ERRNO_ERR);
 		if (write(new_fd[1], input, ft_strlen(input)) == -1
 		||	write(new_fd[1], "\n", 1) == -1)
 			return (free(input), close_files(new_fd, 2), ERRNO_ERR);
-		free(input);
-		if (ft_strncmp(str, input, i))
+		if (!ft_strncmp(str, input, i) && input[i] == '\0')
 			break ;
+		free(input);
 	}
 	close(new_fd[1]);
 	close(fd[cmd]);
 	fd[cmd] = new_fd[0];
-	return (0);
+	return (free(input), 0);
 }
 
 int	input(char *str, int *fd, int cmd)
 {
-	int	fd;
+	int	new_fd;
 	int	i;
 
-	i = skip_spaces(str);
-	while (str[i] && str[i] != ' ' && str[i] != '|')
-		i++;
 	
 }
 
@@ -91,7 +93,7 @@ int	nth_pipe(t_token *token, int *fd, int cmd)
 	quotes = '\0';
 	while (token->str[++i])
 	{
-		if (token->str[i] == SQUOTE || token->str[i] == DQUOTE && !quotes)
+		if ((token->str[i] == SQUOTE || token->str[i] == DQUOTE) && !quotes)
 			quotes = token->str[i];
 		else if (token->str[i] == quotes)
 			quotes = '\0';
@@ -104,10 +106,10 @@ int	nth_pipe(t_token *token, int *fd, int cmd)
 		}
 		else if (token->str[i] == '>' && !quotes)
 		{
-			if (token->str[++i] == '>')
+			/*if (token->str[++i] == '>')
 				err = append_output(&token->str[++i], fd, cmd);
 			else
-				err = output(&token->str[i], fd, cmd);
+				err = output(&token->str[i], fd, cmd);*/
 		}
 		if (err)
 			return (err);
