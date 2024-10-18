@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/17 01:26:35 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/18 18:15:34 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 # define DQUOTE		34
 # define LVL_LIMIT 	1000
 # define PATH_MAX 	1024
+# define FILE_CREAT 0644
 
 # define EMPTY_INPUT 		1
 # define ERRNO_ERR 			2
 # define QUOTES_ERR 		3
-# define SPLIT_ERR 			4
-# define LIST_ERR 			5
+# define PIPE_END_ERR		4
 # define PARENTHESIS_ERR 	6
 # define FORMAT_ERR 		7
 # define SYNTAX_ERR			8

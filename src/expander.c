@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/16 23:48:14 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/18 19:06:29 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	valid_name(char c)
 {
-	return (c && (c == '_'|| ft_isalnum(c)));
+	return (c && (c == '_' || ft_isalnum(c)));
 }
 
 int	valid_expand(char c, char quotes, char next)
@@ -23,7 +23,7 @@ int	valid_expand(char c, char quotes, char next)
 		&& next != '$' && next != DQUOTE);
 }
 
-int	expand(t_expand *e, char *src, char *dst, int status)
+int	expand(t_expand *e, char *src, char *dst)
 {
 	char	*temp;
 	char	*var;
@@ -32,7 +32,7 @@ int	expand(t_expand *e, char *src, char *dst, int status)
 	start = ++e->i;
 	if (src[e->i] == '?')
 	{
-		temp = ft_itoa(status);
+		temp = ft_itoa(e->status);
 		if (!temp)
 			return (-1);
 		ft_strlcpy(&dst[e->j], temp, ft_strlen(temp) + 1);
@@ -52,67 +52,42 @@ int	expand(t_expand *e, char *src, char *dst, int status)
 	return (0);
 }
 
-void	init_expand(t_expand *expand, char **env)
+void	init_expand(t_expand *e, char **env, int expand, int status)
 {
-	expand->i = -1;
-	expand->j = 0;
-	expand->quotes = '\0';
-	expand->env = env;
-	expand->redirect = 0;
+	e->i = -1;
+	e->j = 0;
+	e->quotes = '\0';
+	e->expand = expand;
+	e->status = status;
+	e->env = env;
 }
 
-void	redirect_expand(t_expand *e, char *src, char *dst)
+int	get_expanded(t_token *t, t_expand *e, char *dst)
 {
-	dst[e->j++] = src[e->i];
-	e->redirect = 2;
-	if (src[e->i + 1] == '<')
+	while (t->str[++e->i])
 	{
-		e->redirect = 1;
-		dst[e->j++] = src[++e->i];
-	}
-	else if (src[e->i + 1] == '>')
-		dst[e->j++] = src[++e->i];
-	while (ft_isspace(src[e->i + 1]))
-		e->i++;
-}
-
-int	get_expanded(char *src, char *dst, char **env, int status)
-{
-	t_expand	e;
-
-	init_expand(&e, env);
-	while (src[++e.i])
-	{
-		if (src[e.i] && valid_expand(src[e.i], e.quotes, src[e.i + 1]) && e.redirect != 1)
+		if (t->str[e->i] && valid_expand(t->str[e->i], e->quotes, t->str[e->i + 1]) && e->expand)
 		{
-			if (expand(&e, src, dst, status) == -1)
+			if (expand(e, t->str, dst) == -1)
 				return (ERRNO_ERR);
 			continue ;
 		}
-		if ((src[e.i] == SQUOTE || src[e.i] == DQUOTE) && e.quotes == '\0')
-			e.quotes = src[e.i];
-		else if (src[e.i] == e.quotes && e.quotes != '\0')
-			e.quotes = '\0';
-		else if (redirect_delimiter(src[e.i]) && !e.quotes && e.redirect)
-		{
-			dst[e.j++] = '\0';
-			dst[e.j++] = src[e.i];
-			e.redirect = 0;
-		}
-		else if (src[e.i] == '\\' && src[e.i + 1] && e.quotes == '\0')
-			e.i++;
-		else if (src[e.i] == '<' || src[e.i] == '>')
-			redirect_expand(&e, src, dst);
-		else if (!src[e.i])
+		if ((t->str[e->i] == SQUOTE || t->str[e->i] == DQUOTE) && e->quotes == '\0')
+			e->quotes = t->str[e->i];
+		else if (t->str[e->i] == e->quotes && e->quotes != '\0')
+			e->quotes = '\0';
+		else if (t->str[e->i] == '\\' && t->str[e->i + 1] && e->quotes == '\0')
+			e->i++;
+		else if (!t->str[e->i])
 			break ;
 		else
-			dst[e.j++] = src[e.i];
+			dst[e->j++] = t->str[e->i];
 	}
-	dst[e.j] = '\0';
+	dst[e->j] = '\0';
 	return (0);
 }
 
-void	parsing(t_format *f, char *str, int status)
+int	parsing(t_format *f, char *str)
 {
 	int		i;
 	char	*sbstr;
@@ -122,7 +97,7 @@ void	parsing(t_format *f, char *str, int status)
 		f->err = PARENTHESIS_ERR;
 	else if (str[i] == '?')
 	{
-		if (status > 100)
+		if (f->status > 100)
 			f->len_val++;
 	}
 	else
@@ -134,12 +109,13 @@ void	parsing(t_format *f, char *str, int status)
 		if (!sbstr)
 			f->err = ERRNO_ERR;
 		else
-			f->len_val += ft_strlen(find_env(f->env, sbstr));	
+			f->len_val += ft_strlen(find_env(f->env, sbstr));
 		free(sbstr);
 	}
+	return (f->err);
 }
 
-void	init_format(t_format *f, char **env)
+void	init_format(t_format *f, char **env, int expand, int status)
 {
 	f->quotes = '\0';
 	f->rem_quotes = 0;
@@ -149,86 +125,62 @@ void	init_format(t_format *f, char **env)
 	f->i = -1;
 	f->env = env;
 	f->err = 0;
-	f->redirect = 0;
+	f->expand = expand;
+	f->status = status;
 	f->spaces_skipped = 0;
 	f->temp = 0;
 	f->red_limit = 0;
 }
 
-void	redirect_len(t_format *f, char *str)
-{
-	int	skip_red;
-
-	f->redirect = 2;
-	skip_red = 2;
-	if (str[f->i + 1] == '<')
-		f->redirect = 1;
-	else if (str[f->i + 1] != '>')
-		skip_red = 1;
-	f->red_limit++;
-	f->temp = skip_spaces(&str[f->i + skip_red]);
-	f->spaces_skipped += f->temp;
-	f->i += f->temp + skip_red - 1;
-}
-
-int	calculate_len(char *str, char **env, int *len, int status)
-{
-	t_format	f;
-
-	init_format(&f, env);
-	while (str[++f.i])
+int	calculate_len(t_token *t, t_format *f, int *len)
+{\
+	while (t->str[++f->i])
 	{
-		if ((str[f.i] == SQUOTE || str[f.i] == DQUOTE) && str[f.i + 1] && f.quotes == '\0')
+		if ((t->str[f->i] == SQUOTE || t->str[f->i] == DQUOTE)
+			&& t->str[f->i + 1] && f->quotes == '\0')
 		{
-			f.quotes = str[f.i++];
-			f.rem_quotes++;
+			f->quotes = t->str[f->i++];
+			f->rem_quotes++;
 		}
-		if (str[f.i] == f.quotes && f.quotes != '\0')
-			f.quotes = '\0';
-		else if (str[f.i] == '<' || str[f.i] == '>')
-			redirect_len(&f, str);
-		else if (redirect_delimiter(str[f.i]) && !f.quotes && f.redirect)
-			f.redirect = 0;
-		else if (valid_expand(str[f.i], f.quotes, str[f.i + 1]) && f.redirect != 1)
+		if (t->str[f->i] == f->quotes && f->quotes != '\0')
+			f->quotes = '\0';
+		else if (valid_expand(t->str[f->i], f->quotes, t->str[f->i + 1]) && f->expand)
 		{
-			printf("Redirect: %i\n", f.redirect);
-			parsing(&f, &str[f.i], status);
-			if (f.err)
-				return (f.err);
+			if (parsing(f, &t->str[f->i]))
+				return (f->err);
 		}
-		else if (str[f.i] == '\\' && str[f.i + 1] && f.quotes == '\0')
+		else if (t->str[f->i] == '\\' && t->str[f->i + 1] && f->quotes == '\0')
 		{
-			f.rem_slash++;
-			f.i++;	
+			f->rem_slash++;
+			f->i++;	
 		}
 	}
-	printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\nspaces: %i\nlimiter: %i\n",
-		f.rem_quotes, f.rem_slash, f.len_var, f.len_val, f.spaces_skipped, f.red_limit);
-	(*len) = f.i - (f.rem_quotes * 2) - f.rem_slash - f.len_var - f.spaces_skipped + (f.len_val) + f.red_limit;
+	//printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\nspaces: %i\nlimiter: %i\n",
+	//	f.rem_quotes, f.rem_slash, f.len_var, f.len_val, f.spaces_skipped, f.red_limit);
+	(*len) = f->i - (f->rem_quotes * 2) - f->rem_slash - f->len_var - f->spaces_skipped + (f->len_val) + f->red_limit;
 	return (0);
 }
 
-int	handle_expansions(t_token *cmd_head, char **env, int status)
+int	handle_expansions(t_token *t, char **env, int status, int expand)
 {
-	t_token	*temp;
-	int		new_len;
-	char	*new_str;
+	int			new_len;
+	char		*new_str;
+	t_format	f;
+	t_expand	e;
 
-	temp = cmd_head;
 	new_len = 0;
-	while (temp && temp->type != OPERATOR)
-	{
-		if (calculate_len(temp->str, env, &new_len, status))
-			return (FORMAT_ERR);
-		printf("len: %i\n", new_len);
-		new_str = malloc(sizeof(char) * (new_len + 1));
-		if (!new_str || get_expanded(temp->str, new_str, env, status))
-			return (free(new_str), ERRNO_ERR);
-		temp->len = new_len;
-		free(temp->str);
-		temp->str = new_str;
-		temp = temp->next;
-	}
+	if (t->type != COMMAND && t->type != ARGUMENT)
+		return (0);
+	init_format(&f, env, expand, status);
+	if (calculate_len(t, &f, &new_len))
+		return (FORMAT_ERR);
+	new_str = malloc(sizeof(char) * (new_len + 1));
+	init_expand(&e, env, expand, status);
+	if (!new_str || get_expanded(t, &e, new_str))
+		return (free(new_str), ERRNO_ERR);
+	t->len = new_len;
+	free(t->str);
+	t->str = new_str;
 	return (0);
 }
 
@@ -236,23 +188,29 @@ void	expand_commands(t_shell *shell)
 {
 	t_token	*temp;
 	int		err;
+	int		expand;
 
 	temp = shell->tokens;
 	shell->env_var = get_env(shell->env);
+	expand = 1;
 	if (!shell->env_var)
 		return ;
 	while (temp)
 	{
-		err = handle_expansions(temp, shell->env_var, shell->exit_status);
+		if (temp->type == HEREDOC)
+		{
+			expand = 0;
+			temp = temp->next;
+		}
+		else
+			expand = 1;
+		err = handle_expansions(temp, shell->env_var, shell->exit_status, expand);
 		if (err)
 		{
 			print_err(err);
 			free_shell(shell);
 			exit(1);
 		}
-		while (temp && temp->type != OPERATOR)
-			temp = temp->next;
-		if (temp)
-			temp = temp->next;
+		temp = temp->next;
 	}
 }

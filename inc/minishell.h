@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/17 01:29:14 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/18 19:44:25 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ typedef enum e_type
 	COMMAND,
 	ARGUMENT,
 	OPERATOR,
-	REDIRECT,
+	HEREDOC,
+	RED_IN,
+	RED_OUT,
+	RED_APP,
 }	t_type;
 
 typedef struct s_token
@@ -62,7 +65,8 @@ typedef struct s_format
 	int		len_val;
 	int		i;
 	int		err;
-	int		redirect;
+	int		expand;
+	int		status;
 	int		spaces_skipped;
 	int		temp;
 	int		red_limit;
@@ -74,7 +78,8 @@ typedef struct s_expand
 {
 	int		i;
 	int		j;
-	int		redirect;
+	int		expand;
+	int		status;
 	char	quotes;
 	char	**env;
 }	t_expand;
@@ -96,8 +101,8 @@ void		free_shell(t_shell *shell);
 void		close_files(int *fd, int n);
 
 // prompt.c
-void		print_errno(char *str);
 void		print_err(int err);
+void		print_errno(char *str);
 char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);
 
@@ -105,7 +110,8 @@ void		prompt(t_shell *shell);
 void		expand_commands(t_shell *shell);
 
 // redirect.c
-int			redirect_delimiter(char c);
+int			get_pipes(t_shell *shell);
+int			red_heredoc(t_shell *shell);
 int			redirect(t_shell *shell);
 
 // parser.c

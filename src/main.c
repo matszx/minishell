@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/17 01:15:23 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/18 15:02:00 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ void	free_shell(t_shell *shell)
 		destroy_list(&shell->tokens);
 		destroy_env(&shell->env);
 		free_table((void **) shell->env_var);
-		close_files(shell->fd, shell->n_commands);
-		free(shell->fd);
 	}
 	free(shell);
 }
@@ -65,7 +63,6 @@ static t_shell	*init_shell(char **envp)
 	shell->env_var = NULL;
 	shell->tokens = NULL;
 	shell->env_var = NULL;
-	shell->fd = NULL;
 	shell->n_commands = 0;
 	shell->env = copy_env(envp);
 	if (!shell->env)

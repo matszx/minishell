@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/17 01:43:25 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/18 19:52:55 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,22 @@ int	get_pipes(t_shell *shell)
 	return (err);
 }
 
-int	redirect_delimiter(char c)
+int	heredoc(t_token *t, int *fd, int cmd)
 {
-	return (!c || c == ' ' || c == '|' || c == '<' || c == '>');
-}
-
-int	heredoc(char *str, int *fd, int cmd)
-{
-	int		i;
 	char	*input;
 	int		new_fd[2];
 
 	if (pipe(new_fd) == -1)
 		return (ERRNO_ERR);
-	i = 0;
-	while (str[i])
-		i++;
 	while (1)
 	{
 		input = readline("> ");
 		if (!input)
 			return (close_files(new_fd, 2), ERRNO_ERR);
 		if (write(new_fd[1], input, ft_strlen(input)) == -1
-		||	write(new_fd[1], "\n", 1) == -1)
+			|| write(new_fd[1], "\n", 1) == -1)
 			return (free(input), close_files(new_fd, 2), ERRNO_ERR);
-		if (!ft_strncmp(str, input, i) && input[i] == '\0')
+		if (!ft_strncmp(t->str, input, t->len))
 			break ;
 		free(input);
 	}
@@ -77,102 +68,75 @@ int	heredoc(char *str, int *fd, int cmd)
 int	input(char *str, int *fd, int cmd)
 {
 	int	new_fd;
-	
+
 	close(fd[cmd * 2]);
-	new_fd = open(str, O_RDONLY);
-	if (new_fd != -1)
-		return (fd[cmd * 2] = new_fd, 0);
-	print_errno(str);
-	new_fd = open("/dev/null", O_RDONLY);
+	new_fd = open(str, O_RDONLY, FILE_CREAT);
 	fd[cmd * 2] = new_fd;
 	if (new_fd == -1)
-		return (print_errno("/dev/null"), ERRNO_PRINTED);
+		return (ERRNO_ERR);
+	return (0);
 }
 
 int	output(char *str, int *fd, int cmd)
 {
 	int	new_fd;
-	int	i;
 
-	i = 0;
-	while (str[i])
-		i++;
-	
+	close(fd[(cmd * 2) + 1]);
+	new_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, FILE_CREAT);
+	fd[(cmd * 2) + 1] = new_fd;
+	if (new_fd == -1)
+		return (ERRNO_ERR);
+	return (0);
 }
 
 int	append_output(char *str, int *fd, int cmd)
 {
 	int	new_fd;
-	int	i;
 
-	i = 0;
-	while (str[i])
-		i++;
-	
+	close(fd[(cmd * 2) + 1]);
+	new_fd = open(str, O_WRONLY | O_CREAT | O_APPEND, FILE_CREAT);
+	fd[(cmd * 2) + 1] = new_fd;
+	if (new_fd == -1)
+		return (ERRNO_ERR);
+	return (0);
 }
 
-int	red_heredoc(t_token *token, int *fd, int cmd)
+int	red_heredoc(t_shell *shell)
 {
-	int		i;
-	int		err;
-	char	quotes;
+	t_token		*temp;
+	int			err;
+	int			cmd;
 
-	i = -1;
-	err = 0;
-	quotes = '\0';
-	while (++i < token->len)
+	temp = shell->tokens;
+	cmd = 0;
+	while (temp)
 	{
-		if ((token->str[i] == SQUOTE || token->str[i] == DQUOTE) && !quotes)
-			quotes = token->str[i];
-		else if (token->str[i] == quotes)
-			quotes = '\0';
-		else if (token->str[i] == '<' && !quotes)
+		if (temp->type == HEREDOC)
 		{
-			if (token->str[++i] == '<')
-				err = heredoc(&token->str[++i], fd, cmd);
+			err = heredoc(temp->next, shell->fd, cmd);
+			if (err)
+				return (err);	
 		}
-		if (err)
-			return (err);
-		if (i == token->len)
-			break;
+		temp = temp->next;
+		if (temp && temp->type == OPERATOR)
+			cmd++;
 	}
 	return (0);
 }
 
 int	nth_pipe(t_token *token, int *fd, int cmd)
 {
-	int		i;
 	int		err;
-	char	quotes;
 
-	i = -1;
-	err = red_heredoc(token, fd, cmd);
-	quotes = '\0';
+	err = 0;
+	if (token->type == RED_IN)
+		err = input(token->next->str, fd, cmd);
+	else if (token->type == RED_OUT)
+		err = output(token->next->str, fd, cmd);
+	else if (token->type == RED_APP)
+		err = append_output(token->next->str, fd, cmd);
 	if (err)
 		return (err);
-	while (++i < token->len)
-	{
-		if ((token->str[i] == SQUOTE || token->str[i] == DQUOTE) && !quotes)
-			quotes = token->str[i];
-		else if (token->str[i] == quotes)
-			quotes = '\0';
-		else if (token->str[i] == '<' && !quotes)
-		{
-			if (token->str[++i] != '<')
-				err = input(&token->str[i], fd, cmd);
-		}
-		else if (token->str[i] == '>' && !quotes)
-		{
-			if (token->str[++i] == '>')
-				err = append_output(&token->str[++i], fd, cmd);
-			else
-				err = output(&token->str[i], fd, cmd);
-		}
-		if (err)
-			return (err);
-		if (i == token->len)
-			break;
-	}
 	return (0);
 }
 
@@ -182,9 +146,6 @@ int	redirect(t_shell *shell)
 	int			err;
 	int			cmd;
 
-	err = get_pipes(shell);
-	if (err)
-		return (err);
 	temp = shell->tokens;
 	cmd = 0;
 	while (temp)
@@ -193,7 +154,8 @@ int	redirect(t_shell *shell)
 		if (err)
 			return (err);
 		temp = temp->next;
-		cmd++;
+		if (temp && temp->type == OPERATOR)
+			cmd++;
 	}
 	return (0);
 }

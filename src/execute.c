@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/16 23:04:04 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/18 15:18:19 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ int	execute(t_shell *shell)
 	while (temp)
 	{
 		shell->exit_status = argument_manager(shell, temp);
-		while (temp && temp->type != OPERATOR)
-			temp = temp->next;
-		if (temp)
-			temp = temp->next;
+		temp = temp->next;
 	}
 	return (0);
 }
