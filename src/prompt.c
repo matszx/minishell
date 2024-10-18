@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/18 20:00:12 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 00:55:08 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ void	print_tokens(t_token *head)
 		write(1, temp->str, temp->len);
 		write(1, "\n", 1);
 		temp = temp->next;
+	}
+}
+
+void	print_fd(int *fd, int n)
+{
+	int	i;
+
+	i = -1;
+	while(++i < n)
+	{
+		if (i % 2)
+			printf("Out:\t%i\n", fd[i]);
+		else
+			printf("In:\t%i\n", fd[i]);
 	}
 }
 
@@ -66,6 +80,17 @@ int	verify_order(t_token *t)
 	return (0);
 }
 
+void	clean(t_shell *shell)
+{
+	close_files(shell->fd, shell->n_commands * 2);
+	free(shell->fd);
+	shell->fd = NULL;
+	destroy_list(&shell->tokens);
+	free_table((void **) shell->env_var);
+	shell->env_var = NULL;
+	shell->n_commands = 0;
+}
+
 void	minishell(t_shell *shell)
 {
 	int	err;
@@ -83,10 +108,8 @@ void	minishell(t_shell *shell)
 	err = red_heredoc(shell);
 	if (err)
 		return (print_err(err));
-	//execute(shell);
-	destroy_list(&shell->tokens);
-	free_table((void **) shell->env_var);
-	shell->env_var = NULL;
+	execute(shell);
+	print_fd(shell->fd, shell->n_commands * 2);
 }
 
 // Displays a prompt
@@ -114,5 +137,6 @@ void	prompt(t_shell *shell)
 			continue ;
 		}
 		minishell(shell);
+		clean(shell);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/18 19:52:55 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 01:15:17 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	get_pipes(t_shell *shell)
 	while (++i < shell->n_commands * 2)
 		shell->fd[i] = -1;
 	i = 0;
-	while (i < shell->n_commands)
+	while (i < shell->n_commands * 2)
 	{
 		if (pipe(&shell->fd[i]) == -1)
 		{
@@ -40,7 +40,25 @@ int	get_pipes(t_shell *shell)
 	return (err);
 }
 
-int	heredoc(t_token *t, int *fd, int cmd)
+int	write_heredoc_line(t_shell *shell, char *buf, int fd)
+{
+	t_token	temp;
+	int		err;
+
+	temp.type = ARGUMENT;
+	temp.str = buf;
+	temp.next = NULL;
+	temp.len = ft_strlen(buf);
+	err = handle_expansions(&temp, shell->env_var, shell->exit_status, 1);
+	if (err)
+		return (free(buf), err);
+	if (write(fd, temp.str, ft_strlen(temp.str)) == -1
+			|| write(fd, "\n", 1) == -1)
+		return (free(temp.str), ERRNO_ERR);
+	return (free(temp.str), 0);
+}
+
+int	heredoc(t_shell *shell, t_token *t, int *fd, int cmd)
 {
 	char	*input;
 	int		new_fd[2];
@@ -52,12 +70,10 @@ int	heredoc(t_token *t, int *fd, int cmd)
 		input = readline("> ");
 		if (!input)
 			return (close_files(new_fd, 2), ERRNO_ERR);
-		if (write(new_fd[1], input, ft_strlen(input)) == -1
-			|| write(new_fd[1], "\n", 1) == -1)
-			return (free(input), close_files(new_fd, 2), ERRNO_ERR);
 		if (!ft_strncmp(t->str, input, t->len))
 			break ;
-		free(input);
+		if (write_heredoc_line(shell, input, new_fd[1]))
+			return (close_files(new_fd, 2), ERRNO_ERR);
 	}
 	close(new_fd[1]);
 	close(fd[cmd * 2]);
@@ -113,7 +129,7 @@ int	red_heredoc(t_shell *shell)
 	{
 		if (temp->type == HEREDOC)
 		{
-			err = heredoc(temp->next, shell->fd, cmd);
+			err = heredoc(shell, temp->next, shell->fd, cmd);
 			if (err)
 				return (err);	
 		}

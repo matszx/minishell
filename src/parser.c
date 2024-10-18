@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/18 19:58:20 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 00:18:09 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,8 @@ int	start_token(char *str, int *i, int *len)
 	if (str[*i] == '<' || str[*i] == '>')
 	{
 		(*len)++;
-		if (str[*i] == str[++(*i)])
+		(*i)++;
+		if (str[*i] == str[(*i) - 1])
 		{
 			(*i)++;
 			(*len)++;
@@ -267,6 +268,7 @@ void	classify_count(t_token *head, int *n)
 int	parse(char	*buf, t_shell *shell)
 {
 	shell->tokens = NULL;
+	shell->n_commands = 0;
 	if (!buf[0] || !buf[skip_spaces(buf)])
 		return (EMPTY_INPUT);
 	if (!quotes_closed(buf))

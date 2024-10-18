@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/18 19:44:25 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 01:21:18 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);
 
 // expander.c
+int			handle_expansions(t_token *t, char **env, int status, int expand);
 void		expand_commands(t_shell *shell);
 
 // redirect.c
