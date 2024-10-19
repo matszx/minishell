@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 00:18:09 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 18:08:34 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,7 @@ int	check_string(char *str)
 	return (0);
 }
 
-void	classify_operator(t_token *head)
+void	classify_operator(t_token *head, int *cmd, int *n)
 {
 	if (!ft_strncmp("<<", head->str, 3))
 		head->type = HEREDOC;
@@ -236,6 +236,15 @@ void	classify_operator(t_token *head)
 		head->type = RED_OUT;
 	else
 		head->type = OPERATOR;
+	if (head->type == OPERATOR)
+	{
+		*cmd = 1;
+		(*n)++;
+	}
+	else if (*cmd == 1)
+		*cmd = 2;
+	else
+		*cmd = 3;
 }
 
 void	classify_count(t_token *head, int *n)
@@ -243,24 +252,25 @@ void	classify_count(t_token *head, int *n)
 	int	cmd;
 
 	cmd = 1;
-	(*n)++;
 	while (head)
 	{
 		if (is_token(head->str[0]))
+			classify_operator(head, &cmd, n);
+		else if (cmd == 2 || cmd == 3)
 		{
-			if (head->str[0] == '|')
-			{
+			head->type = RED_ARG;
+			if (cmd == 2)
 				cmd = 1;
-				(*n)++;
-			}
 			else
 				cmd = 0;
-			classify_operator(head);
 		}
 		else if (!cmd)
 			head->type = ARGUMENT;
 		else
+		{
 			head->type = COMMAND;
+			cmd = 0;
+		}
 		head = head->next;
 	}
 }
@@ -268,7 +278,6 @@ void	classify_count(t_token *head, int *n)
 int	parse(char	*buf, t_shell *shell)
 {
 	shell->tokens = NULL;
-	shell->n_commands = 0;
 	if (!buf[0] || !buf[skip_spaces(buf)])
 		return (EMPTY_INPUT);
 	if (!quotes_closed(buf))
@@ -278,6 +287,7 @@ int	parse(char	*buf, t_shell *shell)
 	shell->tokens = get_arguments(buf);
 	if (!(shell->tokens))
 		return (ERRNO_ERR);
+	shell->n_commands = 1;
 	classify_count(shell->tokens, &shell->n_commands);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 01:21:18 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 18:04:41 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef enum e_type
 	RED_IN,
 	RED_OUT,
 	RED_APP,
+	RED_ARG,
 }	t_type;
 
 typedef struct s_token
@@ -113,7 +114,7 @@ void		expand_commands(t_shell *shell);
 // redirect.c
 int			get_pipes(t_shell *shell);
 int			red_heredoc(t_shell *shell);
-int			redirect(t_shell *shell);
+int			redirect(t_token *token, int *fd, int cmd);
 
 // parser.c
 int			skip_spaces(char *str);

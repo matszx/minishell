@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 00:55:08 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 19:28:08 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,31 @@ static char	*prompt_msg(int exit_status)
 		return (PT "minishell" VM " > " RESET);
 }
 
+char	*get_type(t_token *token)
+{
+	if (token->type == COMMAND)
+		return ("Command\n");
+	else if (token->type == ARGUMENT)
+		return ("Argument\n");
+	else if (token->type == HEREDOC)
+		return ("Heredoc\n");
+	else if (token->type == RED_IN)
+		return ("Redirect Input\n");
+	else if (token->type == RED_OUT)
+		return ("Redirect Output\n");
+	else if (token->type == RED_APP)
+		return ("Redirect Append\n");
+	else if (token->type == RED_ARG)
+		return ("Redirect Argument\n");
+	else if (token->type == OPERATOR)
+		return ("Operator\n");
+	return ("");
+}
+
 void	print_tokens(t_token *head)
 {
 	t_token	*temp;
+	char	*type;
 
 	temp = head;
 	while (temp)
@@ -31,6 +53,9 @@ void	print_tokens(t_token *head)
 		write(1, "STR: ", 5);
 		write(1, temp->str, temp->len);
 		write(1, "\n", 1);
+		write(1, "TYPE: ", 5);
+		type = get_type(temp);
+		write(1, type, ft_strlen(type));
 		temp = temp->next;
 	}
 }
@@ -63,7 +88,7 @@ void	print_err(int err)
 		write(STDERR_FILENO, "Unclosed quotes\n", 17);
 	else if (err == SYNTAX_ERR)
 		write(STDERR_FILENO, "Syntax error near unexpected token\n", 36);
-	else if (PIPE_END_ERR)
+	else if (err == PIPE_END_ERR)
 		write(STDERR_FILENO, "Unclosed pipes are not allowed\n", 32);
 	else if (err != ERRNO_PRINTED)
 		perror(NULL);
@@ -73,7 +98,7 @@ int	verify_order(t_token *t)
 {
 	while (t)
 	{
-		if (t->type == OPERATOR && !t->next)
+		if (t->type == OPERATOR && !(t->next))
 			return (PIPE_END_ERR);
 		t = t->next;
 	}
@@ -108,7 +133,9 @@ void	minishell(t_shell *shell)
 	err = red_heredoc(shell);
 	if (err)
 		return (print_err(err));
+	printf("Executing\n");
 	execute(shell);
+	printf("Executed\n");
 	print_fd(shell->fd, shell->n_commands * 2);
 }
 

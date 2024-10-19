@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/19 01:15:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/19 19:29:18 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,10 @@ int	input(char *str, int *fd, int cmd)
 	int	new_fd;
 
 	close(fd[cmd * 2]);
-	new_fd = open(str, O_RDONLY, FILE_CREAT);
+	new_fd = open(str, O_RDONLY);
 	fd[cmd * 2] = new_fd;
 	if (new_fd == -1)
-		return (ERRNO_ERR);
+		return (print_errno(str), ERRNO_PRINTED);
 	return (0);
 }
 
@@ -101,7 +101,7 @@ int	output(char *str, int *fd, int cmd)
 	new_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, FILE_CREAT);
 	fd[(cmd * 2) + 1] = new_fd;
 	if (new_fd == -1)
-		return (ERRNO_ERR);
+		return (print_errno(str), ERRNO_PRINTED);
 	return (0);
 }
 
@@ -113,7 +113,7 @@ int	append_output(char *str, int *fd, int cmd)
 	new_fd = open(str, O_WRONLY | O_CREAT | O_APPEND, FILE_CREAT);
 	fd[(cmd * 2) + 1] = new_fd;
 	if (new_fd == -1)
-		return (ERRNO_ERR);
+		return (print_errno(str), ERRNO_PRINTED);
 	return (0);
 }
 
@@ -140,7 +140,7 @@ int	red_heredoc(t_shell *shell)
 	return (0);
 }
 
-int	nth_pipe(t_token *token, int *fd, int cmd)
+int	redirect(t_token *token, int *fd, int cmd)
 {
 	int		err;
 
@@ -153,25 +153,5 @@ int	nth_pipe(t_token *token, int *fd, int cmd)
 		err = append_output(token->next->str, fd, cmd);
 	if (err)
 		return (err);
-	return (0);
-}
-
-int	redirect(t_shell *shell)
-{
-	t_token		*temp;
-	int			err;
-	int			cmd;
-
-	temp = shell->tokens;
-	cmd = 0;
-	while (temp)
-	{
-		err = nth_pipe(temp, shell->fd, cmd);
-		if (err)
-			return (err);
-		temp = temp->next;
-		if (temp && temp->type == OPERATOR)
-			cmd++;
-	}
 	return (0);
 }
