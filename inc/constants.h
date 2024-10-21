@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/18 18:15:34 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/20 20:58:54 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,12 @@
 # define ERRNO_ERR 			2
 # define QUOTES_ERR 		3
 # define PIPE_END_ERR		4
-# define PARENTHESIS_ERR 	6
-# define FORMAT_ERR 		7
-# define SYNTAX_ERR			8
-# define ERRNO_PRINTED		9
+# define PARENTHESIS_ERR 	5
+# define FORMAT_ERR 		6
+# define SYNTAX_ERR			7
+# define ERRNO_PRINTED		8
+# define ARGS_ERR			9
+# define NAN_ERR			10
+# define IDENTIFIER_ERR		11
 
 #endif

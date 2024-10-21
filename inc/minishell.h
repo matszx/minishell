@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 18:04:41 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/20 21:36:50 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 # include "../libft/inc/libft.h"
 # include "constants.h"
 
@@ -102,8 +103,6 @@ void		free_shell(t_shell *shell);
 void		close_files(int *fd, int n);
 
 // prompt.c
-void		print_err(int err);
-void		print_errno(char *str);
 char		*find_env(char **env, char *var);
 void		prompt(t_shell *shell);
 
@@ -138,10 +137,20 @@ int			ft_cd(char **env, t_token *token);
 int			ft_pwd(void);
 int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 
+// builtins_utils.c
+int			ft_isnumber(char *str);
+int			has_args(t_token *t);
+t_token		*get_cmd_token(t_token *t, t_type type);
+
 // signals.c
 void		init_signals(void);
 
-//execute.c
+// execute.c
 int			execute(t_shell *shell);
+
+// errors.c
+void		print_err(int err);
+void		print_errno(char *str);
+void		print_custom_err(char *cmd, int err);
 
 #endif

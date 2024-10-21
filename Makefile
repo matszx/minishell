@@ -6,7 +6,7 @@
 #    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/10 14:42:09 by dzapata          ###   ########.fr        #
+#    Updated: 2024/10/20 20:57:05 by dzapata          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,9 @@ SRC_FILES 		=	main.c \
 					env_utils.c \
 					signals.c \
 					redirect.c \
-					execute.c
+					execute.c \
+					errors.c \
+					builtins_utils.c
 					
 SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

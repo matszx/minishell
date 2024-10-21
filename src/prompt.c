@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 19:28:08 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/20 21:53:09 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@ static char	*prompt_msg(int exit_status)
 char	*get_type(t_token *token)
 {
 	if (token->type == COMMAND)
-		return ("Command\n");
+		return ("Command:\t\t");
 	else if (token->type == ARGUMENT)
-		return ("Argument\n");
+		return ("Argument:\t\t");
 	else if (token->type == HEREDOC)
-		return ("Heredoc\n");
+		return ("Heredoc:\t\t");
 	else if (token->type == RED_IN)
-		return ("Redirect Input\n");
+		return ("Redirect Input:\t\t");
 	else if (token->type == RED_OUT)
-		return ("Redirect Output\n");
+		return ("Redirect Output:\t");
 	else if (token->type == RED_APP)
-		return ("Redirect Append\n");
+		return ("Redirect Append:\t");
 	else if (token->type == RED_ARG)
-		return ("Redirect Argument\n");
+		return ("Redirect Argument:\t");
 	else if (token->type == OPERATOR)
-		return ("Operator\n");
-	return ("");
+		return ("Operator:\t\t");
+	return ("\t\t\t");
 }
 
 void	print_tokens(t_token *head)
@@ -50,12 +50,10 @@ void	print_tokens(t_token *head)
 	temp = head;
 	while (temp)
 	{
-		write(1, "STR: ", 5);
-		write(1, temp->str, temp->len);
-		write(1, "\n", 1);
-		write(1, "TYPE: ", 5);
 		type = get_type(temp);
 		write(1, type, ft_strlen(type));
+		write(1, temp->str, temp->len);
+		write(1, "\n", 1);
 		temp = temp->next;
 	}
 }
@@ -72,26 +70,6 @@ void	print_fd(int *fd, int n)
 		else
 			printf("In:\t%i\n", fd[i]);
 	}
-}
-
-void	print_errno(char *str)
-{
-	write(STDERR_FILENO, "Minishell: ", 12);
-	perror(str);
-}
-
-void	print_err(int err)
-{
-	if (err != ERRNO_PRINTED)
-		write(STDERR_FILENO, "Minishell: ", 12);
-	if (err == QUOTES_ERR)
-		write(STDERR_FILENO, "Unclosed quotes\n", 17);
-	else if (err == SYNTAX_ERR)
-		write(STDERR_FILENO, "Syntax error near unexpected token\n", 36);
-	else if (err == PIPE_END_ERR)
-		write(STDERR_FILENO, "Unclosed pipes are not allowed\n", 32);
-	else if (err != ERRNO_PRINTED)
-		perror(NULL);
 }
 
 int	verify_order(t_token *t)
@@ -125,7 +103,7 @@ void	minishell(t_shell *shell)
 	if (err)
 		return (print_err(err));
 	expand_commands(shell);
-	printf("Expanded ============\n");
+	printf("Expanded =======================================\n");
 	print_tokens(shell->tokens);
 	err = get_pipes(shell);
 	if (err)

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/18 19:06:29 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/20 18:10:27 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ int	handle_expansions(t_token *t, char **env, int status, int expand)
 	t_expand	e;
 
 	new_len = 0;
-	if (t->type != COMMAND && t->type != ARGUMENT)
+	if (t->type != COMMAND && t->type != ARGUMENT && t->type != RED_ARG)
 		return (0);
 	init_format(&f, env, expand, status);
 	if (calculate_len(t, &f, &new_len))
@@ -192,7 +192,6 @@ void	expand_commands(t_shell *shell)
 
 	temp = shell->tokens;
 	shell->env_var = get_env(shell->env);
-	expand = 1;
 	if (!shell->env_var)
 		return ;
 	while (temp)
@@ -209,7 +208,7 @@ void	expand_commands(t_shell *shell)
 		{
 			print_err(err);
 			free_shell(shell);
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		temp = temp->next;
 	}

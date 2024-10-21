@@ -6,45 +6,51 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/18 16:58:25 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/20 22:15:24 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int	is_flag(char *s)
+static int	n_flag(char *s)
 {
+	int	flag;
+
+	flag = 1;
 	if (s && *s == '-' && *(++s))
 	{
 		while (*s)
 		{
-			if (*s != 'n' && *s != 'e' && *s != 'E')
-				return (0);
+			if (*s == 'n')
+				flag = 0;
+			else if (*s == 'e' || *s == 'E')
+				flag = 2;
+			else
+				return (1);
 			s++;
 		}
-		return (1);
 	}
-	return (0);
+	return (flag);
 }
 
 int	ft_echo(t_token *token)
 {
 	int	newline;
 
-	if (!token || token->type != ARGUMENT)
+	if (!token)
 		return (printf("\n"), 0);
-	newline = 1;
-	if (token && is_flag(token->str))
-	{
-		newline = 0;
+	newline = n_flag(token->str);
+	if (!newline || newline == 2)
 		token = token->next;
-	}
-	while (token && token->type == ARGUMENT)
+	while (token && token->type != OPERATOR)
 	{
-		printf("%s", token->str);
-		token = token->next;
-		if (token)
-			printf(" ");
+		if (token->type == ARGUMENT)
+		{
+			printf("%s", token->str);
+			token = token->next;
+			if (get_cmd_token(token, ARGUMENT))
+				printf(" ");
+		}
 	}
 	if (newline)
 		printf("\n");
@@ -55,13 +61,14 @@ int	ft_cd(char **env, t_token *token)
 {
 	char	*tmp;
 	int		ret;
+	t_token	*arg;
 
-	if (token && token->next && token->next->type == ARGUMENT)
-		return (printf("minishell: cd: Too many arguments\n"), 1);
-	ret = 1;
-	if (!token || token->type != ARGUMENT)
+	if (token && has_args(token->next))
+		return (print_custom_err("cd", ARGS_ERR), 1);
+	arg = get_cmd_token(token, ARGUMENT);
+	if (!arg)
 		ret = (chdir(find_env(env, "HOME")) != 0);
-	else if (token && token->type == ARGUMENT)
+	else
 	{
 		if (*(token->str) == '~')
 			tmp = ft_strjoin(find_env(env, "HOME"), token->str + 1);
@@ -71,7 +78,7 @@ int	ft_cd(char **env, t_token *token)
 		free(tmp);
 	}
 	if (ret)
-		printf("minishell: cd: %s: No such file or directory\n", token->str);
+		return (print_errno("cd"), 1);
 	return (ret);
 }
 
@@ -80,34 +87,27 @@ int	ft_pwd(void)
 	char	cwd[PATH_MAX];
 
 	if (!getcwd(cwd, PATH_MAX))
-		return (1);
+		return (print_errno("pwd"), 1);
 	return (printf("%s\n", cwd), 0);
 }
 
 int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 {
-	int				i;
+	t_token	*arg;
+	char	*temp;
 
-	if (token && token->next)
-		return (printf("exit\nminishell: exit: Too many arguments\n"), \
-			free_shell(shell), exit(1), 0);
-	else if (token && token->type == ARGUMENT)
+	printf("exit\n");
+	if (!token || !has_args(token))
+		return (free_shell(shell), exit(ret), 0);
+	arg = get_cmd_token(token, ARGUMENT);
+	if (!ft_isnumber(arg->str))
 	{
-		i = 0;
-		if (*token->str == '-' || *token->str == '+')
-			i++;
-		if (!token->str[i])
-			return (printf(\
-				"exit\nminishell: exit: %s: Numeric argument required\n", \
-				token->str), free_shell(shell), exit(2), 0);
-		while (token->str[i])
-		{
-			if (!ft_isdigit(token->str[i++]))
-				return (printf(\
-					"exit\nminishell: exit: %s: Numeric argument required\n", \
-					token->str), free_shell(shell), exit(2), 0);
-		}
-		ret = (unsigned char)ft_atoi(token->str);
+		temp = ft_strjoin("exit: ", arg->str);
+		if (!temp)
+			return (print_err(ERRNO_ERR), 1);
+		return (print_custom_err(temp, NAN_ERR), free(temp), 2);
 	}
-	return (printf("exit\n"), free_shell(shell), exit(ret), 0);
+	if (arg->next && has_args(arg->next))
+		return (print_custom_err("exit", ARGS_ERR), 2);
+	return (free_shell(shell), exit(ft_atoi(arg->str)), 0);
 }
