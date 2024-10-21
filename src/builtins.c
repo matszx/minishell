@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/20 22:15:24 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:08:43 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,25 @@ int	ft_cd(char **env, t_token *token)
 	int		ret;
 	t_token	*arg;
 
-	if (token && has_args(token->next))
-		return (print_custom_err("cd", ARGS_ERR), 1);
 	arg = get_cmd_token(token, ARGUMENT);
+	if (arg && has_args(arg->next))
+		return (print_custom_err("cd", ARGS_ERR), 1);
 	if (!arg)
-		ret = (chdir(find_env(env, "HOME")) != 0);
+		ret = chdir(find_env(env, "HOME"));
 	else
 	{
-		if (*(token->str) == '~')
-			tmp = ft_strjoin(find_env(env, "HOME"), token->str + 1);
+		if (*(arg->str) == '~')
+		{
+			tmp = ft_strjoin(find_env(env, "HOME"), arg->str + 1);
+			if (!tmp)
+				return (print_err(ERRNO_ERR), 1);
+			ret = chdir(tmp);
+			free(tmp);
+		}
 		else
-			tmp = ft_strjoin("", token->str);
-		ret = (chdir(tmp) != 0);
-		free(tmp);
+			ret = chdir(arg->str);
 	}
-	if (ret)
+	if (ret == -1)
 		return (print_errno("cd"), 1);
 	return (ret);
 }

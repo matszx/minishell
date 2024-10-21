@@ -6,13 +6,13 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/20 23:22:14 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:16:32 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	is_builting(char *str)
+int	is_builtin(char *str)
 {
 	return (!ft_strncmp(str, "echo", 5)
 		|| !ft_strncmp(str, "cd", 3)
@@ -20,6 +20,14 @@ int	is_builting(char *str)
 		|| !ft_strncmp(str, "export", 6)
 		|| !ft_strncmp(str, "unset", 5)
 		|| !ft_strncmp(str, "env", 4)
+		|| !ft_strncmp(str, "exit", 5));
+}
+
+int	affects_environtment(char *str)
+{
+	return (!ft_strncmp(str, "cd", 3)
+		|| !ft_strncmp(str, "export", 6)
+		|| !ft_strncmp(str, "unset", 5)
 		|| !ft_strncmp(str, "exit", 5));
 }
 
@@ -77,7 +85,7 @@ void	child(t_shell *shell, t_token *t, int n)
 	err = build_command(t, shell->fd, n);
 	if (err)
 		return (print_err(err), exit(EXIT_FAILURE));
-	if (is_builting(t->str))
+	if (is_builtin(t->str))
 	{
 		close(shell->fd[n * 2]);
 		if (dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
@@ -118,8 +126,8 @@ int	execute(t_shell *shell)
 	i = -1;
 	temp = get_cmd_token(shell->tokens, COMMAND);
 	pid = -1;
-	if (shell->n_commands == 1 && temp && !ft_strncmp(temp->str, "exit", 5))
-		return (ft_exit((unsigned int) shell->exit_status, shell, temp->next));
+	if (shell->n_commands == 1 && temp && affects_environtment(temp->str))
+		return (argument_manager(shell, temp));
 	temp = shell->tokens;
 	while (++i < shell->n_commands)
 	{
@@ -130,3 +138,10 @@ int	execute(t_shell *shell)
 		print_err(ERRNO_ERR);
 	return (0);
 }
+
+/*
+	n1
+	in	out
+	n2
+	in1	out1	in2	out2
+*/
