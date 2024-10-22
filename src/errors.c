@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 19:59:18 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/21 16:03:25 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 04:49:41 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ char	*get_err_msg(int err)
 		return (": Numeric argument required\n");
 	else if (err == IDENTIFIER_ERR)
 		return (": Not a valid identifier\n");
+	else if (err == CMD_NOT_FOUND)
+		return (": Command not found\n");
 	else if (err == ERRNO_ERR)
 		return (strerror(errno));
 	else

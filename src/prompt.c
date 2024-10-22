@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/20 21:53:09 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 21:36:01 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	print_fd(int *fd, int n)
 	int	i;
 
 	i = -1;
-	while(++i < n)
+	while (++i < n)
 	{
 		if (i % 2)
 			printf("Out:\t%i\n", fd[i]);
@@ -102,7 +102,9 @@ void	minishell(t_shell *shell)
 	err = verify_order(shell->tokens);
 	if (err)
 		return (print_err(err));
-	expand_commands(shell);
+	err = expand_commands(shell);
+	if (err)
+		return (print_err(err), free_shell(shell), exit(EXIT_FAILURE));
 	printf("Expanded =======================================\n");
 	print_tokens(shell->tokens);
 	err = get_pipes(shell);

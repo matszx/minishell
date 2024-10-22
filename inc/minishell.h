@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/20 21:36:50 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 01:20:30 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void		prompt(t_shell *shell);
 
 // expander.c
 int			handle_expansions(t_token *t, char **env, int status, int expand);
-void		expand_commands(t_shell *shell);
+int			expand_commands(t_shell *shell);
 
 // redirect.c
 int			get_pipes(t_shell *shell);
@@ -141,6 +141,7 @@ int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 int			ft_isnumber(char *str);
 int			has_args(t_token *t);
 t_token		*get_cmd_token(t_token *t, t_type type);
+int			exit_error(char *str);
 
 // signals.c
 void		init_signals(void);
@@ -152,5 +153,8 @@ int			execute(t_shell *shell);
 void		print_err(int err);
 void		print_errno(char *str);
 void		print_custom_err(char *cmd, int err);
+
+//ft_atol.c
+long		ft_atol(const char *nptr, int *overflow);
 
 #endif

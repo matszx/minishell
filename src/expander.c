@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/20 18:10:27 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 21:34:56 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,16 @@ int	get_expanded(t_token *t, t_expand *e, char *dst)
 {
 	while (t->str[++e->i])
 	{
-		if (t->str[e->i] && valid_expand(t->str[e->i], e->quotes, t->str[e->i + 1]) && e->expand)
+		if (t->str[e->i]
+			&& valid_expand(t->str[e->i], e->quotes, t->str[e->i + 1])
+			&& e->expand)
 		{
 			if (expand(e, t->str, dst) == -1)
 				return (ERRNO_ERR);
 			continue ;
 		}
-		if ((t->str[e->i] == SQUOTE || t->str[e->i] == DQUOTE) && e->quotes == '\0')
+		if ((t->str[e->i] == SQUOTE || t->str[e->i] == DQUOTE)
+			&& e->quotes == '\0')
 			e->quotes = t->str[e->i];
 		else if (t->str[e->i] == e->quotes && e->quotes != '\0')
 			e->quotes = '\0';
@@ -133,7 +136,7 @@ void	init_format(t_format *f, char **env, int expand, int status)
 }
 
 int	calculate_len(t_token *t, t_format *f, int *len)
-{\
+{
 	while (t->str[++f->i])
 	{
 		if ((t->str[f->i] == SQUOTE || t->str[f->i] == DQUOTE)
@@ -144,7 +147,8 @@ int	calculate_len(t_token *t, t_format *f, int *len)
 		}
 		if (t->str[f->i] == f->quotes && f->quotes != '\0')
 			f->quotes = '\0';
-		else if (valid_expand(t->str[f->i], f->quotes, t->str[f->i + 1]) && f->expand)
+		else if (valid_expand(t->str[f->i], f->quotes, t->str[f->i + 1])
+			&& f->expand)
 		{
 			if (parsing(f, &t->str[f->i]))
 				return (f->err);
@@ -152,12 +156,13 @@ int	calculate_len(t_token *t, t_format *f, int *len)
 		else if (t->str[f->i] == '\\' && t->str[f->i + 1] && f->quotes == '\0')
 		{
 			f->rem_slash++;
-			f->i++;	
+			f->i++;
 		}
 	}
 	//printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\nspaces: %i\nlimiter: %i\n",
 	//	f.rem_quotes, f.rem_slash, f.len_var, f.len_val, f.spaces_skipped, f.red_limit);
-	(*len) = f->i - (f->rem_quotes * 2) - f->rem_slash - f->len_var - f->spaces_skipped + (f->len_val) + f->red_limit;
+	(*len) = f->i - (f->rem_quotes * 2) - f->rem_slash - f->len_var
+		- f->spaces_skipped + (f->len_val) + f->red_limit;
 	return (0);
 }
 
@@ -184,7 +189,7 @@ int	handle_expansions(t_token *t, char **env, int status, int expand)
 	return (0);
 }
 
-void	expand_commands(t_shell *shell)
+int	expand_commands(t_shell *shell)
 {
 	t_token	*temp;
 	int		err;
@@ -193,7 +198,7 @@ void	expand_commands(t_shell *shell)
 	temp = shell->tokens;
 	shell->env_var = get_env(shell->env);
 	if (!shell->env_var)
-		return ;
+		return (ERRNO_ERR);
 	while (temp)
 	{
 		if (temp->type == HEREDOC)
@@ -203,13 +208,10 @@ void	expand_commands(t_shell *shell)
 		}
 		else
 			expand = 1;
-		err = handle_expansions(temp, shell->env_var, shell->exit_status, expand);
+		err = handle_expansions(temp, shell->env_var,
+			shell->exit_status, expand);
 		if (err)
-		{
-			print_err(err);
-			free_shell(shell);
-			exit(EXIT_FAILURE);
-		}
+			return (err);
 		temp = temp->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 18:08:34 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 21:27:12 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	remove_dummy(t_token **token)
 	}
 }
 
-int		is_token(char c)
+int	is_token(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }
@@ -112,7 +112,7 @@ int	start_token(char *str, int *i, int *len)
 	return (0);
 }
 
-int		token_len(char *str, int *i)
+int	token_len(char *str, int *i)
 {
 	char	quotes;
 	int		len;
@@ -128,7 +128,7 @@ int		token_len(char *str, int *i)
 		else if (str[*i] == quotes && quotes)
 			quotes = '\0';
 		else if ((ft_isspace(str[*i]) || is_token(str[*i])) && !quotes)
-			break ;	
+			break ;
 		len++;
 		(*i)++;
 	}

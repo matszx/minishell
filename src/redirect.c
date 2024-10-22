@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/19 19:29:18 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 21:27:53 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	write_heredoc_line(t_shell *shell, char *buf, int fd)
 	if (err)
 		return (free(buf), err);
 	if (write(fd, temp.str, ft_strlen(temp.str)) == -1
-			|| write(fd, "\n", 1) == -1)
+		|| write(fd, "\n", 1) == -1)
 		return (free(temp.str), ERRNO_ERR);
 	return (free(temp.str), 0);
 }
@@ -131,7 +131,7 @@ int	red_heredoc(t_shell *shell)
 		{
 			err = heredoc(shell, temp->next, shell->fd, cmd);
 			if (err)
-				return (err);	
+				return (err);
 		}
 		temp = temp->next;
 		if (temp && temp->type == OPERATOR)

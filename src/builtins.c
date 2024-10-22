@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/21 16:08:43 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 01:23:26 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,20 +98,23 @@ int	ft_pwd(void)
 int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 {
 	t_token	*arg;
-	char	*temp;
+	int		out;
+	int		overflow;
 
 	printf("exit\n");
 	if (!token || !has_args(token))
 		return (free_shell(shell), exit(ret), 0);
 	arg = get_cmd_token(token, ARGUMENT);
 	if (!ft_isnumber(arg->str))
-	{
-		temp = ft_strjoin("exit: ", arg->str);
-		if (!temp)
-			return (print_err(ERRNO_ERR), 1);
-		return (print_custom_err(temp, NAN_ERR), free(temp), 2);
-	}
+		return (out = exit_error(arg->str), free_shell(shell), exit(out), 0);
 	if (arg->next && has_args(arg->next))
-		return (print_custom_err("exit", ARGS_ERR), 2);
-	return (free_shell(shell), exit(ft_atoi(arg->str)), 0);
+	{
+		print_custom_err("exit", ARGS_ERR);
+		return (free_shell(shell), exit(2), 0);
+	}
+	overflow = 0;
+	out = ft_atol(arg->str, &overflow);
+	if (overflow)
+		return (out = exit_error(arg->str), free_shell(shell), exit(out), 0);
+	return (free_shell(shell), exit(out), 0);
 }

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/18 16:58:12 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/21 21:26:10 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 				"minishell: export: '%s': Not a valid identifier\n",
 				token->str
 				);
-			ret = 1;	
+			ret = 1;
 		}
 		token = token->next;
 	}
