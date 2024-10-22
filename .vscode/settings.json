@@ -2,6 +2,7 @@
 	"files.associations": {
 		"minishell.h": "c",
 		"sstream": "c",
-		"constants.h": "c"
+		"constants.h": "c",
+		"system_error": "c"
 	}
 }

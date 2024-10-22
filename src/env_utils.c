@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:42:13 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/09 19:47:14 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/22 17:05:55 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,12 @@ int	addenv(t_env *stack, t_env_node *env, char *str)
 		free(new->var);
 		free(new->value);
 	}
+	printf("ST: %i: %s\n", stack->amount + 1, str);
 	new->value = ft_substr(str, idx + (str[idx] == '='), ft_strlen(str) - idx);
-	return (stack->amount++, new->var = ft_substr(str, 0, idx), 0);
+	new->var = ft_substr(str, 0, idx);
+	printf("New Var: %s\n", new->var);
+	printf("New Val: %s\n", new->value);
+	return (stack->amount++, 0);
 }
 
 void	destroy_env(t_env **env)
@@ -104,6 +108,18 @@ int	set_level(t_env_node *head)
 	return (0);
 }
 
+void	print_env2(t_env_node *node)
+{
+	int	i;
+
+	i = 0;
+	while (node)
+	{
+		printf("%i: %s\n", ++i, node->value);
+		node = node->next;
+	}
+}
+
 // Copies envp into a list of t_env
 t_env	*copy_env(char **envp)
 {
@@ -120,8 +136,11 @@ t_env	*copy_env(char **envp)
 	env->head->next = NULL;
 	env->amount = 0;
 	while (*envp)
-		addenv(env, env->head, *(envp++));
+		if (addenv(env, env->head, *(envp++)))
+			return (destroy_env(&env), NULL);
 	if (set_level(env->head))
 		destroy_env(&env);
+	printf("ENV LONG: %i\n", env->amount);
+	print_env2(env->head->next);
 	return (env);
 }

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 19:59:18 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/22 04:49:41 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 15:46:16 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ void	print_err(int err)
 	else if (err == PIPE_END_ERR)
 		write(STDERR_FILENO,
 			"Minishell: Unclosed pipes are not allowed\n", 43);
+	else if (err == ARGS_ERR)
+		write(STDERR_FILENO,
+			"Minishell: Arguments are not accepted\n", 39);
 	else if (err != ERRNO_PRINTED)
 		perror("Minishell: ");
 }

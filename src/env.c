@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/21 21:26:10 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 16:14:35 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ char	**get_env(t_env *env)
 		return (NULL);
 	i = -1;
 	temp = env->head->next;
+	printf("ENV: %i\n", env->amount);
 	while (temp)
 	{
 		env_var[++i] = get_var(temp);
@@ -126,7 +127,7 @@ int	ft_env(t_env *env, t_token *token)
 	t_env_node	*temp;
 
 	if (token && token->type == ARGUMENT)
-		return (printf("minishell: env: Too many arguments\n"), 1);
+		return (print_custom_err("env", ARGS_ERR), 1);
 	temp = env->head->next;
 	while (temp)
 	{

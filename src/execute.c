@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/22 15:12:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 17:14:47 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ char	*find_command(t_shell *shell, t_token *cmd, int *code)
 	int		i;
 	int		file;
 
+	if (!cmd->str[0])
+		return ((*code) = CMD_NOT_FOUND, NULL);
 	file = path_access(cmd->str);
 	if (!file)
 		return (*code = 0, cmd->str);

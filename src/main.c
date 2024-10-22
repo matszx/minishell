@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/19 00:29:47 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 15:43:17 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,11 @@ static t_shell	*init_shell(char **envp)
 {
 	t_shell	*shell;
 
-	shell = malloc(sizeof(*shell));
+	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
 	shell->env_var = NULL;
 	shell->tokens = NULL;
-	shell->env_var = NULL;
 	shell->fd = NULL;
 	shell->n_commands = 0;
 	shell->env = copy_env(envp);
@@ -83,10 +82,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argv;
 	if (argc > 1)
-		return (printf("error: does not accept arguments\n"), EXIT_FAILURE);
+		return (print_err(ARGS_ERR), EXIT_FAILURE);
 	shell = init_shell(envp);
 	if (!shell)
-		return (printf("error: could not allocate memory\n"), EXIT_FAILURE);
+		return (print_err(ERRNO_ERR), EXIT_FAILURE);
 	prompt(shell);
 	return (free_shell(shell), EXIT_SUCCESS);
 }

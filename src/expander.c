@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/22 15:16:49 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 16:55:14 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,15 @@ int	handle_expansions(t_token *t, char **env, int status, int expand)
 	return (0);
 }
 
+void	print_env(char **env)
+{
+	int	i;
+
+	i = -1;
+	while (env[++i])
+		printf("%i: %s\n", i + 1, env[i]);
+}
+
 int	expand_commands(t_shell *shell)
 {
 	t_token	*temp;
@@ -197,6 +206,7 @@ int	expand_commands(t_shell *shell)
 	shell->env_var = get_env(shell->env);
 	if (!shell->env_var)
 		return (ERRNO_ERR);
+	print_env(shell->env_var);
 	while (temp)
 	{
 		if (temp->type == HEREDOC)
