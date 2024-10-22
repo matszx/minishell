@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/21 21:34:56 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 15:16:49 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,6 @@ int	calculate_len(t_token *t, t_format *f, int *len)
 			f->i++;
 		}
 	}
-	//printf("Quotes: %i\nslash: %i\nvar: %i\nval: %i\nspaces: %i\nlimiter: %i\n",
-	//	f.rem_quotes, f.rem_slash, f.len_var, f.len_val, f.spaces_skipped, f.red_limit);
 	(*len) = f->i - (f->rem_quotes * 2) - f->rem_slash - f->len_var
 		- f->spaces_skipped + (f->len_val) + f->red_limit;
 	return (0);
@@ -209,9 +207,10 @@ int	expand_commands(t_shell *shell)
 		else
 			expand = 1;
 		err = handle_expansions(temp, shell->env_var,
-			shell->exit_status, expand);
+				shell->exit_status, expand);
 		if (err)
 			return (err);
 		temp = temp->next;
 	}
+	return (0);
 }

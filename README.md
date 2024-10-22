@@ -4,7 +4,7 @@
 **General:**
 - [X] Display a prompt when waiting for a new command.
 - [X] Have a working history.
-- [ ] Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
+- [X] Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
 - [X] Not use more than one global variable. Think about it. You will have to explain its purpose.
 - [X] Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
 - [X] Handle ’ (single quote) which should prevent the shell from interpreting the meta- characters in the quoted sequence.

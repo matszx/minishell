@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/22 04:53:22 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/22 15:12:17 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,11 @@ char	**get_args(t_token *t)
 			len++;
 		temp = temp->next;
 	}
-	str = malloc(sizeof(char *) * (len + 1));
+	str = malloc(sizeof(char *) * (len + 2));
 	if (!str)
 		return (NULL);
 	temp = t;
-	len = 0;
+	len = 1;
 	while (temp && temp->type != OPERATOR)
 	{
 		if (temp->type == ARGUMENT)
@@ -96,7 +96,7 @@ char	**get_args(t_token *t)
 		temp = temp->next;
 	}
 	str[len] = NULL;
-	return (str);
+	return (str[0] = t->str, str);
 }
 
 void	jump_to_next(t_token **t)
@@ -183,8 +183,10 @@ void	child(t_shell *shell, t_token *t, int n)
 	if (is_builtin(cmd->str))
 	{
 		close(shell->fd[n * 2]);
-		if (dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
+		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO && dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
 			return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
+		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
+			close(shell->fd[(n * 2) + 1]);
 		exit(argument_manager(shell, cmd));
 	}
 	err = 0;
