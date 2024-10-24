@@ -3,6 +3,7 @@
 		"minishell.h": "c",
 		"sstream": "c",
 		"constants.h": "c",
-		"system_error": "c"
+		"system_error": "c",
+		"complex": "c"
 	}
 }

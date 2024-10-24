@@ -34,8 +34,3 @@
 - [X] unset with no options
 - [X] env with no options or arguments
 - [X] exit with no options
-
-ST: 1: TERM_SESSION_ID=w0t0p0:33FDB222-0769-4C92-A424-0190D9E3432B
-ST: 3: LC_TERMINAL_VERSION=3.4.16
-ST: 11: TERM_PROGRAM_VERSION=3.4.16
-ST: 24: __CF_USER_TEXT_ENCODING=0x0:0:0

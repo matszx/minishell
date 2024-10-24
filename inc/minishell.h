@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/22 01:20:30 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 19:15:20 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,12 @@ void		prompt(t_shell *shell);
 int			handle_expansions(t_token *t, char **env, int status, int expand);
 int			expand_commands(t_shell *shell);
 
+// expander_len.c
+int			valid_name(char c);
+int			valid_expand(char c, char quotes, char next);
+int			calculate_len(t_token *t, t_format *f, int *len);
+void		init_format(t_format *f, char **env, int expand, int status);
+
 // redirect.c
 int			get_pipes(t_shell *shell);
 int			red_heredoc(t_shell *shell);
@@ -120,16 +126,36 @@ int			skip_spaces(char *str);
 int			parse(char *buf, t_shell *shell);
 void		destroy_list(t_token **head);
 
+// parser_utils.c
+int			skip_spaces(char *str);
+int			is_token(char c);
+int			is_operator(char c);
+int			verify_redirect(char *str, int *i);
+
+// parse_strings.c
+int			quotes_closed(char *s);
+char		*get_token(char *str, int *i);
+int			check_string(char *str);
+
+// classifier.c
+void		classify_count(t_token *head, int *n);
+
 // env.c
-char		**get_env(t_env *env);
+void		print_var(t_env *stack);
 int			ft_export(t_env *stack, t_env_node *env, t_token *token);
 int			ft_unset(t_env *env, t_token *token);
 int			ft_env(t_env *env, t_token *token);
 
 // env_utils.c
 int			addenv(t_env *stack, t_env_node *env, char *str);
+void		remove_env(t_env *env, t_token *token);
 void		destroy_env(t_env **env);
 t_env		*copy_env(char **envp);
+
+// env_string.c
+char		**get_env(t_env *env);
+char		*find_env(char **env, char *var);
+int			set_level(t_env_node *head);
 
 // builtins.c
 int			ft_echo(t_token *token);
@@ -141,7 +167,6 @@ int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 int			ft_isnumber(char *str);
 int			has_args(t_token *t);
 t_token		*get_cmd_token(t_token *t, t_type type);
-int			exit_error(char *str);
 
 // signals.c
 void		init_signals(void);
@@ -151,8 +176,8 @@ int			execute(t_shell *shell);
 
 // errors.c
 void		print_err(int err);
-void		print_errno(char *str);
 void		print_custom_err(char *cmd, int err);
+void		print_arg_err(char *cmd, char *str, int err);
 
 //ft_atol.c
 long		ft_atol(const char *nptr, int *overflow);

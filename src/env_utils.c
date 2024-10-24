@@ -6,117 +6,101 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:42:13 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/22 17:05:55 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:14:21 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-// Checks if the environment identifier is valid
-static int	is_valid_identifier(char *s)
+static int	addenv2(t_env_node *env, char *str, size_t idx, char *equal)
 {
-	if (!ft_isalpha(*s) && *s != '_')
-		return (0);
-	while (*s && *s != '=')
-	{
-		if (!ft_isalnum(*s) && *s != '_')
-			return (0);
-		s++;
-	}
-	return (1);
+	t_env_node	*new;
+
+	new = malloc(sizeof(t_env_node));
+	if (!new)
+		return (print_err(ERRNO_ERR), 1);
+	new->value = NULL;
+	new->next = NULL;
+	if ((equal[0]))
+		new->value = ft_substr(str, idx + 1, ft_strlen(str) - idx);
+	new->var = ft_substr(str, 0, idx);
+	if (!new->var || (!new->value && equal[0]))
+		return (free(new->value), free(new->var), \
+			free(new), print_err(ERRNO_ERR), 1);
+	while (env->next)
+		env = env->next;
+	env->next = new;
+	return (0);
 }
 
 // Sets a new environment variable or replaces an existing one
 int	addenv(t_env *stack, t_env_node *env, char *str)
 {
-	t_env_node	*new;
 	size_t		idx;
+	char		*equal;
 
-	if (!ft_strchr(str, '=') || !is_valid_identifier(str))
-		return (1);
-	new = malloc(sizeof(t_env_node));
-	if (!new)
-		return (1);
-	idx = 0;
-	while (str[idx] && str[idx] != '=')
-		idx++;
+	equal = ft_strchr(str, '=');
+	if (!equal)
+		equal = &str[ft_strlen(str)];
+	idx = equal - str;
 	while (env && env->next && ft_strncmp(env->var, str, idx))
 		env = env->next;
-	new->next = NULL;
-	if (!env->next && ft_strncmp(env->var, str, idx))
-		env->next = new;
-	else
+	if (!ft_strncmp(env->var, str, idx) && !str[idx])
+		return (0);
+	else if (!ft_strncmp(env->var, str, idx) && !env->var[idx])
 	{
-		free(new);
-		new = env;
-		free(new->var);
-		free(new->value);
+		equal = env->value;
+		env->value = ft_substr(str, idx + 1, ft_strlen(str) - idx);
+		if (!env->value)
+			return (env->value = equal, print_err(ERRNO_ERR), 1);
+		return (0);
 	}
-	printf("ST: %i: %s\n", stack->amount + 1, str);
-	new->value = ft_substr(str, idx + (str[idx] == '='), ft_strlen(str) - idx);
-	new->var = ft_substr(str, 0, idx);
-	printf("New Var: %s\n", new->var);
-	printf("New Val: %s\n", new->value);
+	if (addenv2(env, str, idx, equal))
+		return (1);
 	return (stack->amount++, 0);
+}
+
+void	remove_env(t_env *env, t_token *token)
+{
+	t_env_node	*prev;
+	t_env_node	*temp;
+
+	prev = env->head;
+	temp = env->head->next;
+	while (temp && ft_strcmp(temp->var, token->str))
+	{
+		prev = temp;
+		temp = temp->next;
+	}
+	if (temp)
+	{
+		prev->next = temp->next;
+		free(temp->var);
+		free(temp->value);
+		free(temp);
+		env->amount--;
+	}
 }
 
 void	destroy_env(t_env **env)
 {
 	t_env_node	*temp;
+	t_env_node	*next;
 
 	if (*env)
 	{
-		while ((*env)->head)
+		temp = (*env)->head->next;
+		while (temp)
 		{
-			temp = (*env)->head->next;
-			free((*env)->head->var);
-			free((*env)->head->value);
-			free((*env)->head);
-			(*env)->head = temp;
+			next = temp->next;
+			free(temp->var);
+			free(temp->value);
+			free(temp);
+			temp = next;
 		}
+		free((*env)->head);
 		free(*env);
 		*env = NULL;
-	}
-}
-
-int	set_level(t_env_node *head)
-{
-	t_env_node	*tmp;
-	int			level;
-	char		*shlvl;
-
-	tmp = head;
-	shlvl = NULL;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->var, "SHLVL"))
-		{
-			level = ft_atoi(tmp->value) + 1;
-			if (level < 0)
-				level = 0;
-			else if (level > LVL_LIMIT)
-				level = 1;
-			shlvl = ft_itoa(level);
-			free(tmp->value);
-			tmp->value = shlvl;
-			if (!tmp->value)
-				return (1);
-			break ;
-		}
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
-void	print_env2(t_env_node *node)
-{
-	int	i;
-
-	i = 0;
-	while (node)
-	{
-		printf("%i: %s\n", ++i, node->value);
-		node = node->next;
 	}
 }
 
@@ -131,8 +115,8 @@ t_env	*copy_env(char **envp)
 	env->head = malloc(sizeof(t_env_node));
 	if (!env->head)
 		return (free(env), NULL);
-	env->head->var = ft_strdup("");
-	env->head->value = ft_strdup("");
+	env->head->var = "";
+	env->head->value = "";
 	env->head->next = NULL;
 	env->amount = 0;
 	while (*envp)
@@ -140,7 +124,5 @@ t_env	*copy_env(char **envp)
 			return (destroy_env(&env), NULL);
 	if (set_level(env->head))
 		destroy_env(&env);
-	printf("ENV LONG: %i\n", env->amount);
-	print_env2(env->head->next);
 	return (env);
 }

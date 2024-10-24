@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/22 17:14:47 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 19:06:57 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ char	*find_command(t_shell *shell, t_token *cmd, int *code)
 void	find_error(char *str, int *code)
 {
 	if (*code == 126 || *code == 127)
-		return (print_errno(str));
+		return (print_custom_err(str, ERRNO_ERR));
 	else if (*code == CMD_NOT_FOUND)
 		return (*code = 127, print_custom_err(str, CMD_NOT_FOUND));
 	return (print_err(ERRNO_ERR));

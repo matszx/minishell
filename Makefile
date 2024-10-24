@@ -6,7 +6,7 @@
 #    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/22 16:18:46 by dzapata          ###   ########.fr        #
+#    Updated: 2024/10/24 16:48:54 by dzapata          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,12 @@ SRC_FILES 		=	main.c \
 					execute.c \
 					errors.c \
 					builtins_utils.c \
-					ft_atol.c
+					ft_atol.c \
+					env_string.c \
+					expander_len.c \
+					parser_utils.c \
+					classifier.c \
+					parse_strings.c
 					
 SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

@@ -6,23 +6,12 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 02:02:01 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/22 17:27:56 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 13:07:27 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 #include <limits.h>
-
-char	*ft_strjoin2(const char *s, ...)
-{
-	int		print_c;
-	va_list	args;
-
-	va_start(args, s);
-	print_c = ft_printf_funct(1, s, args);
-	va_end(args);
-	return (print_c);
-}
 
 long	ft_atol(const char *nptr, int *overflow)
 {

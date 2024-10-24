@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/21 21:36:01 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:34:19 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void	prompt(t_shell *shell)
 		if (!shell->buf)
 		{
 			if (err != errno)
-				return (perror("Minishell"));
+				return (perror(MINISHELL));
 			ft_exit((unsigned int)shell->exit_status, shell, NULL);
 		}
 		add_history(shell->buf);

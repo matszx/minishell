@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/21 21:27:53 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 19:07:28 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	input(char *str, int *fd, int cmd)
 	new_fd = open(str, O_RDONLY);
 	fd[cmd * 2] = new_fd;
 	if (new_fd == -1)
-		return (print_errno(str), ERRNO_PRINTED);
+		return (print_custom_err(str, ERRNO_ERR), ERRNO_PRINTED);
 	return (0);
 }
 
@@ -101,7 +101,7 @@ int	output(char *str, int *fd, int cmd)
 	new_fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, FILE_CREAT);
 	fd[(cmd * 2) + 1] = new_fd;
 	if (new_fd == -1)
-		return (print_errno(str), ERRNO_PRINTED);
+		return (print_custom_err(str, ERRNO_ERR), ERRNO_PRINTED);
 	return (0);
 }
 
@@ -113,7 +113,7 @@ int	append_output(char *str, int *fd, int cmd)
 	new_fd = open(str, O_WRONLY | O_CREAT | O_APPEND, FILE_CREAT);
 	fd[(cmd * 2) + 1] = new_fd;
 	if (new_fd == -1)
-		return (print_errno(str), ERRNO_PRINTED);
+		return (print_custom_err(str, ERRNO_ERR), ERRNO_PRINTED);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/22 01:23:26 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 19:15:48 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_cd(char **env, t_token *token)
 			ret = chdir(arg->str);
 	}
 	if (ret == -1)
-		return (print_errno("cd"), 1);
+		return (print_custom_err("cd", ERRNO_ERR), 1);
 	return (ret);
 }
 
@@ -91,7 +91,7 @@ int	ft_pwd(void)
 	char	cwd[PATH_MAX];
 
 	if (!getcwd(cwd, PATH_MAX))
-		return (print_errno("pwd"), 1);
+		return (print_custom_err("pwd", ERRNO_ERR), 1);
 	return (printf("%s\n", cwd), 0);
 }
 
@@ -106,7 +106,8 @@ int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 		return (free_shell(shell), exit(ret), 0);
 	arg = get_cmd_token(token, ARGUMENT);
 	if (!ft_isnumber(arg->str))
-		return (out = exit_error(arg->str), free_shell(shell), exit(out), 0);
+		return (print_arg_err("exit", arg->str, NAN_ERR),
+			free_shell(shell), exit(2), 0);
 	if (arg->next && has_args(arg->next))
 	{
 		print_custom_err("exit", ARGS_ERR);
@@ -115,6 +116,7 @@ int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 	overflow = 0;
 	out = ft_atol(arg->str, &overflow);
 	if (overflow)
-		return (out = exit_error(arg->str), free_shell(shell), exit(out), 0);
+		return (print_arg_err("exit", arg->str, NAN_ERR),
+			free_shell(shell), exit(2), 0);
 	return (free_shell(shell), exit(out), 0);
 }

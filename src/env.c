@@ -6,29 +6,62 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/22 16:14:35 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:19:06 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+// Checks if the environment identifier is valid
+static int	is_valid_identifier(char *s)
+{
+	if (!(*s) || (!ft_isalpha(*s) && *s != '_'))
+		return (0);
+	s++;
+	while (*s && *s != '=')
+	{
+		if (!ft_isalnum(*s) && *s != '_')
+			return (0);
+		s++;
+	}
+	return (1);
+}
+
+void	print_var(t_env *stack)
+{
+	t_env_node	*temp;
+
+	temp = stack->head->next;
+	while (temp)
+	{
+		if (temp->value)
+			printf("declare -x %s=\"%s\"\n", temp->var, temp->value);
+		else
+			printf("declare -x %s\n", temp->var);
+		temp = temp->next;
+	}
+}
+
 // Loops addenv for every argument given
 int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 {
 	int		ret;
+	t_token	*arg;
 
 	ret = 0;
-	while (token && token->type == ARGUMENT)
+	arg = get_cmd_token(token, ARGUMENT);
+	if (!arg)
+		return (print_var(stack), 0);
+	while (arg)
 	{
-		if (addenv(stack, env, token->str))
+		if (is_valid_identifier(arg->str))
 		{
-			printf(
-				"minishell: export: '%s': Not a valid identifier\n",
-				token->str
-				);
-			ret = 1;
+			if (addenv(stack, env, arg->str))
+				ret = 1;
 		}
-		token = token->next;
+		else
+			print_arg_err("export", arg->str, IDENTIFIER_ERR);
+		arg = get_cmd_token(arg->next, ARGUMENT);
 	}
 	return (ret);
 }
@@ -36,89 +69,22 @@ int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 // Deletes an environment variable
 int	ft_unset(t_env *env, t_token *token)
 {
-	t_env_node	*prev;
-	t_env_node	*temp;
+	int			ret;
 
-	while (token && token->type == ARGUMENT)
+	token = get_cmd_token(token, ARGUMENT);
+	ret = 0;
+	while (token)
 	{
-		prev = env->head;
-		temp = env->head->next;
-		while (temp && ft_strcmp(temp->var, token->str))
+		if (is_valid_identifier(token->str))
+			remove_env(env, token);
+		else
 		{
-			prev = temp;
-			temp = temp->next;
+			ret = 1;
+			print_arg_err("unset", token->str, IDENTIFIER_ERR);
 		}
-		if (temp)
-		{
-			prev->next = temp->next;
-			free(temp->var);
-			free(temp->value);
-			free(temp);
-			env->amount--;
-		}
-		token = token->next;
+		token = get_cmd_token(token->next, ARGUMENT);
 	}
-	return (0);
-}
-
-char	*get_var(t_env_node *node)
-{
-	int		len_var;
-	int		len_val;
-	char	*str;
-
-	len_var = ft_strlen(node->var);
-	len_val = ft_strlen(node->value);
-	str = malloc(sizeof(char) * (len_var + len_val + 3));
-	if (!str)
-		return (NULL);
-	ft_strlcpy(str, node->var, len_var + 1);
-	str[len_var] = '=';
-	ft_strlcpy(&str[len_var + 1], node->value, len_val + 1);
-	str[len_var + len_val + 2] = '\0';
-	return (str);
-}
-
-char	**get_env(t_env *env)
-{
-	char		**env_var;
-	int			i;
-	t_env_node	*temp;
-
-	env_var = malloc(sizeof(char *) * env->amount + 1);
-	if (!env_var)
-		return (NULL);
-	i = -1;
-	temp = env->head->next;
-	printf("ENV: %i\n", env->amount);
-	while (temp)
-	{
-		env_var[++i] = get_var(temp);
-		if (!env_var)
-		{
-			while (i-- > -1)
-				free(env_var[i]);
-			return (free(env_var), NULL);
-		}
-		temp = temp->next;
-	}
-	env_var[++i] = NULL;
-	return (env_var);
-}
-
-char	*find_env(char **env, char *var)
-{
-	int		i;
-	int		len;
-
-	i = -1;
-	len = ft_strlen(var);
-	while (env[++i])
-	{
-		if (!ft_strncmp(var, env[i], len) && env[i][len] == '=')
-			return (&env[i][len + 1]);
-	}
-	return ("");
+	return (ret);
 }
 
 // Prints the environment
@@ -131,7 +97,8 @@ int	ft_env(t_env *env, t_token *token)
 	temp = env->head->next;
 	while (temp)
 	{
-		printf("%s=%s\n", temp->var, temp->value);
+		if (temp->value)
+			printf("%s=%s\n", temp->var, temp->value);
 		temp = temp->next;
 	}
 	return (0);
