@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/24 19:15:20 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/25 15:55:09 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,17 @@ typedef enum e_type
 	RED_APP,
 	RED_ARG,
 }	t_type;
+
+typedef struct s_err_msg
+{
+	char	*str;
+	char	*str_err;
+	char	*cmd;
+	char	*arg;
+	int		len1;
+	int		len2;
+	int		quotes;
+}	t_err_msg;
 
 typedef struct s_token
 {
@@ -176,8 +187,7 @@ int			execute(t_shell *shell);
 
 // errors.c
 void		print_err(int err);
-void		print_custom_err(char *cmd, int err);
-void		print_arg_err(char *cmd, char *str, int err);
+void		print_arg_err(char *cmd, char *arg, int err, int quotes);
 
 //ft_atol.c
 long		ft_atol(const char *nptr, int *overflow);

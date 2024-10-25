@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/24 19:06:57 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:44:30 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	perform_redirections(t_token *t, int *fd, int n)
 		{
 			err = redirect(temp, fd, n);
 			if (err)
-				return (err);
+				return (print_arg_err(temp->next->str, NULL, ERRNO_ERR, 0), 1);
 		}
 		temp = temp->next;
 	}
@@ -118,12 +118,37 @@ int	path_access(char *str)
 	return (2);
 }
 
-char	*find_command(t_shell *shell, t_token *cmd, int *code)
+char	*get_cmd_path(int *code, char **paths, char *str)
 {
-	char	*str;
-	char	**paths;
+	char	*temp;
 	char	*c_path;
 	int		i;
+	int		file;
+
+	i = -1;
+	while (paths[++i])
+	{
+		temp = ft_strjoin(paths[i], "/");
+		if (!temp)
+			return (*code = 1, NULL);
+		c_path = ft_strjoin(temp, str);
+		free(temp);
+		if (!c_path)
+			return (*code = 1, NULL);
+		file = path_access(c_path);
+		if (!file)
+			return (c_path);
+		free(c_path);
+		if (file == 1)
+			return (NULL);
+	}
+	return ((*code) = CMD_NOT_FOUND, NULL);
+}
+
+char	*find_command(t_shell *shell, t_token *cmd, int *code)
+{
+	char	**paths;
+	char	*c_path;
 	int		file;
 
 	if (!cmd->str[0])
@@ -133,40 +158,38 @@ char	*find_command(t_shell *shell, t_token *cmd, int *code)
 		return (*code = 0, cmd->str);
 	else if (file == 1)
 		return (*code = 126, NULL);
-	i = -1;
 	c_path = find_env(shell->env_var, "PATH");
 	if (!c_path)
-		c_path = DEFAULT_PATH;
+		return ((*code) = CMD_NOT_FOUND, NULL);
 	paths = ft_split(c_path, ':');
 	if (!paths)
 		return (*code = 1, NULL);
-	while (paths[++i])
-	{
-		str = ft_strjoin(paths[i], "/");
-		if (!str)
-			return (*code = 1, free_table((void **) paths), NULL);
-		c_path = ft_strjoin(str, cmd->str);
-		free(str);
-		if (!c_path)
-			return (*code = 1, free_table((void **) paths), NULL);
-		file = path_access(c_path);
-		if (!file)
-			return (free_table((void **) paths), c_path);
-		else if (file == 1)
-			return (free(c_path), free_table((void **) paths), NULL);
-		free(c_path);
-	}
+	c_path = get_cmd_path(code, paths, cmd->str);
 	free_table((void **) paths);
-	return ((*code) = CMD_NOT_FOUND, NULL);
+	if (!c_path)
+		return (NULL);
+	return (c_path);
 }
 
 void	find_error(char *str, int *code)
 {
 	if (*code == 126 || *code == 127)
-		return (print_custom_err(str, ERRNO_ERR));
+		return (print_arg_err(str, NULL, ERRNO_ERR, 0));
 	else if (*code == CMD_NOT_FOUND)
-		return (*code = 127, print_custom_err(str, CMD_NOT_FOUND));
+		return (*code = 127, print_arg_err(str, NULL, CMD_NOT_FOUND, 0));
 	return (print_err(ERRNO_ERR));
+}
+
+void	files(t_shell *shell, int n)
+{
+	if (dup2(shell->fd[(n * 2)], STDIN_FILENO) == -1)
+		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
+	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO
+		&& dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
+		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
+	close(shell->fd[(n * 2)]);
+	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
+		close(shell->fd[(n * 2) + 1]);
 }
 
 void	child(t_shell *shell, t_token *t, int n)
@@ -178,19 +201,13 @@ void	child(t_shell *shell, t_token *t, int n)
 
 	err = perform_redirections(t, shell->fd, n);
 	if (err)
-		return (print_err(err), exit(EXIT_FAILURE));
+		return (exit(EXIT_FAILURE));
 	cmd = get_cmd_token(t, COMMAND);
 	if (!cmd)
 		exit(EXIT_SUCCESS);
+	files(shell, n);
 	if (is_builtin(cmd->str))
-	{
-		close(shell->fd[n * 2]);
-		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO && dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
-			return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
-		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
-			close(shell->fd[(n * 2) + 1]);
 		exit(argument_manager(shell, cmd));
-	}
 	err = 0;
 	str = find_command(shell, cmd, &err);
 	if (!str)
@@ -200,13 +217,6 @@ void	child(t_shell *shell, t_token *t, int n)
 		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
 	execve(str, args, shell->env_var);
 	return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
-}
-
-void	parent(t_shell *shell, t_token *t, int n)
-{
-	close(shell->fd[n * 2]);
-	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
-		close (shell->fd[(n * 2) + 1]);
 }
 
 pid_t	execute_process(t_shell *shell, t_token *t, int n)
@@ -219,7 +229,11 @@ pid_t	execute_process(t_shell *shell, t_token *t, int n)
 	else if (pid == 0)
 		child(shell, t, n);
 	else
-		parent(shell, t, n);
+	{
+		close(shell->fd[n * 2]);
+		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
+			close (shell->fd[(n * 2) + 1]);
+	}
 	return (pid);
 }
 
@@ -244,10 +258,3 @@ int	execute(t_shell *shell)
 		print_err(ERRNO_ERR);
 	return (0);
 }
-
-/*
-	n1
-	in	out
-	n2
-	in1	out1	in2	out2
-*/

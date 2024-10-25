@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/24 18:55:05 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/25 16:57:06 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@
 # define LVL_LIMIT 			1000
 # define PATH_MAX 			1024
 # define FILE_CREAT 		0644
-# define DEFAULT_PATH		"/usr/local/sbin:/usr/local/bin:\
-								/usr/sbin:/usr/bin:/sbin:/bin"
 
 # define EMPTY_INPUT 		1
 # define ERRNO_ERR 			2
@@ -39,10 +37,15 @@
 # define CMD_NOT_FOUND		11
 
 # define MINISHELL			"minishell"
-# define PIPE_END_MSG		"unclosed pipes are not supported\n"
-# define QUOTES_MSG			"unclosed quotes\n"
-# define SYNTAX_MSG			"syntax error near unexpected token\n"
-# define PARENTHESIS_MSG	"parenthesis are not supported\n"
-# define ARGS_MSG			"arguments are not accepted\n"
+# define PIPE_END_MSG		"unclosed pipes are not supported"
+# define QUOTES_MSG			"unclosed quotes"
+# define SYNTAX_MSG			"syntax error near unexpected token"
+# define PARENTHESIS_MSG	"parenthesis are not supported"
+# define NO_ARGS_MSG		"arguments are not accepted"
+# define ARGS_MSG			"too many arguments"
+# define NAN_MSG			"numeric argument required"
+# define IDENTIFIER_MSG		"not a valid identifier"
+# define NO_CMD_MSG			"command not found"
+# define UNKNOW_MSG			"unknow error"
 
 #endif

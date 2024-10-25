@@ -6,7 +6,7 @@
 #    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/24 16:48:54 by dzapata          ###   ########.fr        #
+#    Updated: 2024/10/25 16:36:56 by dzapata          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,8 @@ SRC_FILES 		=	main.c \
 					expander_len.c \
 					parser_utils.c \
 					classifier.c \
-					parse_strings.c
+					parse_strings.c \
+					heredoc.c
 					
 SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/24 18:19:06 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/25 15:50:22 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 				ret = 1;
 		}
 		else
-			print_arg_err("export", arg->str, IDENTIFIER_ERR);
+			print_arg_err("export", arg->str, IDENTIFIER_ERR, 1);
 		arg = get_cmd_token(arg->next, ARGUMENT);
 	}
 	return (ret);
@@ -80,7 +80,7 @@ int	ft_unset(t_env *env, t_token *token)
 		else
 		{
 			ret = 1;
-			print_arg_err("unset", token->str, IDENTIFIER_ERR);
+			print_arg_err("unset", token->str, IDENTIFIER_ERR, 1);
 		}
 		token = get_cmd_token(token->next, ARGUMENT);
 	}
@@ -93,7 +93,7 @@ int	ft_env(t_env *env, t_token *token)
 	t_env_node	*temp;
 
 	if (token && token->type == ARGUMENT)
-		return (print_custom_err("env", ARGS_ERR), 1);
+		return (print_arg_err("env", NULL, ARGS_ERR, 0), 1);
 	temp = env->head->next;
 	while (temp)
 	{
