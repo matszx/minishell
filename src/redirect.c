@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/26 23:32:53 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 20:10:34 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	get_pipes(t_shell *shell)
 	i = -1;
 	while (++i < shell->n_commands * 2)
 		shell->fd[i] = -1;
-	shell->fd[0] = STDIN_FILENO; 
+	shell->fd[0] = STDIN_FILENO;
 	i = 2;
 	while (i < shell->n_commands * 2)
 	{
@@ -31,7 +31,11 @@ int	get_pipes(t_shell *shell)
 				shell->fd = NULL, ERRNO_ERR);
 		i += 2;
 	}
-	return (sort_io(shell->fd, shell->n_commands));
+	i = 0;
+	while (++i < shell->n_commands)
+		shell->fd[((i - 1) * 2) + 1] = shell->fd[(i * 2) + 1];
+	shell->fd[((i - 1) * 2) + 1] = STDOUT_FILENO;
+	return (0);
 }
 
 int	input(char *str, int *fd, int cmd)

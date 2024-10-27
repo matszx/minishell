@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/26 23:34:26 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 20:11:16 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,25 +98,25 @@ void	minishell(t_shell *shell)
 {
 	int	err;
 
-	print_tokens(shell->tokens);
+	//print_tokens(shell->tokens);
 	err = verify_order(shell->tokens);
 	if (err)
 		return (print_err(err));
 	err = expand_commands(shell);
 	if (err)
 		return (print_err(err), free_shell(shell), exit(EXIT_FAILURE));
-	printf("Expanded =======================================\n");
-	print_tokens(shell->tokens);
+	//printf("Expanded =======================================\n");
+	//print_tokens(shell->tokens);
 	err = get_pipes(shell);
 	if (err)
 		return (print_err(err));
 	err = red_heredoc(shell);
 	if (err)
 		return (print_err(err));
-	printf("Executing\n");
+	//printf("Executing\n");
 	execute(shell);
-	printf("Executed\n");
-	print_fd(shell->fd, shell->n_commands * 2);
+	//printf("Executed\n");
+	//print_fd(shell->fd, shell->n_commands * 2);
 }
 
 // Displays a prompt

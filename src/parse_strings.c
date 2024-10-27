@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:47:19 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/24 16:51:37 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 18:50:20 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	token_len(char *str, int *i)
 			quotes = str[*i];
 		else if (str[*i] == quotes && quotes)
 			quotes = '\0';
-		else if ((ft_isspace(str[*i]) || is_token(str[*i])) && !quotes)
+		else if ((ft_isspace(str[*i]) || is_special_token(str[*i])) && !quotes)
 			break ;
 		len++;
 		(*i)++;

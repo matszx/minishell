@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:40:11 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/24 16:41:38 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 18:50:20 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	skip_spaces(char *str)
 	return (i);
 }
 
-int	is_token(char c)
+int	is_special_token(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }

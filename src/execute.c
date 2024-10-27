@@ -6,30 +6,11 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/27 00:26:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 20:10:38 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int	is_builtin(char *str)
-{
-	return (!ft_strncmp(str, "echo", 5)
-		|| !ft_strncmp(str, "cd", 3)
-		|| !ft_strncmp(str, "pwd", 4)
-		|| !ft_strncmp(str, "export", 6)
-		|| !ft_strncmp(str, "unset", 5)
-		|| !ft_strncmp(str, "env", 4)
-		|| !ft_strncmp(str, "exit", 5));
-}
-
-int	affects_environtment(char *str)
-{
-	return (!ft_strncmp(str, "cd", 3)
-		|| !ft_strncmp(str, "export", 6)
-		|| !ft_strncmp(str, "unset", 5)
-		|| !ft_strncmp(str, "exit", 5));
-}
 
 int	argument_manager(t_shell *shell, t_token *head)
 {
@@ -49,135 +30,6 @@ int	argument_manager(t_shell *shell, t_token *head)
 		return (ft_exit((unsigned int)shell->exit_status, shell, head->next));
 	else
 		return (1);
-}
-
-int	perform_redirections(t_token *t, int *fd, int n)
-{
-	t_token	*temp;
-	int		err;
-
-	temp = t;
-	while (temp && temp->type != OPERATOR)
-	{
-		if (temp->type != COMMAND && temp->type != ARGUMENT)
-		{
-			err = redirect(temp, fd, n);
-			if (err)
-				return (print_arg_err(temp->next->str, NULL, ERRNO_ERR, 0), 1);
-		}
-		temp = temp->next;
-	}
-	return (0);
-}
-
-char	**get_args(t_token *t)
-{
-	t_token	*temp;
-	int		len;
-	char	**str;
-
-	temp = t;
-	len = 0;
-	while (temp && temp->type != OPERATOR)
-	{
-		if (temp->type == ARGUMENT)
-			len++;
-		temp = temp->next;
-	}
-	str = malloc(sizeof(char *) * (len + 2));
-	if (!str)
-		return (NULL);
-	temp = t;
-	len = 1;
-	while (temp && temp->type != OPERATOR)
-	{
-		if (temp->type == ARGUMENT)
-			str[len++] = temp->str;
-		temp = temp->next;
-	}
-	str[len] = NULL;
-	return (str[0] = t->str, str);
-}
-
-void	jump_to_next(t_token **t)
-{
-	while (*t && (*t)->type != OPERATOR)
-		*t = (*t)->next;
-	if (*t)
-		*t = (*t)->next;
-}
-
-int	path_access(char *str)
-{
-	if (!access(str, F_OK))
-	{
-		if (!access(str, X_OK))
-			return (0);
-		return (1);
-	}
-	return (2);
-}
-
-char	*get_cmd_path(int *code, char **paths, char *str)
-{
-	char	*temp;
-	char	*c_path;
-	int		i;
-	int		file;
-
-	i = -1;
-	while (paths[++i])
-	{
-		temp = ft_strjoin(paths[i], "/");
-		if (!temp)
-			return (*code = 1, NULL);
-		c_path = ft_strjoin(temp, str);
-		free(temp);
-		if (!c_path)
-			return (*code = 1, NULL);
-		file = path_access(c_path);
-		if (!file)
-			return (c_path);
-		free(c_path);
-		if (file == 1)
-			return (NULL);
-	}
-	return ((*code) = CMD_NOT_FOUND, NULL);
-}
-
-char	*find_command(t_shell *shell, t_token *cmd, int *code)
-{
-	char	**paths;
-	char	*c_path;
-	int		file;
-
-	if (!cmd->str[0])
-		return ((*code) = CMD_NOT_FOUND, NULL);
-	file = path_access(cmd->str);
-	if (!file)
-		return (*code = 0, cmd->str);
-	else if (file == 1)
-		return (*code = 126, NULL);
-	c_path = find_env(shell->env_var, "PATH");
-	if (!c_path)
-		return ((*code) = CMD_NOT_FOUND, NULL);
-	paths = ft_split(c_path, ':');
-	if (!paths)
-		return (*code = 1, NULL);
-	c_path = get_cmd_path(code, paths, cmd->str);
-	free_table((void **) paths);
-	if (!c_path)
-		return (NULL);
-	return (c_path);
-}
-
-void	find_error(char *str, int *code)
-{
-	if (*code == 126 || *code == 127)
-		return (print_arg_err(str, NULL, ERRNO_ERR, 0));
-	else if (*code == CMD_NOT_FOUND)
-		return (*code = 127, print_arg_err(str, NULL, CMD_NOT_FOUND, 0));
-	return (print_err(ERRNO_ERR));
 }
 
 void	files(t_shell *shell, int n)

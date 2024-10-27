@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:44:51 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/24 16:45:19 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 18:50:20 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	classify_count(t_token *head, int *n)
 	cmd = 1;
 	while (head)
 	{
-		if (is_token(head->str[0]))
+		if (is_special_token(head->str[0]))
 			classify_operator(head, &cmd, n);
 		else if (cmd == 2 || cmd == 3)
 		{

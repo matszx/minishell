@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/25 15:50:22 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 18:39:29 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,23 @@ static int	is_valid_identifier(char *s)
 	return (1);
 }
 
-void	print_var(t_env *stack)
+int	print_var(t_env *stack)
 {
 	t_env_node	*temp;
+	int			err;
 
 	temp = stack->head->next;
 	while (temp)
 	{
 		if (temp->value)
-			printf("declare -x %s=\"%s\"\n", temp->var, temp->value);
+			err = printf("declare -x %s=\"%s\"\n", temp->var, temp->value);
 		else
-			printf("declare -x %s\n", temp->var);
+			err = printf("declare -x %s\n", temp->var);
+		if (err == -1)
+			return (print_arg_err("export", "write error", ERRNO_ERR, 0), 1);
 		temp = temp->next;
 	}
+	return (0);
 }
 
 // Loops addenv for every argument given
@@ -51,7 +55,7 @@ int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 	ret = 0;
 	arg = get_cmd_token(token, ARGUMENT);
 	if (!arg)
-		return (print_var(stack), 0);
+		return (print_var(stack));
 	while (arg)
 	{
 		if (is_valid_identifier(arg->str))
@@ -91,14 +95,20 @@ int	ft_unset(t_env *env, t_token *token)
 int	ft_env(t_env *env, t_token *token)
 {
 	t_env_node	*temp;
+	t_token		*arg;
+	int			err;
 
-	if (token && token->type == ARGUMENT)
+	arg = get_cmd_token(token, ARGUMENT);
+	if (arg)
 		return (print_arg_err("env", NULL, ARGS_ERR, 0), 1);
 	temp = env->head->next;
+	err = 0;
 	while (temp)
 	{
 		if (temp->value)
-			printf("%s=%s\n", temp->var, temp->value);
+			err = printf("%s=%s\n", temp->var, temp->value);
+		if (err == -1)
+			return (print_arg_err("env", "write error", ERRNO_ERR, 0), 1);
 		temp = temp->next;
 	}
 	return (0);

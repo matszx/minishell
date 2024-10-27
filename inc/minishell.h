@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/26 21:18:36 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 20:09:21 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ int			calculate_len(t_token *t, t_format *f, int *len);
 void		init_format(t_format *f, char **env, int expand, int status);
 
 // heredoc.c
-int			sort_io(int *fd, int n);
 int			red_heredoc(t_shell *shell);
 
 // redirect.c
@@ -142,7 +141,7 @@ void		destroy_list(t_token **head);
 
 // parser_utils.c
 int			skip_spaces(char *str);
-int			is_token(char c);
+int			is_special_token(char c);
 int			is_operator(char c);
 int			verify_redirect(char *str, int *i);
 
@@ -155,7 +154,7 @@ int			check_string(char *str);
 void		classify_count(t_token *head, int *n);
 
 // env.c
-void		print_var(t_env *stack);
+int			print_var(t_env *stack);
 int			ft_export(t_env *stack, t_env_node *env, t_token *token);
 int			ft_unset(t_env *env, t_token *token);
 int			ft_env(t_env *env, t_token *token);
@@ -179,7 +178,6 @@ int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 
 // builtins_utils.c
 int			ft_isnumber(char *str);
-int			has_args(t_token *t);
 t_token		*get_cmd_token(t_token *t, t_type type);
 
 // signals.c
@@ -187,6 +185,19 @@ void		init_signals(void);
 
 // execute.c
 int			execute(t_shell *shell);
+
+// execute_utils.c
+int			is_builtin(char *str);
+int			affects_environtment(char *str);
+void		jump_to_next(t_token **t);
+int			path_access(char *str);
+int			perform_redirections(t_token *t, int *fd, int n);
+
+// command.c
+char		**get_args(t_token *t);
+char		*get_cmd_path(int *code, char **paths, char *str);
+char		*find_command(t_shell *shell, t_token *cmd, int *code);
+void		find_error(char *str, int *code);
 
 // errors.c
 void		print_err(int err);

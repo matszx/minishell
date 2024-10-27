@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 16:33:09 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/26 23:33:57 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 19:19:21 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int	heredoc(t_shell *shell, t_token *t, int *fd, int cmd)
 			return (close_files(new_fd, 2), ERRNO_ERR);
 	}
 	close(new_fd[1]);
-	close(fd[cmd * 2]);
+	if (fd[cmd * 2] != STDIN_FILENO)
+		close(fd[cmd * 2]);
 	fd[cmd * 2] = new_fd[0];
 	return (free(input), 0);
 }
@@ -73,16 +74,5 @@ int	red_heredoc(t_shell *shell)
 		if (temp && temp->type == OPERATOR)
 			cmd++;
 	}
-	return (0);
-}
-
-int	sort_io(int *fd, int n)
-{
-	int	i;
-
-	i = 0;
-	while (++i < n)
-		fd[((i - 1) * 2) + 1] = fd[(i * 2) + 1];
-	fd[((i - 1) * 2) + 1] = STDOUT_FILENO;
 	return (0);
 }

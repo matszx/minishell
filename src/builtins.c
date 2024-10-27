@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/26 21:14:05 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 18:47:04 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_cd(char **env, t_token *token)
 	t_token	*arg;
 
 	arg = get_cmd_token(token, ARGUMENT);
-	if (arg && has_args(arg->next))
+	if (arg && get_cmd_token(arg->next, ARGUMENT))
 		return (print_arg_err("cd", NULL, ARGS_ERR, 0), 1);
 	if (!arg)
 	{
@@ -105,13 +105,13 @@ int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 	int		overflow;
 
 	write(STDERR_FILENO, "exit\n", 5);
-	if (!token || !has_args(token))
+	if (!token || !get_cmd_token(token, ARGUMENT))
 		return (free_shell(shell), exit(ret), 0);
 	arg = get_cmd_token(token, ARGUMENT);
 	if (!ft_isnumber(arg->str))
 		return (print_arg_err("exit", arg->str, NAN_ERR, 1),
 			free_shell(shell), exit(2), 0);
-	if (arg->next && has_args(arg->next))
+	if (arg->next && get_cmd_token(arg->next, ARGUMENT))
 	{
 		print_arg_err("exit", NULL, ARGS_ERR, 0);
 		return (free_shell(shell), exit(2), 0);
