@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 16:33:09 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/25 16:38:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/26 23:33:57 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,16 @@ int	red_heredoc(t_shell *shell)
 		if (temp && temp->type == OPERATOR)
 			cmd++;
 	}
+	return (0);
+}
+
+int	sort_io(int *fd, int n)
+{
+	int	i;
+
+	i = 0;
+	while (++i < n)
+		fd[((i - 1) * 2) + 1] = fd[(i * 2) + 1];
+	fd[((i - 1) * 2) + 1] = STDOUT_FILENO;
 	return (0);
 }

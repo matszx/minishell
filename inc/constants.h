@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/25 16:57:06 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/26 17:18:54 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define NAN_ERR			9
 # define IDENTIFIER_ERR		10
 # define CMD_NOT_FOUND		11
+# define HOME_ERR			12
 
 # define MINISHELL			"minishell"
 # define PIPE_END_MSG		"unclosed pipes are not supported"
@@ -46,6 +47,7 @@
 # define NAN_MSG			"numeric argument required"
 # define IDENTIFIER_MSG		"not a valid identifier"
 # define NO_CMD_MSG			"command not found"
+# define HOME_MSG			"HOME not set"
 # define UNKNOW_MSG			"unknow error"
 
 #endif

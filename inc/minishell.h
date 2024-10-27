@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/25 15:55:09 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/26 21:18:36 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ typedef struct s_err_msg
 	char	*str_err;
 	char	*cmd;
 	char	*arg;
-	int		len1;
-	int		len2;
+	int		cmd_len;
+	int		arg_len;
 	int		quotes;
 }	t_err_msg;
 
@@ -127,9 +127,12 @@ int			valid_expand(char c, char quotes, char next);
 int			calculate_len(t_token *t, t_format *f, int *len);
 void		init_format(t_format *f, char **env, int expand, int status);
 
+// heredoc.c
+int			sort_io(int *fd, int n);
+int			red_heredoc(t_shell *shell);
+
 // redirect.c
 int			get_pipes(t_shell *shell);
-int			red_heredoc(t_shell *shell);
 int			redirect(t_token *token, int *fd, int cmd);
 
 // parser.c

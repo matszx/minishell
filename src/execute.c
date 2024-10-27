@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/25 18:44:30 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 00:26:17 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,12 +182,14 @@ void	find_error(char *str, int *code)
 
 void	files(t_shell *shell, int n)
 {
-	if (dup2(shell->fd[(n * 2)], STDIN_FILENO) == -1)
+	if (shell->fd[(n * 2)] != STDIN_FILENO
+		&& dup2(shell->fd[(n * 2)], STDIN_FILENO) == -1)
 		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
 	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO
 		&& dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
 		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
-	close(shell->fd[(n * 2)]);
+	if (shell->fd[(n * 2)] != STDIN_FILENO)
+		close(shell->fd[(n * 2)]);
 	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
 		close(shell->fd[(n * 2) + 1]);
 }
@@ -230,7 +232,8 @@ pid_t	execute_process(t_shell *shell, t_token *t, int n)
 		child(shell, t, n);
 	else
 	{
-		close(shell->fd[n * 2]);
+		if (shell->fd[(n * 2)] != STDIN_FILENO)
+			close(shell->fd[n * 2]);
 		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
 			close (shell->fd[(n * 2) + 1]);
 	}
@@ -256,5 +259,6 @@ int	execute(t_shell *shell)
 	}
 	if (waitpid(pid, &shell->exit_status, 0) == -1)
 		print_err(ERRNO_ERR);
+	shell->exit_status = WEXITSTATUS(shell->exit_status);
 	return (0);
 }

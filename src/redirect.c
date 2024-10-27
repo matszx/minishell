@@ -6,25 +6,11 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:49:32 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/25 18:30:49 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/26 23:32:53 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int	sort_io(int *fd, int n)
-{
-	int	i;
-
-	i = close (fd[1]);
-	if (i)
-		return (i);
-	i = 0;
-	while (++i < n)
-		fd[((i - 1) * 2) + 1] = fd[(i * 2) + 1];
-	fd[((i - 1) * 2) + 1] = STDOUT_FILENO;
-	return (0); 
-}
 
 int	get_pipes(t_shell *shell)
 {
@@ -36,7 +22,8 @@ int	get_pipes(t_shell *shell)
 	i = -1;
 	while (++i < shell->n_commands * 2)
 		shell->fd[i] = -1;
-	i = 0;
+	shell->fd[0] = STDIN_FILENO; 
+	i = 2;
 	while (i < shell->n_commands * 2)
 	{
 		if (pipe(&shell->fd[i]) == -1)

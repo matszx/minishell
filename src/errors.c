@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 19:59:18 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/25 16:14:12 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/26 17:43:38 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ char	*get_err_msg(int err)
 		return (IDENTIFIER_MSG);
 	else if (err == CMD_NOT_FOUND)
 		return (NO_CMD_MSG);
+	else if (err == HOME_ERR)
+		return (HOME_MSG);
 	else if (err == ERRNO_ERR)
 		return (strerror(errno));
 	else
@@ -40,14 +42,14 @@ void	write_strerr(t_err_msg *err)
 	i = ft_strlcpy(err->str, MINISHELL ": ", ft_strlen(MINISHELL) + 3);
 	if (err->cmd)
 	{
-		i += ft_strlcpy(&err->str[i], err->cmd, err->len1 + 1);
+		i += ft_strlcpy(&err->str[i], err->cmd, err->cmd_len + 1);
 		i += ft_strlcpy(&err->str[i], ": ", 3);
 	}
 	if (err->arg)
 	{
 		if (err->quotes)
 			i += ft_strlcpy(&err->str[i], "'", 2);
-		i += ft_strlcpy(&err->str[i], err->str, err->len2 + 1);
+		i += ft_strlcpy(&err->str[i], err->arg, err->arg_len + 1);
 		if (err->quotes)
 			i += ft_strlcpy(&err->str[i], "'", 2);
 		i += ft_strlcpy(&err->str[i], ": ", 3);
@@ -64,16 +66,17 @@ void	print_arg_err(char *cmd, char *arg, int err, int quotes)
 
 	err_msg.cmd = cmd;
 	err_msg.arg = arg;
+	err_msg.quotes = quotes;
 	if (cmd)
-		err_msg.len1 = ft_strlen(cmd) + 2;
+		err_msg.cmd_len = ft_strlen(cmd) + 2;
 	else
-		err_msg.len1 = 0;
+		err_msg.cmd_len = 0;
 	if (arg)
-		err_msg.len2 = ft_strlen(arg) + 2;
+		err_msg.arg_len = ft_strlen(arg) + 2;
 	else
-		err_msg.len2 = 0;
+		err_msg.arg_len = 0;
 	err_msg.str_err = get_err_msg(err);
-	total_len = err_msg.len1 + err_msg.len2 + ft_strlen(err_msg.str_err);
+	total_len = err_msg.cmd_len + err_msg.arg_len + ft_strlen(err_msg.str_err);
 	if (quotes)
 		total_len += 2;
 	err_msg.str = malloc(total_len + ft_strlen(MINISHELL) + 4);

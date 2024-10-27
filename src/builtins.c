@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/25 15:49:55 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/26 21:14:05 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	n_flag(char *s)
 		{
 			if (*s == 'n')
 				flag = 0;
-			else if (*s == 'e' || *s == 'E')
+			else if ((*s == 'e' || *s == 'E') && flag)
 				flag = 2;
 			else
 				return (1);
@@ -36,24 +36,29 @@ static int	n_flag(char *s)
 int	ft_echo(t_token *token)
 {
 	int	newline;
+	int	err;
 
-	if (!token)
-		return (printf("\n"), 0);
-	newline = n_flag(token->str);
-	if (!newline || newline == 2)
-		token = token->next;
-	while (token && token->type != OPERATOR)
+	newline = 1;
+	err = 0;
+	if (token)
 	{
-		if (token->type == ARGUMENT)
+		newline = n_flag(token->str);
+		if (!newline || newline == 2)
+			token = get_cmd_token(token->next, ARGUMENT);
+		while (token)
 		{
-			printf("%s", token->str);
-			token = token->next;
-			if (get_cmd_token(token, ARGUMENT))
-				printf(" ");
+			err = write(STDOUT_FILENO, token->str, token->len);
+			token = get_cmd_token(token->next, ARGUMENT);
+			if (token && err != -1)
+				err = write(STDOUT_FILENO, " ", 1);
+			if (err == -1)
+				break ;
 		}
 	}
-	if (newline)
-		printf("\n");
+	if (newline && err != -1)
+		err = write(STDOUT_FILENO, "\n", 1);
+	if (err == -1)
+		return (print_arg_err("echo", "write error", ERRNO_ERR, 0), 1);
 	return (0);
 }
 
@@ -67,32 +72,30 @@ int	ft_cd(char **env, t_token *token)
 	if (arg && has_args(arg->next))
 		return (print_arg_err("cd", NULL, ARGS_ERR, 0), 1);
 	if (!arg)
-		ret = chdir(find_env(env, "HOME"));
-	else
 	{
-		if (*(arg->str) == '~')
-		{
-			tmp = ft_strjoin(find_env(env, "HOME"), arg->str + 1);
-			if (!tmp)
-				return (print_err(ERRNO_ERR), 1);
-			ret = chdir(tmp);
-			free(tmp);
-		}
-		else
-			ret = chdir(arg->str);
+		tmp = find_env(env, "HOME");
+		if (!tmp[0])
+			return (print_arg_err("cd", NULL, HOME_ERR, 0), 1);
 	}
+	else
+		tmp = arg->str;
+	ret = chdir(tmp);
 	if (ret == -1)
-		return (print_arg_err("cd", NULL, ERRNO_ERR, 0), 1);
+		return (print_arg_err("cd", tmp, ERRNO_ERR, 0), 1);
 	return (ret);
 }
 
 int	ft_pwd(void)
 {
 	char	cwd[PATH_MAX];
+	int		err;
 
 	if (!getcwd(cwd, PATH_MAX))
 		return (print_arg_err("pwd", NULL, ERRNO_ERR, 0), 1);
-	return (printf("%s\n", cwd), 0);
+	err = write(STDOUT_FILENO, cwd, ft_strlen(cwd));
+	if (err == -1)
+		return (print_arg_err("pwd", "write error", ERRNO_ERR, 0), 1);
+	return (0);
 }
 
 int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
@@ -101,7 +104,7 @@ int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 	int		out;
 	int		overflow;
 
-	printf("exit\n");
+	write(STDERR_FILENO, "exit\n", 5);
 	if (!token || !has_args(token))
 		return (free_shell(shell), exit(ret), 0);
 	arg = get_cmd_token(token, ARGUMENT);
@@ -116,7 +119,9 @@ int	ft_exit(unsigned int ret, t_shell *shell, t_token *token)
 	overflow = 0;
 	out = ft_atol(arg->str, &overflow);
 	if (overflow)
-		return (print_arg_err("exit", arg->str, NAN_ERR, 1),
-			free_shell(shell), exit(2), 0);
+	{
+		print_arg_err("exit", arg->str, NAN_ERR, 1);
+		out = 2;
+	}
 	return (free_shell(shell), exit(out), 0);
 }
