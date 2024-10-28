@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/27 20:11:16 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/28 00:23:37 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	minishell(t_shell *shell)
 		return (print_err(err));
 	err = expand_commands(shell);
 	if (err)
-		return (print_err(err), free_shell(shell), exit(EXIT_FAILURE));
+		return (print_err(err));
 	//printf("Expanded =======================================\n");
 	//print_tokens(shell->tokens);
 	err = get_pipes(shell);

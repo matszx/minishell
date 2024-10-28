@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:42:13 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/24 18:14:21 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:52:36 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,14 @@ static int	addenv2(t_env_node *env, char *str, size_t idx, char *equal)
 
 	new = malloc(sizeof(t_env_node));
 	if (!new)
-		return (print_err(ERRNO_ERR), 1);
+		return (1);
 	new->value = NULL;
 	new->next = NULL;
 	if ((equal[0]))
 		new->value = ft_substr(str, idx + 1, ft_strlen(str) - idx);
 	new->var = ft_substr(str, 0, idx);
 	if (!new->var || (!new->value && equal[0]))
-		return (free(new->value), free(new->var), \
-			free(new), print_err(ERRNO_ERR), 1);
+		return (free(new->value), free(new->var), free(new), 1);
 	while (env->next)
 		env = env->next;
 	env->next = new;

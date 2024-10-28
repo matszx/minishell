@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/24 16:48:19 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/28 00:05:43 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ t_token	*get_arguments(char *str)
 	{
 		token_str = get_token(str, &i);
 		temp->next = new_node(token_str);
-		if (!token_str || !temp)
+		if (!token_str || !temp->next)
 			return (free(token_str), destroy_list(&head), NULL);
 		temp = temp->next;
 		i += skip_spaces(&str[i]);

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:29:05 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/24 18:14:26 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/28 00:15:01 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	**get_env(t_env *env)
 			env_var[++i] = get_var(temp);
 			if (!env_var[i])
 			{
-				while (i-- > -1)
+				while (--i > -1)
 					free(env_var[i]);
 				return (free(env_var), NULL);
 			}

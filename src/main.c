@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/22 15:43:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/28 00:27:55 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	close_files(int *fd, int n)
 	if (!fd)
 		return ;
 	while (++i < n)
-		if (fd[i] != -1 && fd[i] != STDOUT_FILENO
+		if (fd[i] > -1 && fd[i] != STDOUT_FILENO
 			&& fd[i] != STDIN_FILENO && fd[i] != STDERR_FILENO)
 			close(fd[i]);
 	errno = err;

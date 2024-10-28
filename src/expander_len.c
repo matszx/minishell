@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:33:56 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/27 00:25:01 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/28 00:41:56 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	env_var_len(t_format *f, char *str)
 		f->err = PARENTHESIS_ERR;
 	else if (str[i] == '?')
 	{
-		printf("%i\n", f->status);
 		if (f->status > 100)
 			f->len_val++;
 	}

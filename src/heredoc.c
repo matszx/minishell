@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 16:33:09 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/27 19:19:21 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/28 00:38:15 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ int	write_heredoc_line(t_shell *shell, char *buf, int fd)
 	err = handle_expansions(&temp, shell->env_var, shell->exit_status, 1);
 	if (err)
 		return (free(buf), err);
-	if (write(fd, temp.str, ft_strlen(temp.str)) == -1
-		|| write(fd, "\n", 1) == -1)
-		return (free(temp.str), ERRNO_ERR);
-	return (free(temp.str), 0);
+	err = write(fd, temp.str, ft_strlen(temp.str)) == -1
+		|| write(fd, "\n", 1) == -1;
+	free(temp.str);
+	if (err)
+		return (ERRNO_ERR);
+	return (0);
 }
 
 int	heredoc(t_shell *shell, t_token *t, int *fd, int cmd)
