@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/29 12:39:49 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/29 12:55:38 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ pid_t	execute_process(t_shell *shell, t_token *t, int n)
 
 	pid = fork();
 	if (pid < 0)
+	{
+		shell->exit_status = 1;
 		print_err(ERRNO_ERR);
+	}
 	else if (pid == 0)
 		child(shell, t, n);
 	else
@@ -111,7 +114,10 @@ int	execute(t_shell *shell)
 	}
 	signal(SIGINT, SIG_IGN);
 	if (waitpid(pid, &shell->exit_status, 0) == -1)
+	{
+		shell->exit_status = 1;
 		print_err(ERRNO_ERR);
+	}
 	signal(SIGINT, sigint_handler);
 	shell->exit_status = WEXITSTATUS(shell->exit_status);
 	return (0);

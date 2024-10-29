@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/29 11:13:35 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/29 12:54:58 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,18 +101,18 @@ void	minishell(t_shell *shell)
 	//print_tokens(shell->tokens);
 	err = verify_order(shell->tokens);
 	if (err)
-		return (print_err(err));
+		return (shell->exit_status = 2, print_err(err));
 	err = expand_commands(shell);
 	if (err)
-		return (print_err(err));
+		return (shell->exit_status = 1, print_err(err));
 	//printf("Expanded =======================================\n");
 	//print_tokens(shell->tokens);
 	err = get_pipes(shell);
 	if (err)
-		return (print_err(err));
+		return (shell->exit_status = 1, print_err(err));
 	err = red_heredoc(shell);
 	if (err)
-		return (print_err(err));
+		return (shell->exit_status = 1, print_err(err));
 	//printf("Executing\n");
 	execute(shell);
 	//printf("Executed\n");
@@ -140,7 +140,7 @@ void	prompt(t_shell *shell)
 			if (err != EMPTY_INPUT)
 			{
 				print_err(err);
-				shell->exit_status = 1;
+				shell->exit_status = 2;
 			}
 			continue ;
 		}
