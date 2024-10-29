@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/28 00:57:44 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 12:39:49 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,10 @@ int	execute(t_shell *shell)
 		pid = execute_process(shell, temp, i);
 		jump_to_next(&temp);
 	}
+	signal(SIGINT, SIG_IGN);
 	if (waitpid(pid, &shell->exit_status, 0) == -1)
 		print_err(ERRNO_ERR);
+	signal(SIGINT, sigint_handler);
 	shell->exit_status = WEXITSTATUS(shell->exit_status);
 	return (0);
 }

@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-static void	sigint_handler(int sig)
+void	sigint_handler(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);

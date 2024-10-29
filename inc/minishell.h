@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/27 20:09:21 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 12:35:48 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ int			ft_isnumber(char *str);
 t_token		*get_cmd_token(t_token *t, t_type type);
 
 // signals.c
+void		sigint_handler(int sig);
 void		init_signals(void);
 
 // execute.c
