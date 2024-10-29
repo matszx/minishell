@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/29 12:35:48 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/10/29 16:00:34 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void		sigint_handler(int sig);
 void		init_signals(void);
 
 // execute.c
-int			execute(t_shell *shell);
+void		execute(t_shell *shell);
 
 // execute_utils.c
 int			is_builtin(char *str);

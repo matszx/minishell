@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/28 00:05:43 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 17:19:48 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ t_token	*get_arguments(char *str)
 	if (!head)
 		return (NULL);
 	temp = head;
-	i = 0;
+	i = skip_spaces(str);
 	while (str[i])
 	{
 		token_str = get_token(str, &i);

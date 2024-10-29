@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/28 00:21:03 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 14:59:22 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	get_expanded(t_token *t, t_expand *e, char *dst)
 		else if (t->str[e->i] == e->quotes && e->quotes != '\0')
 			e->quotes = '\0';
 		else if (t->str[e->i] == '\\' && t->str[e->i + 1] && e->quotes == '\0')
-			e->i++;
+			dst[e->j++] = t->str[++e->i];
 		else if (!t->str[e->i])
 			break ;
 		else

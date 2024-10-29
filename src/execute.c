@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/29 12:55:38 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:36:45 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@ void	files(t_shell *shell, int n)
 	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO
 		&& dup2(shell->fd[(n * 2) + 1], STDOUT_FILENO) == -1)
 		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
-	if (shell->fd[(n * 2)] != STDIN_FILENO)
-		close(shell->fd[(n * 2)]);
-	if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
-		close(shell->fd[(n * 2) + 1]);
+	close_files(&shell->fd[n], (shell->n_commands - n) * 2);
 }
 
 void	child(t_shell *shell, t_token *t, int n)
@@ -85,40 +82,52 @@ pid_t	execute_process(t_shell *shell, t_token *t, int n)
 	}
 	else if (pid == 0)
 		child(shell, t, n);
-	else
-	{
-		if (shell->fd[(n * 2)] != STDIN_FILENO)
-			close(shell->fd[n * 2]);
-		if (shell->fd[(n * 2) + 1] != STDOUT_FILENO)
-			close (shell->fd[(n * 2) + 1]);
-	}
+	close_files(&shell->fd[n * 2], 2);
 	return (pid);
 }
 
-int	execute(t_shell *shell)
+void	wait_processes(pid_t *pid, t_shell *shell)
 {
-	int		i;
-	t_token	*temp;
-	pid_t	pid;
+	int	i;
 
 	i = -1;
-	temp = get_cmd_token(shell->tokens, COMMAND);
-	pid = -1;
-	if (shell->n_commands == 1 && temp && affects_environtment(temp->str))
-		return (argument_manager(shell, temp));
-	temp = shell->tokens;
-	while (++i < shell->n_commands)
-	{
-		pid = execute_process(shell, temp, i);
-		jump_to_next(&temp);
-	}
-	signal(SIGINT, SIG_IGN);
-	if (waitpid(pid, &shell->exit_status, 0) == -1)
+	if (waitpid(pid[shell->n_commands - 1], &shell->exit_status, 0) == -1)
 	{
 		shell->exit_status = 1;
 		print_err(ERRNO_ERR);
 	}
-	signal(SIGINT, sigint_handler);
-	shell->exit_status = WEXITSTATUS(shell->exit_status);
-	return (0);
+	while (++i < shell->n_commands - 1)
+	{
+		if (pid[i] != -1)
+			waitpid(pid[i], NULL, WNOHANG);
+	}
+}
+
+void	execute(t_shell *shell)
+{
+	int		i;
+	t_token	*temp;
+	pid_t	*pid;
+
+	i = -1;
+	temp = get_cmd_token(shell->tokens, COMMAND);
+	if (shell->n_commands == 1 && temp && affects_environtment(temp->str))
+		shell->exit_status = argument_manager(shell, temp);
+	else
+	{
+		temp = shell->tokens;
+		pid = malloc(sizeof(pid_t) * shell->n_commands);
+		if (!pid)
+			return (shell->exit_status = 1, print_err(ERRNO_ERR));
+		while (++i < shell->n_commands)
+		{
+			pid[i] = execute_process(shell, temp, i);
+			jump_to_next(&temp);
+		}
+		signal(SIGINT, SIG_IGN);
+		wait_processes(pid, shell);
+		signal(SIGINT, sigint_handler);
+		shell->exit_status = WEXITSTATUS(shell->exit_status);
+		free(pid);
+	}
 }
