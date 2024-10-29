@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/28 00:23:37 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 11:13:35 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,19 +128,20 @@ void	prompt(t_shell *shell)
 	{
 		err = errno;
 		shell->buf = readline(prompt_msg(shell->exit_status));
-		if (!shell->buf)
-		{
-			if (err != errno)
-				return (perror(MINISHELL));
+		if (!shell->buf && err != errno)
+			return (perror(MINISHELL));
+		else if (!shell->buf)
 			ft_exit((unsigned int)shell->exit_status, shell, NULL);
-		}
 		add_history(shell->buf);
 		err = parse(shell->buf, shell);
 		free(shell->buf);
 		if (err)
 		{
 			if (err != EMPTY_INPUT)
+			{
 				print_err(err);
+				shell->exit_status = 1;
+			}
 			continue ;
 		}
 		minishell(shell);
