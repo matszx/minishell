@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:42:13 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/27 23:52:36 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 14:16:40 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	addenv(t_env *stack, t_env_node *env, char *str)
 		env->value = ft_substr(str, idx + 1, ft_strlen(str) - idx);
 		if (!env->value)
 			return (env->value = equal, print_err(ERRNO_ERR), 1);
+		free(equal);
 		return (0);
 	}
 	if (addenv2(env, str, idx, equal))

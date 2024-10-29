@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/28 01:16:25 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/29 14:11:14 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int	ft_pwd(void)
 
 	if (!getcwd(cwd, PATH_MAX))
 		return (print_arg_err("pwd", NULL, ERRNO_ERR, 0), 1);
-	if (write(STDOUT_FILENO, cwd, ft_strlen(cwd)) == -1)
+	if (write(STDOUT_FILENO, cwd, ft_strlen(cwd)) == -1
+		|| write(STDOUT_FILENO, "\n", 1) == -1)
 		return (print_arg_err("pwd", "write error", ERRNO_ERR, 0), 1);
 	return (0);
 }
