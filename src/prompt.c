@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/30 19:02:54 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 19:06:59 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	prompt(t_shell *shell)
 		err = errno;
 		shell->buf = readline(prompt_msg(shell->exit_status));
 		if (!shell->buf && err != errno && errno != ENOENT)
-			return (perror(MINISHELL));	
+			return (perror(MINISHELL));
 		else if (!shell->buf)
 			ft_exit((unsigned int)shell->exit_status, shell, NULL);
 		add_history(shell->buf);
