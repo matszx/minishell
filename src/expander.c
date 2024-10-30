@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/29 14:59:22 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 17:09:18 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	handle_expansions(t_token *t, char **env, int status, int expand)
 	if (!new_str || get_expanded(t, &e, new_str))
 		return (free(new_str), ERRNO_ERR);
 	t->len = new_len;
-	free(t->str);
+	t->old_str = t->str;
 	t->str = new_str;
 	return (0);
 }

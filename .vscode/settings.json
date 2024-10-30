@@ -4,6 +4,7 @@
 		"sstream": "c",
 		"constants.h": "c",
 		"system_error": "c",
-		"complex": "c"
+		"complex": "c",
+		"__locale": "c"
 	}
 }

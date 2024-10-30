@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 20:55:20 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/27 18:47:55 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 18:10:25 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,38 @@ int	ft_isnumber(char *str)
 		str++;
 	}
 	return (1);
+}
+
+// Determines if a string (after the '-') has only echo flags. The verification
+// is performed until the string ends or he finds a space
+int	has_echo_flag(char *s)
+{
+	int	flag;
+
+	flag = 0;
+	while (*s && !ft_isspace(*s))
+	{
+		if (*s == 'n')
+			flag = 1;
+		else if ((*s == 'e' || *s == 'E') && flag)
+			flag = 2;
+		else
+			return (0);
+		s++;
+	}
+	return (flag);
+}
+
+int	write_rest(t_token *token, char *temp, int flag)
+{
+	int	err;
+
+	err = write(STDOUT_FILENO, temp, ft_strlen(temp));
+	if (err == -1)
+		return (3);
+	if (get_cmd_token(token->next, ARGUMENT))
+		err = write(STDOUT_FILENO, " ", 1);
+	if (err == -1)
+		return (3);
+	return (flag);
 }

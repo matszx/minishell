@@ -6,28 +6,36 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/29 14:11:14 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 18:11:17 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int	n_flag(char *s)
+static int	n_flag(t_token *token)
 {
-	int	flag;
+	int		i;
+	int		flag;
+	char	*temp;
 
-	flag = 1;
-	if (s && *s == '-' && *(++s))
+	i = -1;
+	while (token->old_str[++i])
+		if (ft_isspace(token->old_str[i]))
+			return (0);
+	temp = ft_strchr(token->str, '-');
+	flag = 0;
+	if (temp)
 	{
-		while (*s)
+		flag = has_echo_flag(&temp[1]);
+		i = 0;
+		while (temp[++i])
+			if (ft_isspace(temp[i]))
+				break ;
+		if (temp[i])
 		{
-			if (*s == 'n')
-				flag = 0;
-			else if ((*s == 'e' || *s == 'E') && flag)
-				flag = 2;
-			else
-				return (1);
-			s++;
+			temp = &temp[i + skip_spaces(&temp[i])];
+			if (temp[0])
+				flag = write_rest(token, temp, flag);
 		}
 	}
 	return (flag);
@@ -38,26 +46,25 @@ int	ft_echo(t_token *token)
 	int	newline;
 	int	err;
 
-	newline = 1;
+	newline = 0;
 	err = 0;
+	token = get_cmd_token(token, ARGUMENT);
 	if (token)
 	{
-		newline = n_flag(token->str);
-		if (!newline || newline == 2)
+		newline = n_flag(token);
+		if (newline == 1 || newline == 2)
 			token = get_cmd_token(token->next, ARGUMENT);
-		while (token)
+		while (token && newline != 3 && err != -1)
 		{
 			err = write(STDOUT_FILENO, token->str, token->len);
 			token = get_cmd_token(token->next, ARGUMENT);
 			if (token && err != -1)
 				err = write(STDOUT_FILENO, " ", 1);
-			if (err == -1)
-				break ;
 		}
 	}
-	if (newline && err != -1)
+	if (newline == 0 && newline != 3 && err != -1)
 		err = write(STDOUT_FILENO, "\n", 1);
-	if (err == -1)
+	if (err == -1 || newline == 3)
 		return (print_arg_err("echo", "write error", ERRNO_ERR, 0), 1);
 	return (0);
 }

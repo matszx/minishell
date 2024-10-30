@@ -6,7 +6,7 @@
 #    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/27 20:09:51 by dzapata          ###   ########.fr        #
+#    Updated: 2024/10/30 18:16:48 by dzapata          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME 			=	minishell
 
 CC 				=	cc
 
-CFLAGS 			=	-Wall -Wextra -fsanitize=address -g \
+CFLAGS 			=	-Wall -Wextra -Werror -fsanitize=address -g \
 					-I./libft/inc -I~/.brew/opt/readline/include
 					
 INC				=	-L./libft -lft \
@@ -46,7 +46,8 @@ SRC_FILES 		=	main.c \
 					parse_strings.c \
 					heredoc.c \
 					execute_utils.c \
-					command.c
+					command.c \
+					execute_waits.c
 					
 SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

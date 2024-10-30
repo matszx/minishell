@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/29 17:19:48 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 16:47:04 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_token	*new_node(char *s)
 	if (!node)
 		return (NULL);
 	node->str = s;
+	node->old_str = NULL;
 	if (!s)
 		node->len = 0;
 	else
@@ -39,6 +40,7 @@ void	destroy_list(t_token **head)
 	while (temp)
 	{
 		free(temp->str);
+		free(temp->old_str);
 		next = temp->next;
 		free(temp);
 		temp = next;

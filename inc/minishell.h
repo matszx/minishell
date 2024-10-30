@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/29 16:00:34 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 18:15:37 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_err_msg
 typedef struct s_token
 {
 	char			*str;
+	char			*old_str;
 	int				len;
 	t_type			type;
 	struct s_token	*next;
@@ -179,6 +180,8 @@ int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 // builtins_utils.c
 int			ft_isnumber(char *str);
 t_token		*get_cmd_token(t_token *t, t_type type);
+int			has_echo_flag(char *s);
+int			write_rest(t_token *token, char *temp, int flag);
 
 // signals.c
 void		sigint_handler(int sig);
@@ -186,6 +189,9 @@ void		init_signals(void);
 
 // execute.c
 void		execute(t_shell *shell);
+
+// execute_waits.c
+void		wait_processes(pid_t *pid, t_shell *shell);
 
 // execute_utils.c
 int			is_builtin(char *str);

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/29 18:36:45 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/10/30 18:14:47 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ void	child(t_shell *shell, t_token *t, int n)
 	char	*str;
 	char	**args;
 
-	err = perform_redirections(t, shell->fd, n);
-	if (err)
+	if (perform_redirections(t, shell->fd, n))
 		return (exit(EXIT_FAILURE));
 	cmd = get_cmd_token(t, COMMAND);
 	if (!cmd)
@@ -86,23 +85,6 @@ pid_t	execute_process(t_shell *shell, t_token *t, int n)
 	return (pid);
 }
 
-void	wait_processes(pid_t *pid, t_shell *shell)
-{
-	int	i;
-
-	i = -1;
-	if (waitpid(pid[shell->n_commands - 1], &shell->exit_status, 0) == -1)
-	{
-		shell->exit_status = 1;
-		print_err(ERRNO_ERR);
-	}
-	while (++i < shell->n_commands - 1)
-	{
-		if (pid[i] != -1)
-			waitpid(pid[i], NULL, WNOHANG);
-	}
-}
-
 void	execute(t_shell *shell)
 {
 	int		i;
@@ -127,7 +109,6 @@ void	execute(t_shell *shell)
 		signal(SIGINT, SIG_IGN);
 		wait_processes(pid, shell);
 		signal(SIGINT, sigint_handler);
-		shell->exit_status = WEXITSTATUS(shell->exit_status);
 		free(pid);
 	}
 }
