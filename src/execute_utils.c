@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 20:01:06 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/27 20:04:26 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/01 17:24:24 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	is_builtin(char *str)
 	return (!ft_strncmp(str, "echo", 5)
 		|| !ft_strncmp(str, "cd", 3)
 		|| !ft_strncmp(str, "pwd", 4)
-		|| !ft_strncmp(str, "export", 6)
-		|| !ft_strncmp(str, "unset", 5)
+		|| !ft_strncmp(str, "export", 7)
+		|| !ft_strncmp(str, "unset", 6)
 		|| !ft_strncmp(str, "env", 4)
 		|| !ft_strncmp(str, "exit", 5));
 }
@@ -26,8 +26,8 @@ int	is_builtin(char *str)
 int	affects_environtment(char *str)
 {
 	return (!ft_strncmp(str, "cd", 3)
-		|| !ft_strncmp(str, "export", 6)
-		|| !ft_strncmp(str, "unset", 5)
+		|| !ft_strncmp(str, "export", 7)
+		|| !ft_strncmp(str, "unset", 6)
 		|| !ft_strncmp(str, "exit", 5));
 }
 

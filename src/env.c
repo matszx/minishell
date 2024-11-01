@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/27 18:39:29 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/01 19:27:06 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,16 @@ int	print_var(t_env *stack)
 	while (temp)
 	{
 		if (temp->value)
-			err = printf("declare -x %s=\"%s\"\n", temp->var, temp->value);
+			err = write(STDOUT_FILENO, "declare -x ", 12) == -1
+				|| write(STDOUT_FILENO, temp->var, ft_strlen(temp->var)) == -1
+				|| write(STDOUT_FILENO, "=\"", 2) == -1
+				|| write(STDOUT_FILENO, temp->value, ft_strlen(temp->value)) == -1
+				|| write(STDOUT_FILENO, "\"\n", 2) == -1;
 		else
-			err = printf("declare -x %s\n", temp->var);
-		if (err == -1)
+			err = write(STDOUT_FILENO, "declare -x ", 12) == -1
+				|| write(STDOUT_FILENO, temp->var, ft_strlen(temp->var)) == -1
+				|| write(STDOUT_FILENO, "\n", 1) == -1;
+		if (err)
 			return (print_arg_err("export", "write error", ERRNO_ERR, 0), 1);
 		temp = temp->next;
 	}
@@ -96,19 +102,21 @@ int	ft_env(t_env *env, t_token *token)
 {
 	t_env_node	*temp;
 	t_token		*arg;
-	int			err;
 
 	arg = get_cmd_token(token, ARGUMENT);
 	if (arg)
 		return (print_arg_err("env", NULL, ARGS_ERR, 0), 1);
 	temp = env->head->next;
-	err = 0;
 	while (temp)
 	{
 		if (temp->value)
-			err = printf("%s=%s\n", temp->var, temp->value);
-		if (err == -1)
-			return (print_arg_err("env", "write error", ERRNO_ERR, 0), 1);
+		{
+			if (write(STDOUT_FILENO, temp->var, ft_strlen(temp->var)) == -1
+				|| write(STDOUT_FILENO, "=", 1) == -1
+				|| write(STDOUT_FILENO, temp->value, ft_strlen(temp->value)) == -1
+				|| write(STDOUT_FILENO, "\n", 1) == -1)
+				return (print_arg_err("env", "write error", ERRNO_ERR, 0), 1);
+		}
 		temp = temp->next;
 	}
 	return (0);
