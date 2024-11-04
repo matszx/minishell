@@ -1,5 +1,4 @@
 #  **Minishell**
-## Checklist
 
 **Known issues:**
 - [ ] adding empty lines to history
