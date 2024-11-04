@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/01 19:27:06 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/04 15:40:20 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	print_var(t_env *stack)
 			err = write(STDOUT_FILENO, "declare -x ", 12) == -1
 				|| write(STDOUT_FILENO, temp->var, ft_strlen(temp->var)) == -1
 				|| write(STDOUT_FILENO, "=\"", 2) == -1
-				|| write(STDOUT_FILENO, temp->value, ft_strlen(temp->value)) == -1
+				|| write(STDOUT_FILENO, temp->value, ft_strlen(temp->value)) \
+				== -1
 				|| write(STDOUT_FILENO, "\"\n", 2) == -1;
 		else
 			err = write(STDOUT_FILENO, "declare -x ", 12) == -1
@@ -113,7 +114,8 @@ int	ft_env(t_env *env, t_token *token)
 		{
 			if (write(STDOUT_FILENO, temp->var, ft_strlen(temp->var)) == -1
 				|| write(STDOUT_FILENO, "=", 1) == -1
-				|| write(STDOUT_FILENO, temp->value, ft_strlen(temp->value)) == -1
+				|| write(STDOUT_FILENO, temp->value, ft_strlen(temp->value)) \
+				== -1
 				|| write(STDOUT_FILENO, "\n", 1) == -1)
 				return (print_arg_err("env", "write error", ERRNO_ERR, 0), 1);
 		}
