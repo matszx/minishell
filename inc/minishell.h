@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/30 18:15:37 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/04 23:43:42 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void		wait_processes(pid_t *pid, t_shell *shell);
 
 // execute_utils.c
 int			is_builtin(char *str);
-int			affects_environtment(char *str);
+int			affects_environment(char *str);
 void		jump_to_next(t_token **t);
 int			path_access(char *str);
 int			perform_redirections(t_token *t, int *fd, int n);

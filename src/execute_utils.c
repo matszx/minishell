@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 20:01:06 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/01 17:24:24 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/04 23:43:42 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_builtin(char *str)
 		|| !ft_strncmp(str, "exit", 5));
 }
 
-int	affects_environtment(char *str)
+int	affects_environment(char *str)
 {
 	return (!ft_strncmp(str, "cd", 3)
 		|| !ft_strncmp(str, "export", 7)

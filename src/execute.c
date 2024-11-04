@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/01 17:22:08 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/04 23:43:42 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	execute(t_shell *shell)
 
 	i = -1;
 	temp = get_cmd_token(shell->tokens, COMMAND);
-	if (shell->n_commands == 1 && temp && affects_environtment(temp->str))
+	if (shell->n_commands == 1 && temp && affects_environment(temp->str))
 		shell->exit_status = argument_manager(shell, temp);
 	else
 	{
