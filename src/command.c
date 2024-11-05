@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 20:07:50 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/28 01:11:26 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 17:45:02 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,15 @@ char	*find_command(t_shell *shell, t_token *cmd, int *code)
 
 	if (!cmd->str[0])
 		return ((*code) = CMD_NOT_FOUND, NULL);
-	file = path_access(cmd->str);
-	if (!file)
-		return (*code = 0, cmd->str);
-	else if (file == 1)
-		return (*code = 126, NULL);
+	else if (!ft_strncmp("./", cmd->str, 2) || !ft_strncmp("/", cmd->str, 1))
+	{
+		file = path_access(cmd->str);
+		if (!file)
+			return (*code = 0, cmd->str);
+		else if (file == 1)
+			return (*code = 126, NULL);
+		return (*code = CMD_NOT_FOUND, NULL);
+	}
 	c_path = find_env(shell->env_var, "PATH");
 	if (!c_path)
 		return ((*code) = CMD_NOT_FOUND, NULL);

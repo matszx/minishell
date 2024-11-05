@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:34:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 13:27:23 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 16:35:16 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 static void	sigint_handler(int sig)
 {
-	g_exitstatus = 128 + sig;
+	(void) sig;
 	write(STDOUT_FILENO, "\n", 1);
-	readline(PT "minishell" VM " > " RESET);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();

@@ -3,7 +3,10 @@
 **Known issues:**
 - [X] terminating child with a signal doesn't set exit status to the corect value
 - [X] SIGQUIT not being handled in child processes
+- [ ] cat | cat | ls  and ctrl + c prints the promt message twice
 - [X] empty inputs get added to history
-- [ ] echo "||" returns syntax error 
+- [X] echo "||" returns syntax error 
 - [ ] cd doesn´t work with "." argument
-- [ ] execute looks into PATH when "./" path is specified
+- [X] execute looks into PATH when "./" path is specified
+- [ ] pwd in a deleted directory
+- [ ] norm
