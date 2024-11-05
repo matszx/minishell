@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/05 01:36:08 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 01:39:32 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	execute(t_shell *shell)
 	int		i;
 	t_token	*temp;
 	pid_t	*pid;
-	
+
 	i = -1;
 	temp = get_cmd_token(shell->tokens, COMMAND);
 	if (shell->n_commands == 1 && temp && affects_environment(temp->str))
