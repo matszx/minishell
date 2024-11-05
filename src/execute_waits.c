@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 18:14:59 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 13:17:00 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	wait_processes(pid_t *pid, t_shell *shell)
 	}
 	if (pid[shell->n_commands - 1] == -1)
 		g_exitstatus = 1;
-	else
+	else if (!WIFSIGNALED(g_exitstatus))
 		g_exitstatus = WEXITSTATUS(g_exitstatus);
+	else
+		g_exitstatus = 128 + WTERMSIG(g_exitstatus);
 }
