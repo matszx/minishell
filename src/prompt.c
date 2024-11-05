@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 17:05:36 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:37:48 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,11 @@ void	prompt(t_shell *shell)
 		{
 			if (err != EMPTY_INPUT)
 			{
-				add_history(shell->buf);
 				print_err(err);
 				g_exitstatus = 2;
 			}
-			free(shell->buf);
 			continue ;
 		}
-		add_history(shell->buf);
-		free(shell->buf);
 		minishell(shell);
 		clean(shell);
 	}

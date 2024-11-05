@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:20:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/30 16:47:04 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:38:51 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,14 @@ int	parse(char	*buf, t_shell *shell)
 {
 	shell->tokens = NULL;
 	if (!buf[0] || !buf[skip_spaces(buf)])
-		return (EMPTY_INPUT);
+		return (free(buf), EMPTY_INPUT);
+	add_history(buf);
 	if (!quotes_closed(buf))
-		return (QUOTES_ERR);
+		return (free(buf), QUOTES_ERR);
 	else if (check_string(buf))
-		return (SYNTAX_ERR);
+		return (free(buf), SYNTAX_ERR);
 	shell->tokens = get_arguments(buf);
+	free(buf);
 	if (!(shell->tokens))
 		return (ERRNO_ERR);
 	shell->n_commands = 1;
