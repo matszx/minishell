@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:34:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 11:26:16 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 13:27:23 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void	sigint_handler(int sig)
 {
 	g_exitstatus = 128 + sig;
 	write(STDOUT_FILENO, "\n", 1);
+	readline(PT "minishell" VM " > " RESET);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
