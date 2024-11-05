@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 12:22:37 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	child(t_shell *shell, t_token *t, int n)
 	args = get_args(cmd);
 	if (!args)
 		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
+	signal(SIGQUIT, SIG_DFL);
 	execve(str, args, shell->env_var);
 	return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
 }
@@ -107,7 +108,6 @@ void	execute(t_shell *shell)
 			jump_to_next(&temp);
 		}
 		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_DFL);
 		wait_processes(pid, shell);
 		free(pid);
 	}
