@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/28 00:27:55 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,12 @@ static t_shell	*init_shell(char **envp)
 	shell->env = copy_env(envp);
 	if (!shell->env)
 		return (free_shell(shell), NULL);
-	shell->exit_status = 0;
+	g_exitstatus = 0;
 	init_signals();
 	return (shell);
 }
+
+int		g_exitstatus = 0;
 
 int	main(int argc, char **argv, char **envp)
 {

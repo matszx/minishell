@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 01:22:57 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 11:17:38 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <sys/wait.h>
 # include "../libft/inc/libft.h"
 # include "constants.h"
+
+extern int	g_exitstatus;
 
 typedef enum e_type
 {
@@ -104,7 +106,6 @@ typedef struct s_shell
 	t_token	*tokens;
 	t_env	*env;
 	char	**env_var;
-	int		exit_status;
 	int		*fd;
 	int		n_commands;
 }	t_shell;

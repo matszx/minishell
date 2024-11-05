@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 16:33:09 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/28 00:38:15 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	write_heredoc_line(t_shell *shell, char *buf, int fd)
 	temp.str = buf;
 	temp.next = NULL;
 	temp.len = ft_strlen(buf);
-	err = handle_expansions(&temp, shell->env_var, shell->exit_status, 1);
+	err = handle_expansions(&temp, shell->env_var, g_exitstatus, 1);
 	if (err)
 		return (free(buf), err);
 	err = write(fd, temp.str, ft_strlen(temp.str)) == -1

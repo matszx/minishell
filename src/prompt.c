@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/30 19:06:59 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 11:16:21 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 // Returns the appropriate prompt line
-static char	*prompt_msg(int exit_status)
+static char	*prompt_msg(int exitstatus)
 {
-	if (!exit_status)
+	if (!exitstatus)
 		return (PT "minishell" AG " > " RESET);
 	else
 		return (PT "minishell" VM " > " RESET);
@@ -49,16 +49,16 @@ void	minishell(t_shell *shell)
 
 	err = verify_order(shell->tokens);
 	if (err)
-		return (shell->exit_status = 2, print_err(err));
+		return (g_exitstatus = 2, print_err(err));
 	err = expand_commands(shell);
 	if (err)
-		return (shell->exit_status = 1, print_err(err));
+		return (g_exitstatus = 1, print_err(err));
 	err = get_pipes(shell);
 	if (err)
-		return (shell->exit_status = 1, print_err(err));
+		return (g_exitstatus = 1, print_err(err));
 	err = red_heredoc(shell);
 	if (err)
-		return (shell->exit_status = 1, print_err(err));
+		return (g_exitstatus = 1, print_err(err));
 	execute(shell);
 }
 
@@ -70,11 +70,11 @@ void	prompt(t_shell *shell)
 	while (1)
 	{
 		err = errno;
-		shell->buf = readline(prompt_msg(shell->exit_status));
+		shell->buf = readline(prompt_msg(g_exitstatus));
 		if (!shell->buf && err != errno && errno != ENOENT)
 			return (perror(MINISHELL));
 		else if (!shell->buf)
-			ft_exit((unsigned int)shell->exit_status, shell, NULL);
+			ft_exit((unsigned int)g_exitstatus, shell, NULL);
 		add_history(shell->buf);
 		err = parse(shell->buf, shell);
 		free(shell->buf);
@@ -83,7 +83,7 @@ void	prompt(t_shell *shell)
 			if (err != EMPTY_INPUT)
 			{
 				print_err(err);
-				shell->exit_status = 2;
+				g_exitstatus = 2;
 			}
 			continue ;
 		}

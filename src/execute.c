@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/05 01:39:32 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	argument_manager(t_shell *shell, t_token *head)
 	else if (!ft_strncmp(head->str, "env", 4))
 		return (ft_env(shell->env, head->next));
 	else if (!ft_strncmp(head->str, "exit", 5))
-		return (ft_exit((unsigned int)shell->exit_status, shell, head->next));
+		return (ft_exit((unsigned int)g_exitstatus, shell, head->next));
 	else
 		return (1);
 }
@@ -76,7 +76,7 @@ pid_t	execute_process(t_shell *shell, t_token *t, int n)
 	pid = fork();
 	if (pid < 0)
 	{
-		shell->exit_status = 1;
+		g_exitstatus = 1;
 		print_err(ERRNO_ERR);
 	}
 	else if (pid == 0)
@@ -94,13 +94,13 @@ void	execute(t_shell *shell)
 	i = -1;
 	temp = get_cmd_token(shell->tokens, COMMAND);
 	if (shell->n_commands == 1 && temp && affects_environment(temp->str))
-		shell->exit_status = argument_manager(shell, temp);
+		g_exitstatus = argument_manager(shell, temp);
 	else
 	{
 		temp = shell->tokens;
 		pid = malloc(sizeof(pid_t) * shell->n_commands);
 		if (!pid)
-			return (shell->exit_status = 1, print_err(ERRNO_ERR));
+			return (g_exitstatus = 1, print_err(ERRNO_ERR));
 		while (++i < shell->n_commands)
 		{
 			pid[i] = execute_process(shell, temp, i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:48:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/30 17:09:18 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int	expand_commands(t_shell *shell)
 		else
 			expand = 1;
 		err = handle_expansions(temp, shell->env_var,
-				shell->exit_status, expand);
+				g_exitstatus, expand);
 		if (err)
 			return (err);
 		temp = temp->next;

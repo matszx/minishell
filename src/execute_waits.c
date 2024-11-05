@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_wais.c                                     :+:      :+:    :+:   */
+/*   execute_waits.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 18:14:59 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/30 18:15:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void	wait_processes(pid_t *pid, t_shell *shell)
 	i = -1;
 	while (++i < shell->n_commands)
 	{
-		if (pid[i] != -1 && waitpid(pid[i], &shell->exit_status, 0) == -1)
+		if (pid[i] != -1 && waitpid(pid[i], &g_exitstatus, 0) == -1)
 			print_err(ERRNO_ERR);
 	}
 	if (pid[shell->n_commands - 1] == -1)
-		shell->exit_status = 1;
+		g_exitstatus = 1;
 	else
-		shell->exit_status = WEXITSTATUS(shell->exit_status);
+		g_exitstatus = WEXITSTATUS(g_exitstatus);
 }
