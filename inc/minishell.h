@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 11:17:38 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 19:23:27 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ int			has_echo_flag(char *s);
 int			write_rest(t_token *token, char *temp, int flag);
 
 // signals.c
+void		sigint_handler(int sig);
 void		init_signals(void);
 
 // execute.c
