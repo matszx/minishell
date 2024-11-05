@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:34:56 by mcygan            #+#    #+#             */
-/*   Updated: 2024/10/30 19:07:23 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/05 01:22:45 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	sigint_handler(int sig)
+static void	sigint_handler(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
@@ -21,9 +21,17 @@ void	sigint_handler(int sig)
 	rl_redisplay();
 }
 
+static void	sigchld_handler(int sig)
+{
+	(void)sig;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 void	init_signals(void)
 {
 	signal(SIGINT, sigint_handler);
+	signal(SIGCHLD, sigchld_handler);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
 }
