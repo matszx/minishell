@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 11:16:21 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/05 13:35:06 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,20 @@ void	prompt(t_shell *shell)
 			return (perror(MINISHELL));
 		else if (!shell->buf)
 			ft_exit((unsigned int)g_exitstatus, shell, NULL);
-		add_history(shell->buf);
 		err = parse(shell->buf, shell);
-		free(shell->buf);
 		if (err)
 		{
 			if (err != EMPTY_INPUT)
 			{
+				add_history(shell->buf);
 				print_err(err);
 				g_exitstatus = 2;
 			}
+			free(shell->buf);
 			continue ;
 		}
+		add_history(shell->buf);
+		free(shell->buf);
 		minishell(shell);
 		clean(shell);
 	}
