@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   constants.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 13:33:51 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 18:46:47 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 # define IDENTIFIER_ERR		10
 # define CMD_NOT_FOUND		11
 # define HOME_ERR			12
+# define CD_FLAGS_ERR		13
+# define OLDPWD_ERR			14
 
 # define MINISHELL			"minishell"
 # define PIPE_END_MSG		"unclosed pipes are not supported"
@@ -48,6 +50,10 @@
 # define IDENTIFIER_MSG		"not a valid identifier"
 # define NO_CMD_MSG			"command not found"
 # define HOME_MSG			"HOME not set"
+# define OLDPWD_MSG			"OLDPWD not set"
+# define CD_FLAGS_MSG		"cd does not support options"
+# define NO_PWD_MSG			"error retrieving current directory: "\
+								"getcwd: cannot access parent directories"
 # define UNKNOW_MSG			"unknow error"
 
 #endif

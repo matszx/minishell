@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 19:59:18 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/28 01:25:58 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/06 18:47:26 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@ char	*get_err_msg(int err)
 		return (NO_CMD_MSG);
 	else if (err == HOME_ERR)
 		return (HOME_MSG);
+	else if (err == OLDPWD_ERR)
+		return (OLDPWD_MSG);
+	else if (err == CD_FLAGS_ERR)
+		return (CD_FLAGS_MSG);
 	else if (err == ERRNO_ERR)
 		return (strerror(errno));
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 13:35:25 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 18:54:53 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,25 @@ int	ft_echo(t_token *token)
 	return (0);
 }
 
+int	manage_cd_arg(t_shell *shell, t_token *arg)
+{
+	int		ret;
+	char	*old;
+
+	if (arg->str[1])
+		return (print_arg_err("cd", NULL, CD_FLAGS_ERR, 0), 2);
+	old = find_env(shell->env_var, "OLDPWD");
+	if (!old)
+		return (print_arg_err("cd", NULL, OLDPWD_ERR, 0), 1);
+	ret = chdir(old);
+	if (ret == -1)
+		return (print_arg_err("cd", NULL, ERRNO_ERR, 0), 1);
+	if (write(STDOUT_FILENO, old, ft_strlen(old)) == -1
+		|| write(STDOUT_FILENO, "\n", 1) == -1)
+		return (print_arg_err("cd", "write error", ERRNO_ERR, 0), 1);
+	return (0);
+}
+
 int	ft_cd(t_shell *shell, t_token *token)
 {
 	char	*tmp;
@@ -84,6 +103,8 @@ int	ft_cd(t_shell *shell, t_token *token)
 		if (!tmp[0])
 			return (print_arg_err("cd", NULL, HOME_ERR, 0), 1);
 	}
+	else if (arg->str[0] == '-')
+		return (manage_cd_arg(shell, arg));
 	else
 		tmp = arg->str;
 	ret = chdir(tmp);
@@ -96,6 +117,9 @@ int	ft_cd(t_shell *shell, t_token *token)
 
 int	ft_pwd(char *cwd)
 {
+	if (!cwd[0])
+		return (errno = ENOENT,
+			print_arg_err("pwd", NO_PWD_MSG, ERRNO_ERR, 0), 1);
 	if (write(STDOUT_FILENO, cwd, ft_strlen(cwd)) == -1
 		|| write(STDOUT_FILENO, "\n", 1) == -1)
 		return (print_arg_err("pwd", "write error", ERRNO_ERR, 0), 1);

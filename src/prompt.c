@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:02 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 19:37:48 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 17:37:30 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	prompt(t_shell *shell)
 	{
 		err = errno;
 		shell->buf = readline(prompt_msg(g_exitstatus));
-		if (!shell->buf && err != errno && errno != ENOENT)
+		if (!shell->buf && err && errno && err != errno && errno != ENOENT)
 			return (perror(MINISHELL));
 		else if (!shell->buf)
 			ft_exit((unsigned int)g_exitstatus, shell, NULL);

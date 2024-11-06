@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 13:30:04 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 16:46:15 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	child(t_shell *shell, t_token *t, int n)
 		return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
 	signal(SIGQUIT, SIG_DFL);
 	execve(str, args, shell->env_var);
-	signal(SIGQUIT, SIG_IGN);
 	return (print_err(ERRNO_ERR), exit(EXIT_FAILURE));
 }
 

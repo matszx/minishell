@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 20:07:50 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 13:47:57 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 16:23:45 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*find_command(t_shell *shell, t_token *cmd, int *code)
 
 	if (!cmd->str[0])
 		return ((*code) = CMD_NOT_FOUND, NULL);
-	else if (!ft_strncmp("./", cmd->str, 2) || !ft_strncmp("/", cmd->str, 1))
+	else if (!ft_strncmp(".", cmd->str, 1) || !ft_strncmp("/", cmd->str, 1))
 	{
 		file = path_access(cmd->str);
 		if (!file)

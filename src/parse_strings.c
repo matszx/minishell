@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 16:47:19 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/05 16:27:57 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/06 14:41:13 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,13 +106,11 @@ int	check_string(char *str)
 			while (str[i] && str[i] != quotes)
 				i++;
 		}
-		if (str[i] == '|' && !command)
+		if ((str[i] == '|' && !command) || verify_redirect(str, &i))
 			return (SYNTAX_ERR);
 		else if (str[i] == '|')
 			command = 0;
-		else if (verify_redirect(str, &i))
-			return (SYNTAX_ERR);
-		if (!str[i])
+		else if (!str[i])
 			break ;
 		else
 			command = 1;

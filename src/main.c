@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/06 13:32:37 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 18:11:36 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,9 @@ static t_shell	*init_shell(char **envp)
 	shell->fd = NULL;
 	shell->n_commands = 0;
 	shell->tokens = NULL;
+	shell->cwd[0] = '\0';
 	if (!getcwd(shell->cwd, PATH_MAX))
-		return (free_shell(shell), NULL);
+		print_arg_err(NULL, NO_PWD_MSG, ERRNO_ERR, 0);
 	g_exitstatus = 0;
 	init_signals();
 	return (shell);

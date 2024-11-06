@@ -6,8 +6,8 @@
 - [X] cat | cat | ls  and ctrl+c prints the promt message twice
 - [X] empty inputs get added to history
 - [X] echo "||" returns syntax error 
-- [ ] cd doesn't work with "." argument
-- [ ] cd doesn't update the pwd environment variable
+- [X] cd doesn't work with "-" argument
+- [ ] cd doesn't update the PWD and OLDPWD environment variables
 - [X] execute looks into PATH when "./" path is specified
 - [X] pwd in a deleted directory
 - [ ] norm
