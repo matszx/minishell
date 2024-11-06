@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 20:07:50 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/05 17:45:02 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/06 13:47:57 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,6 @@ char	*find_command(t_shell *shell, t_token *cmd, int *code)
 		return (*code = 1, NULL);
 	c_path = get_cmd_path(code, paths, cmd->str);
 	free_table((void **) paths);
-	if (!c_path)
-		return (NULL);
 	return (c_path);
 }
 
