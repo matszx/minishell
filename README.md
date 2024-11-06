@@ -7,7 +7,7 @@
 - [X] empty inputs get added to history
 - [X] echo "||" returns syntax error 
 - [ ] cd doesn't work with "." argument
-- [ ] cd doesn't update the pwd environtment variable
+- [ ] cd doesn't update the pwd environment variable
 - [X] execute looks into PATH when "./" path is specified
-- [ ] pwd in a deleted directory
+- [X] pwd in a deleted directory
 - [ ] norm

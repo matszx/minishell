@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 11:15:46 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 13:32:37 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,14 @@ static t_shell	*init_shell(char **envp)
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
-	shell->env_var = NULL;
-	shell->tokens = NULL;
-	shell->fd = NULL;
-	shell->n_commands = 0;
 	shell->env = copy_env(envp);
 	if (!shell->env)
+		return (free_shell(shell), NULL);
+	shell->env_var = NULL;
+	shell->fd = NULL;
+	shell->n_commands = 0;
+	shell->tokens = NULL;
+	if (!getcwd(shell->cwd, PATH_MAX))
 		return (free_shell(shell), NULL);
 	g_exitstatus = 0;
 	init_signals();

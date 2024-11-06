@@ -6,7 +6,7 @@
 /*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/05 19:23:27 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/06 13:29:45 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_shell
 	char	**env_var;
 	int		*fd;
 	int		n_commands;
+	char	cwd[PATH_MAX];
 }	t_shell;
 
 // main.c
@@ -174,8 +175,8 @@ int			set_level(t_env_node *head);
 
 // builtins.c
 int			ft_echo(t_token *token);
-int			ft_cd(char **env, t_token *token);
-int			ft_pwd(void);
+int			ft_cd(t_shell *shell, t_token *token);
+int			ft_pwd(char *cwd);
 int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 
 // builtins_utils.c

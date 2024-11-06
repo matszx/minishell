@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/10/30 18:11:17 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/06 13:35:25 by mcygan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_echo(t_token *token)
 	return (0);
 }
 
-int	ft_cd(char **env, t_token *token)
+int	ft_cd(t_shell *shell, t_token *token)
 {
 	char	*tmp;
 	int		ret;
@@ -80,7 +80,7 @@ int	ft_cd(char **env, t_token *token)
 		return (print_arg_err("cd", NULL, ARGS_ERR, 0), 1);
 	if (!arg)
 	{
-		tmp = find_env(env, "HOME");
+		tmp = find_env(shell->env_var, "HOME");
 		if (!tmp[0])
 			return (print_arg_err("cd", NULL, HOME_ERR, 0), 1);
 	}
@@ -89,15 +89,13 @@ int	ft_cd(char **env, t_token *token)
 	ret = chdir(tmp);
 	if (ret == -1)
 		return (print_arg_err("cd", tmp, ERRNO_ERR, 0), 1);
+	if (!getcwd(shell->cwd, PATH_MAX))
+		print_arg_err("cd", "path update error", ERRNO_ERR, 0);
 	return (ret);
 }
 
-int	ft_pwd(void)
+int	ft_pwd(char *cwd)
 {
-	char	cwd[PATH_MAX];
-
-	if (!getcwd(cwd, PATH_MAX))
-		return (print_arg_err("pwd", NULL, ERRNO_ERR, 0), 1);
 	if (write(STDOUT_FILENO, cwd, ft_strlen(cwd)) == -1
 		|| write(STDOUT_FILENO, "\n", 1) == -1)
 		return (print_arg_err("pwd", "write error", ERRNO_ERR, 0), 1);
