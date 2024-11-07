@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 18:52:15 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 18:46:47 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/07 16:19:21 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@
 # define HOME_MSG			"HOME not set"
 # define OLDPWD_MSG			"OLDPWD not set"
 # define CD_FLAGS_MSG		"cd does not support options"
-# define NO_PWD_MSG			"error retrieving current directory: "\
-								"getcwd: cannot access parent directories"
+# define NO_PWD_MSG			"error retrieving current directory: \
+getcwd: cannot access parent directories"
 # define UNKNOW_MSG			"unknow error"
 
 #endif

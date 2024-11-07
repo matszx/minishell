@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcygan <mcygan@student.s19.be>             +#+  +:+       +#+        */
+/*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:40:30 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/04 15:40:20 by mcygan           ###   ########.fr       */
+/*   Updated: 2024/11/07 16:31:27 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	ft_export(t_env *stack, t_env_node *env, t_token *token)
 // Deletes an environment variable
 int	ft_unset(t_env *env, t_token *token)
 {
-	int			ret;
+	int	ret;
 
 	token = get_cmd_token(token, ARGUMENT);
 	ret = 0;

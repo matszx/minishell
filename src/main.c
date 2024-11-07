@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:22:35 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/06 18:11:36 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/07 16:11:53 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	free_shell(t_shell *shell)
 static t_shell	*init_shell(char **envp)
 {
 	t_shell	*shell;
+	char	*tmp;
 
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
@@ -74,7 +75,13 @@ static t_shell	*init_shell(char **envp)
 	shell->cwd[0] = '\0';
 	if (!getcwd(shell->cwd, PATH_MAX))
 		print_arg_err(NULL, NO_PWD_MSG, ERRNO_ERR, 0);
-	g_exitstatus = 0;
+	if (shell->cwd[0])
+	{
+		tmp = ft_strjoin("PWD=", shell->cwd);
+		if (!tmp || addenv(shell->env, shell->env->head, tmp))
+			print_err(ERRNO_ERR);
+		free(tmp);
+	}
 	init_signals();
 	return (shell);
 }
@@ -88,6 +95,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc > 1)
 		return (print_err(ARGS_ERR), EXIT_FAILURE);
+	g_exitstatus = 0;
 	shell = init_shell(envp);
 	if (!shell)
 		return (print_err(ERRNO_ERR), EXIT_FAILURE);

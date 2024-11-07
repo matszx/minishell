@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:14:49 by mcygan            #+#    #+#             */
-/*   Updated: 2024/11/06 15:11:21 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/07 18:53:40 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ typedef struct s_shell
 	int		*fd;
 	int		n_commands;
 	char	cwd[PATH_MAX];
-	char	old_cdw[PATH_MAX];
 }	t_shell;
 
 // main.c
@@ -176,12 +175,13 @@ int			set_level(t_env_node *head);
 
 // builtins.c
 int			ft_echo(t_token *token);
-int			ft_cd(t_shell *shell, t_token *token);
 int			ft_pwd(char *cwd);
 int			ft_exit(unsigned int ret, t_shell *shell, t_token *token);
 
+// cd.c
+int			ft_cd(t_shell *shell, t_token *token);
+
 // builtins_utils.c
-int			ft_isnumber(char *str);
 t_token		*get_cmd_token(t_token *t, t_type type);
 int			has_echo_flag(char *s);
 int			write_rest(t_token *token, char *temp, int flag);
@@ -213,7 +213,9 @@ void		find_error(char *str, int *code);
 void		print_err(int err);
 void		print_arg_err(char *cmd, char *arg, int err, int quotes);
 
-//ft_atol.c
+//utilc.c
+int			ft_isnumber(char *str);
+int			has_quotes(char *str);
 long		ft_atol(const char *nptr, int *overflow);
 
 #endif

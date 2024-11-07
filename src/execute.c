@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:40:44 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 16:46:15 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/07 18:47:10 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void	child(t_shell *shell, t_token *t, int n)
 	char	*str;
 	char	**args;
 
+	if (!t->str[0] && !has_quotes(t->old_str))
+		return (exit(EXIT_SUCCESS));
 	if (perform_redirections(t, shell->fd, n))
 		return (exit(EXIT_FAILURE));
 	cmd = get_cmd_token(t, COMMAND);

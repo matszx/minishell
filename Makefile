@@ -6,7 +6,7 @@
 #    By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 15:24:36 by mcygan            #+#    #+#              #
-#    Updated: 2024/10/30 18:16:48 by dzapata          ###   ########.fr        #
+#    Updated: 2024/11/07 18:48:27 by dzapata          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ SRC_FILES 		=	main.c \
 					execute.c \
 					errors.c \
 					builtins_utils.c \
-					ft_atol.c \
+					utils.c \
 					env_string.c \
 					expander_len.c \
 					parser_utils.c \
@@ -47,7 +47,8 @@ SRC_FILES 		=	main.c \
 					heredoc.c \
 					execute_utils.c \
 					command.c \
-					execute_waits.c
+					execute_waits.c \
+					cd.c
 					
 SRC				=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 

@@ -6,7 +6,7 @@
 /*   By: dzapata <dzapata@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 22:20:39 by dzapata           #+#    #+#             */
-/*   Updated: 2024/11/06 18:54:53 by dzapata          ###   ########.fr       */
+/*   Updated: 2024/11/07 18:29:50 by dzapata          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,52 +67,6 @@ int	ft_echo(t_token *token)
 	if (err == -1 || newline == 3)
 		return (print_arg_err("echo", "write error", ERRNO_ERR, 0), 1);
 	return (0);
-}
-
-int	manage_cd_arg(t_shell *shell, t_token *arg)
-{
-	int		ret;
-	char	*old;
-
-	if (arg->str[1])
-		return (print_arg_err("cd", NULL, CD_FLAGS_ERR, 0), 2);
-	old = find_env(shell->env_var, "OLDPWD");
-	if (!old)
-		return (print_arg_err("cd", NULL, OLDPWD_ERR, 0), 1);
-	ret = chdir(old);
-	if (ret == -1)
-		return (print_arg_err("cd", NULL, ERRNO_ERR, 0), 1);
-	if (write(STDOUT_FILENO, old, ft_strlen(old)) == -1
-		|| write(STDOUT_FILENO, "\n", 1) == -1)
-		return (print_arg_err("cd", "write error", ERRNO_ERR, 0), 1);
-	return (0);
-}
-
-int	ft_cd(t_shell *shell, t_token *token)
-{
-	char	*tmp;
-	int		ret;
-	t_token	*arg;
-
-	arg = get_cmd_token(token, ARGUMENT);
-	if (arg && get_cmd_token(arg->next, ARGUMENT))
-		return (print_arg_err("cd", NULL, ARGS_ERR, 0), 1);
-	if (!arg)
-	{
-		tmp = find_env(shell->env_var, "HOME");
-		if (!tmp[0])
-			return (print_arg_err("cd", NULL, HOME_ERR, 0), 1);
-	}
-	else if (arg->str[0] == '-')
-		return (manage_cd_arg(shell, arg));
-	else
-		tmp = arg->str;
-	ret = chdir(tmp);
-	if (ret == -1)
-		return (print_arg_err("cd", tmp, ERRNO_ERR, 0), 1);
-	if (!getcwd(shell->cwd, PATH_MAX))
-		print_arg_err("cd", "path update error", ERRNO_ERR, 0);
-	return (ret);
 }
 
 int	ft_pwd(char *cwd)
